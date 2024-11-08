@@ -8,13 +8,16 @@ from homeassistant.components.todo import TodoListEntity, TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_NAME, CONF_ACCESS_TOKEN, )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_entry_oauth2_flow
+from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from custom_components.ticktick_todo.pyticktick import openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client import DefaultApi
+from . import DOMAIN
 
-DOMAIN = "ticktick_todo"
+DOMAIN = DOMAIN
 # SCAN_INTERVAL = timedelta(minutes=1)
 _LOGGER = logging.getLogger(__name__)
 _VALID_STATES = [
@@ -35,20 +38,21 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
                             async_add_entities: AddEntitiesCallback) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
-    api_instance = openapi_client.DefaultApi(
-        openapi_client.ApiClient(openapi_client.Configuration(access_token=config_entry.data.get(CONF_ACCESS_TOKEN))))
 
-    lists = api_instance.open_v1_project_get()
+    api_instance = openapi_client.ApiClient(
+        openapi_client.Configuration(access_token=hass.data[DOMAIN][config_entry.entry_id]["ticktick_auth"]))
 
     async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
                                                        identifiers={(DOMAIN, config_entry.entry_id)}),
                                       l.id,
                                       l.name,
                                       api_instance
-                                      )) for l in lists], True)
+                                      )) for l in
+                        (await hass.async_add_executor_job(api_instance.open_v1_project_get))],
+                       True)
 
 
-class TickTickTodo(TodoListEntity):
+class TickTickTodo(TodoListEntity, OAuth2Session):
     """MQTTMediaPlayer"""
 
     def __init__(self, hass: HomeAssistant, device_info: DeviceInfo, id: str, name: str,

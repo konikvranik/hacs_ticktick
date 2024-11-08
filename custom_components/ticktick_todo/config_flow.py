@@ -1,92 +1,63 @@
 """Adds config flow for HDO."""
 import logging
-from typing import Any
+from typing import Any, Mapping
 
-import voluptuous as vol
-from homeassistant import config_entries
-from homeassistant.const import CONF_NAME
-from homeassistant.core import callback
+from homeassistant.config_entries import ConfigFlowResult, SOURCE_REAUTH
+from homeassistant.helpers import config_entry_oauth2_flow
 
-from . import DOMAIN, DEFAULT_NAME, VERSION
+from . import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def _show_form(self, step, user_input):
-    """Configure the form."""
-    options = {
-        vol.Optional(CONF_NAME,
-                     default=user_input[CONF_NAME] if user_input and (CONF_NAME in user_input) else DEFAULT_NAME): str,
-    }
-    return self.async_show_form(step_id=step, data_schema=(vol.Schema(
-        options)), errors=self._errors)
+class NetatmoFlowHandler(
+    config_entry_oauth2_flow.AbstractOAuth2FlowHandler, domain=DOMAIN
+):
+    """Config flow to handle Netatmo OAuth2 authentication."""
 
+    DOMAIN = DOMAIN
 
-@config_entries.HANDLERS.register(DOMAIN)
-class HDOFlowHandler(config_entries.ConfigFlow):
-    """Config flow for iiyama sicp integration."""
+    @property
+    def logger(self) -> logging.Logger:
+        """Return logger."""
+        return logging.getLogger(__name__)
 
-    VERSION = VERSION
-    CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_PUSH
+    @property
+    def extra_authorize_data(self) -> dict:
+        """Extra data that needs to be appended to the authorize url."""
+        return {"scope": " ".join(["tasks: write", "tasks: read"])}
 
-    def __init__(self):
-        """Initialize."""
-        self._errors = {}
-        self._data = {}
+    async def async_step_user(self, user_input: dict | None = None) -> ConfigFlowResult:
+        """Handle a flow start."""
+        await self.async_set_unique_id(DOMAIN)
 
-    async def async_step_user(self, user_input={}):  # pylint: disable=dangerous-default-value
-        """Display the form, then store values and create entry."""
-        self._errors = {}
-        if user_input is not None:
-            self._data.update(user_input)
-            # Call next step
-            return self.async_create_entry(title=self._data[CONF_NAME], data=self._data)
-        return await _show_form(self, "user", self._data)
+        if (self.source !=
+                SOURCE_REAUTH and self._async_current_entries()):
+            return self.async_abort(reason="single_instance_allowed")
 
-    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
-        config_entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
-        self._data.update(config_entry.data)
-        if user_input:
-            self._data.update(user_input)
-            return self.async_update_reload_and_abort(config_entry, title=self._data[CONF_NAME], data=self._data)
-        return await _show_form(self, "reconfigure", self._data)
+        return await super().async_step_user(user_input)
 
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        """Return the options flow handler."""
-        if config_entry.unique_id is None:
-            return EmptyOptions(config_entry)
-        else:
-            return OptionsFlowHandler(config_entry)
+    async def async_step_reauth(
+            self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
+        """Perform reauth upon an API authentication error."""
+        return await self.async_step_reauth_confirm()
 
+    async def async_step_reauth_confirm(
+            self, user_input: dict | None = None
+    ) -> ConfigFlowResult:
+        """Dialog that informs the user that reauth is required."""
+        if user_input is None:
+            return self.async_show_form(step_id="reauth_confirm")
 
-class OptionsFlowHandler(config_entries.OptionsFlow):
-    """Change the configuration."""
+        return await self.async_step_user()
 
-    def __init__(self, config_entry):
-        """Read the configuration and initialize data."""
-        self.config_entry = config_entry
-        self._data = dict(config_entry.options)
-        self._errors = {}
+    async def async_oauth_create_entry(self, data: dict) -> ConfigFlowResult:
+        """Create an oauth config entry or update existing entry for reauth."""
+        existing_entry = await self.async_set_unique_id(DOMAIN)
+        if existing_entry:
+            self.hass.config_entries.async_update_entry(existing_entry, data=data)
+            await self.hass.config_entries.async_reload(existing_entry.entry_id)
+            return self.async_abort(reason="reauth_successful")
 
-    async def async_step_init(self, user_input=None):
-        """Display the form, then store values and create entry."""
-
-        if user_input is not None:
-            # Update entry
-            self._data.update(user_input)
-            return self.async_create_entry(title=self._data[CONF_NAME], data=self._data)
-        else:
-            if user_input is None:
-                user_input = self.config_entry.data
-            self._data.update(user_input)
-            return await _show_form(self, "init", user_input)
-
-
-class EmptyOptions(config_entries.OptionsFlow):
-    """Empty class in to be used if no configuration."""
-
-    def __init__(self, config_entry):
-        """Initialize data."""
-        self.config_entry = config_entry
+        return await super().async_oauth_create_entry(data)
