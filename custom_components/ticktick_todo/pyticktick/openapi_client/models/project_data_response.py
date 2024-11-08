@@ -22,8 +22,8 @@ from typing import Optional, Set
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing_extensions import Self
 
-from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 
 
 class ProjectDataResponse(BaseModel):
