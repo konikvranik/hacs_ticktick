@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: TickTick API
+  description: [ TickTick ](https://ticktick.com/) TODO task manager.
+  version: 0.0.1
+
+paths:
+  /open/v1/project:
+    get:
+      summary: Get User Project.
+      security:
+        - OAuth2:
+            - "tasks:read"
+          BearerAuth: [ ]
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "schemas.yaml#/components/schemas/ProjectResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+    post:
+      summary: Create Project
+      security:
+        - OAuth2:
+            - "tasks:read"
+            - "tasks:write"
+          BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "schemas.yaml#/components/schemas/Project"
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ProjectResponse"
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+
+
+  /open/v1/project/{projectId}:
+    summary: Get Project By ID.
+    get:
+      security:
+        - OAuth2:
+            - "tasks:read"
+          BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: Project identifier
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ProjectResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+    post:
+      summary: Update Project
+      security:
+        - OAuth2:
+            - "tasks:read"
+            - "tasks:write"
+          BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: Project identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - properties:
+                    projectId:
+                      description: project identifier
+                      type: string
+                - $ref: "schemas.yaml#/components/schemas/Project"
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ProjectResponse"
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+
+    delete:
+      security:
+        - OAuth2:
+            - "tasks:read"
+            - "tasks:write"
+          BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: Project identifier
+      responses:
+        "200": # status code
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+
+
+  /open/v1/project/{projectId}/data:
+    summary: Get Project With Data.
+    get:
+      security:
+        - OAuth2:
+            - "tasks:read"
+          BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: Project identifier
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ProjectResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found

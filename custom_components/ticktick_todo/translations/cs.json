@@ -1,0 +1,54 @@
+{
+	"config": {
+		"step": {
+			"user": {
+				"data": {
+					"name": "Zadejte prosím název zařízení.",
+					"host": "Zadejte prosím hostname nebo IP adresu.",
+					"mac": "Zadejte prosím MAC adresu zařízení.",
+					"wol_target": "Zadejte prosím Wake on lan broadcast adresu.",
+					"wol_port": "Zadejte prosím Wake on lan broadcast port."
+				},
+				"data_description": {
+					"name": "Název zařízení.",
+					"host": "Hostname nebo IP adresa.",
+					"mac": "MAC adresa zařízení.",
+					"wol_target": "Wake on lan broadcast adresa.",
+					"wol_port": "Wake on lan broadcast port."
+				}
+			},
+			"init": {
+				"data": {
+					"name": "Zadejte prosím název zařízení.",
+					"host": "Zadejte prosím hostname nebo IP adresu.",
+					"mac": "Zadejte prosím MAC adresu zařízení.",
+					"wol_target": "Zadejte prosím Wake on lan broadcast adresu.",
+					"wol_port": "Zadejte prosím Wake on lan broadcast port."
+				},
+				"data_description": {
+					"name": "Název zařízení.",
+					"host": "Hostname nebo IP adresa.",
+					"mac": "MAC adresa zařízení.",
+					"wol_target": "Wake on lan broadcast adresa.",
+					"wol_port": "Wake on lan broadcast port."
+				}
+			},
+			"reconfigure": {
+				"data": {
+					"name": "Zadejte prosím název zařízení.",
+					"host": "Zadejte prosím hostname nebo IP adresu.",
+					"mac": "Zadejte prosím MAC adresu zařízení.",
+					"wol_target": "Zadejte prosím Wake on lan broadcast adresu.",
+					"wol_port": "Zadejte prosím Wake on lan broadcast port."
+				},
+				"data_description": {
+					"name": "Název zařízení.",
+					"host": "Hostname nebo IP adresa.",
+					"mac": "MAC adresa zařízení.",
+					"wol_target": "Wake on lan broadcast adresa.",
+					"wol_port": "Wake on lan broadcast port."
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "iiyama TV rs232 over LAN remote control",
+	"country": [
+		"CZ"
+	],
+	"homeassistant": "2024.10.0",
+	"render_readme": true
+}
