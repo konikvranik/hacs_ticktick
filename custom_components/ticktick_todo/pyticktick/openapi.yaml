@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: TickTick API
-  description: [ TickTick ](https://ticktick.com/) TODO task manager.
+  description: "[TickTick](https://ticktick.com/) TODO task manager."
   version: 0.0.1
 
 servers:
@@ -12,17 +12,17 @@ components:
   securitySchemes:
     BasicAuth:
       description: "client_id:client_secret"
-      type: https
+      type: http
       scheme: basic
     BearerAuth:
-      type: https
+      type: http
       scheme: bearer
     OAuth2:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: https://ticktick.com/oauth/authorize
-          tokenUrl: https://ticktick.com/oauth/token
+          authorizationUrl: https://ticktick.com/oauth/authorize?scope={scope}&client_id={client_id}&state={state}&redirect_uri={redirect_uri}&response_type=code
+          tokenUrl: https://{client_id}:{client_secret}@ticktick.com/oauth/token?code={code}&grant_type=authorization_code&scope={scope}&redirect_uri={redirect_uri}
           scopes:
             "tasks:write": ""
             "tasks:read": ""
@@ -30,7 +30,7 @@ paths:
 
   /oauth/token:
     post:
-      summary: GEt token
+      summary: Get token
       description: "client_id and :client_secret are passes to basic auth as username and password"
       security:
         - BasicAuth: [ ]
