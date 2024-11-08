@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.checklist_item import ChecklistItem
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
 
 class TestChecklistItem(unittest.TestCase):
     """ChecklistItem unit test stubs"""

@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
 
 class TestOpenV1TaskTaskIdPostRequest(unittest.TestCase):
     """OpenV1TaskTaskIdPostRequest unit test stubs"""
@@ -41,7 +41,7 @@ class TestOpenV1TaskTaskIdPostRequest(unittest.TestCase):
                 desc = '',
                 due_date = None,
                 items = [
-                    openapi_client.models.checklist_item.ChecklistItem(
+                    custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item.ChecklistItem(
                         id = '', 
                         title = '', 
                         status = null, 

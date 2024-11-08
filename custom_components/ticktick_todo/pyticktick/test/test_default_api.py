@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.api.default_api import DefaultApi
+from custom_components.ticktick_todo.pyticktick.openapi_client.api.default_api import DefaultApi
 
 
 class TestDefaultApi(unittest.TestCase):

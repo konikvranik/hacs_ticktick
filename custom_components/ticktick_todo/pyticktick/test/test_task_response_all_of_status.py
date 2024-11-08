@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
 
 class TestTaskResponseAllOfStatus(unittest.TestCase):
     """TaskResponseAllOfStatus unit test stubs"""

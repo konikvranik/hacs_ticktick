@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.task import Task
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 
 class TestTask(unittest.TestCase):
     """Task unit test stubs"""
@@ -41,7 +41,7 @@ class TestTask(unittest.TestCase):
                 desc = '',
                 due_date = None,
                 items = [
-                    openapi_client.models.checklist_item.ChecklistItem(
+                    custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item.ChecklistItem(
                         id = '', 
                         title = '', 
                         status = null, 

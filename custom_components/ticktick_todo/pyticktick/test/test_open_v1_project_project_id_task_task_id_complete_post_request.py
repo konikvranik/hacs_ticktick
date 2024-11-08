@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
 
 class TestOpenV1ProjectProjectIdTaskTaskIdCompletePostRequest(unittest.TestCase):
     """OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest unit test stubs"""

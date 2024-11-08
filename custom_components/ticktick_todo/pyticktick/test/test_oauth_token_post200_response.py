@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
 
 class TestOauthTokenPost200Response(unittest.TestCase):
     """OauthTokenPost200Response unit test stubs"""

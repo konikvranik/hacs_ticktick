@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 
 class TestProjectResponse(unittest.TestCase):
     """ProjectResponse unit test stubs"""

@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime
 
 class TestTaskResponseAllOfCompletedTime(unittest.TestCase):
     """TaskResponseAllOfCompletedTime unit test stubs"""

@@ -13,18 +13,22 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Any, ClassVar, Dict, List
+from typing import Optional, Set
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.object import object
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
-from typing import Optional, Set
 from typing_extensions import Self
+
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import \
+    TaskResponseAllOfCompletedTime
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import \
+    TaskResponseAllOfStatus
+
 
 class OpenV1TaskTaskIdPostRequest(BaseModel):
     """

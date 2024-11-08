@@ -14,7 +14,7 @@
 
 import unittest
 
-from openapi_client.models.task_response import TaskResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 
 class TestTaskResponse(unittest.TestCase):
     """TaskResponse unit test stubs"""
@@ -41,7 +41,7 @@ class TestTaskResponse(unittest.TestCase):
                 desc = '',
                 due_date = None,
                 items = [
-                    openapi_client.models.checklist_item.ChecklistItem(
+                    custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item.ChecklistItem(
                         id = '', 
                         title = '', 
                         status = null, 
