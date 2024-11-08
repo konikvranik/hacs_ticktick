@@ -25,7 +25,7 @@ class NetatmoFlowHandler(
     @property
     def extra_authorize_data(self) -> dict:
         """Extra data that needs to be appended to the authorize url."""
-        return {"scope": " ".join(["tasks: write", "tasks: read"])}
+        return {"scope": " ".join(["tasks:write", "tasks:read"])}
 
     async def async_step_user(self, user_input: dict | None = None) -> ConfigFlowResult:
         """Handle a flow start."""
