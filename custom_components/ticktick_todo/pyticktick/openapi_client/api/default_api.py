@@ -25,6 +25,7 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_pr
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
@@ -868,7 +869,7 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ProjectResponse:
+    ) -> ProjectDataResponse:
         """open_v1_project_project_id_data_get
 
 
@@ -905,7 +906,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProjectResponse",
+            '200': "ProjectDataResponse",
             '401': None,
             '403': None,
             '404': None,
@@ -937,7 +938,7 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ProjectResponse]:
+    ) -> ApiResponse[ProjectDataResponse]:
         """open_v1_project_project_id_data_get
 
 
@@ -974,7 +975,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProjectResponse",
+            '200': "ProjectDataResponse",
             '401': None,
             '403': None,
             '404': None,
@@ -1043,7 +1044,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProjectResponse",
+            '200': "ProjectDataResponse",
             '401': None,
             '403': None,
             '404': None,

@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
 
 # TODO update the JSON string below
 json = "{}"

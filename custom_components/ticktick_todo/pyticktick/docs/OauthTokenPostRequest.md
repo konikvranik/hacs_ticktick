@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
 
 # TODO update the JSON string below
 json = "{}"

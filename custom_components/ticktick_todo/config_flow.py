@@ -4,11 +4,10 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME, CONF_BASE
+from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
-from voluptuous import UNDEFINED
 
-from . import DOMAIN, DEFAULT_NAME, VERSION, CONF_ACCESS_TOKEN
+from . import DOMAIN, DEFAULT_NAME, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,9 +17,6 @@ async def _show_form(self, step, user_input):
     options = {
         vol.Optional(CONF_NAME,
                      default=user_input[CONF_NAME] if user_input and (CONF_NAME in user_input) else DEFAULT_NAME): str,
-        vol.Optional(CONF_ACCESS_TOKEN,
-                     default=user_input[CONF_ACCESS_TOKEN] if user_input and (
-                             CONF_ACCESS_TOKEN in user_input) else UNDEFINED): str,
     }
     return self.async_show_form(step_id=step, data_schema=(vol.Schema(
         options)), errors=self._errors)
@@ -43,12 +39,8 @@ class HDOFlowHandler(config_entries.ConfigFlow):
         self._errors = {}
         if user_input is not None:
             self._data.update(user_input)
-            if user_input[CONF_ACCESS_TOKEN]:
-                await self.async_set_unique_id(user_input[CONF_ACCESS_TOKEN])
-                # Call next step
-                return self.async_create_entry(title=self._data[CONF_ACCESS_TOKEN], data=self._data)
-            else:
-                self._errors[CONF_BASE] = CONF_ACCESS_TOKEN
+            # Call next step
+            return self.async_create_entry(title=self._data[CONF_NAME], data=self._data)
         return await _show_form(self, "user", self._data)
 
     async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
@@ -56,10 +48,7 @@ class HDOFlowHandler(config_entries.ConfigFlow):
         self._data.update(config_entry.data)
         if user_input:
             self._data.update(user_input)
-            if self._data[CONF_ACCESS_TOKEN]:
-                return self.async_update_reload_and_abort(config_entry, title=self._data[CONF_NAME], data=self._data)
-            else:
-                self._errors[CONF_BASE] = CONF_ACCESS_TOKEN.title()
+            return self.async_update_reload_and_abort(config_entry, title=self._data[CONF_NAME], data=self._data)
         return await _show_form(self, "reconfigure", self._data)
 
     @staticmethod

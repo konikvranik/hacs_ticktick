@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
 
 # TODO update the JSON string below
 json = "{}"

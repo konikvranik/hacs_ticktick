@@ -201,6 +201,18 @@ components:
             permission:
               type: string
               description: '"read", "write" or "comment"'
+    ProjectDataResponse:
+      properties:
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        tasks:
+          type: array
+          items:
+            - $ref: "#/components/schemas/ProjectResponse"
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/Column"
 
     Column:
       type: object
