@@ -11,24 +11,26 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Any, Dict, Optional
 
+from pydantic import BaseModel, conlist
 
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, StrictStr, conlist
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+
 
 class ProjectDataResponse(BaseModel):
     """
     ProjectDataResponse
     """
     project: Optional[ProjectResponse] = None
-    tasks: Optional[conlist(StrictStr)] = None
+    tasks: Optional[conlist(TaskResponse)] = None
     columns: Optional[conlist(Column)] = None
     additional_properties: Dict[str, Any] = {}
     __properties = ["project", "tasks", "columns"]
@@ -55,12 +57,19 @@ class ProjectDataResponse(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
-                            "additional_properties"
+                              "additional_properties"
                           },
                           exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of project
         if self.project:
             _dict['project'] = self.project.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in tasks (list)
+        _items = []
+        if self.tasks:
+            for _item in self.tasks:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['tasks'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in columns (list)
         _items = []
         if self.columns:
@@ -86,8 +95,10 @@ class ProjectDataResponse(BaseModel):
 
         _obj = ProjectDataResponse.parse_obj({
             "project": ProjectResponse.from_dict(obj.get("project")) if obj.get("project") is not None else None,
-            "tasks": obj.get("tasks"),
-            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get("columns") is not None else None
+            "tasks": [TaskResponse.from_dict(_item) for _item in obj.get("tasks")] if obj.get(
+                "tasks") is not None else None,
+            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get(
+                "columns") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
@@ -95,5 +106,3 @@ class ProjectDataResponse(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
-
-

@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **project** | [**ProjectResponse**](ProjectResponse.md) |  | [optional] 
-**tasks** | **List[str]** |  | [optional] 
+**tasks** | [**List[TaskResponse]**](TaskResponse.md) |  | [optional] 
 **columns** | [**List[Column]**](Column.md) |  | [optional] 
 
 ## Example
