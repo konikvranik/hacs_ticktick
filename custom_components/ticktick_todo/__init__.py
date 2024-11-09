@@ -71,7 +71,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
 
-    async with openapi_client.ApiClient(openapi_client.Configuration(access_token=session.token)) as api_client:
+    with openapi_client.ApiClient(openapi_client.Configuration(access_token=session.token)) as api_client:
         hass.data[DOMAIN][config_entry.entry_id] = {
             "ticktick_api_instance": (openapi_client.DefaultApi(api_client))
         }
