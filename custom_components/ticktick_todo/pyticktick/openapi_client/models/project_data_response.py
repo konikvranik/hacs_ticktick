@@ -13,15 +13,16 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Optional
 
-
-from typing import List, Optional
-from pydantic import BaseModel, StrictStr, conlist
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from pydantic import BaseModel, StrictStr, conlist
+
 
 class ProjectDataResponse(BaseModel):
     """

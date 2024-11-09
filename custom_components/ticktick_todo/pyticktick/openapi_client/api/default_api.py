@@ -13,26 +13,7 @@
 
 
 import re  # noqa: F401
-import io
-import warnings
-
-from pydantic import validate_arguments, ValidationError
-
-from typing_extensions import Annotated
-from pydantic import Field, StrictStr
-
 from typing import List, Optional
-
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.api_client import ApiClient
 from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
@@ -40,6 +21,24 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import
     ApiTypeError,
     ApiValueError
 )
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import \
+    OauthTokenPost200Response
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import \
+    OauthTokenPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import \
+    OpenV1ProjectProjectIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import \
+    OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import \
+    OpenV1TaskTaskIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+from pydantic import Field, StrictStr
+from pydantic import validate_arguments
+from typing_extensions import Annotated
 
 
 class DefaultApi:

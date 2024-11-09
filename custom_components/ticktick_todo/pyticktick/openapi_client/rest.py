@@ -18,11 +18,9 @@ import logging
 import re
 import ssl
 
-from urllib.parse import urlencode, quote_plus
 import urllib3
-
-from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiException, UnauthorizedException, ForbiddenException, NotFoundException, ServiceException, ApiValueError, BadRequestException
-
+from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiException, UnauthorizedException, \
+    ForbiddenException, NotFoundException, ServiceException, ApiValueError, BadRequestException
 
 logger = logging.getLogger(__name__)
 

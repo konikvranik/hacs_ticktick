@@ -14,21 +14,20 @@
 
 import atexit
 import datetime
-from dateutil.parser import parse
 import json
 import mimetypes
-from multiprocessing.pool import ThreadPool
 import os
 import re
 import tempfile
-
+from multiprocessing.pool import ThreadPool
 from urllib.parse import quote
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.configuration import Configuration
-from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
 import custom_components.ticktick_todo.pyticktick.openapi_client.models
 from custom_components.ticktick_todo.pyticktick.openapi_client import rest
+from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.configuration import Configuration
 from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiValueError, ApiException
+from dateutil.parser import parse
 
 
 class ApiClient:

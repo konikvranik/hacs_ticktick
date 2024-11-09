@@ -13,14 +13,15 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Any, Optional
 
-
-from typing import Any, List, Optional
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
+
 
 class Task(BaseModel):
     """

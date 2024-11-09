@@ -13,12 +13,9 @@
 
 
 import json
-import pprint
 import re  # noqa: F401
-from aenum import Enum, no_arg
 
-
-
+from aenum import Enum
 
 
 class Status(int, Enum):
@@ -29,9 +26,7 @@ class Status(int, Enum):
     """
     allowed enum values
     """
-    NUMBER_null = null
-    NUMBER_null = null
-    NUMBER_null = null
+    NUMBER_null = None
 
     @classmethod
     def from_json(cls, json_str: str) -> Status:
