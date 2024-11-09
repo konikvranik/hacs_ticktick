@@ -36,12 +36,6 @@ components:
         - 0 # Normal
         - 2 # Completed
 
-    DateTime:
-      example: "2019-11-13T03:00:00+0000"
-      type: string
-      format: date-time
-      pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
-
     TimeZone:
       example: "America/Los_Angeles"
       type: string
@@ -60,9 +54,12 @@ components:
             - description: The completion status of subtask
             - $ref: "#/components/schemas/Status"
         completedTime:
-          allOf:
-            - description: Subtask completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
-            - $ref: "#/components/schemas/DateTime"
+          description: Subtask completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
+
         isAllDay:
           description: All day
           type: boolean
@@ -71,9 +68,12 @@ components:
           example: 234444
           type: integer
         startDate:
-          allOf:
-            - description: Subtask start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
-            - $ref: "#/components/schemas/DateTime"
+          description: Subtask start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
+
         timeZone:
           allOf:
             - description: Subtask timezone
@@ -95,9 +95,12 @@ components:
           description: Task description of checklist
           type: string
         dueDate:
-          allOf:
-            - description: Task due date time in "yyyy-MM-dd'T'HH:mm:ssZ"
-            - $ref: "#/components/schemas/DateTime"
+          description: Task due date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
+
         items:
           description: Subtasks of Task
           type: array
@@ -126,9 +129,12 @@ components:
           example: 12345
           type: integer
         startDate:
-          allOf:
-            - description: Start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
-            - $ref: "#/components/schemas/DateTime"
+          description: Start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
+
         timeZone:
           allOf:
             - description: Task timezone
@@ -146,9 +152,12 @@ components:
               description: Task project id
               type: string
             completedTime:
-              allOf:
-                - description: Task completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
-                - $ref: "#/components/schemas/DateTime"
+              description: Task completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
+              example: "2019-11-13T03:00:00+0000"
+              type: string
+              format: date-time
+              pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
+
             status:
               $ref: "#/components/schemas/Status"
 

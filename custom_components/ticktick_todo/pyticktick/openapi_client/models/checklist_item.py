@@ -11,15 +11,16 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
+from datetime import datetime
 from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+
 
 class ChecklistItem(BaseModel):
     """
@@ -28,13 +29,35 @@ class ChecklistItem(BaseModel):
     id: Optional[StrictStr] = Field(default=None, description="Subtask identifier")
     title: Optional[StrictStr] = Field(default=None, description="Subtask title")
     status: Optional[Any] = None
-    completed_time: Optional[Any] = Field(default=None, alias="completedTime")
+    completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
+                                               description="Subtask completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Subtask sort order")
-    start_date: Optional[Any] = Field(default=None, alias="startDate")
+    start_date: Optional[datetime] = Field(default=None, alias="startDate",
+                                           description="Subtask start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     additional_properties: Dict[str, Any] = {}
     __properties = ["id", "title", "status", "completedTime", "isAllDay", "sortOrder", "startDate", "timeZone"]
+
+    @validator('completed_time')
+    def completed_time_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
+        return value
+
+    @validator('start_date')
+    def start_date_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
+        return value
 
     class Config:
         """Pydantic configuration"""
@@ -58,7 +81,7 @@ class ChecklistItem(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
-                            "additional_properties"
+                              "additional_properties"
                           },
                           exclude_none=True)
         # puts key-value pairs in additional_properties in the top level
@@ -93,5 +116,3 @@ class ChecklistItem(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
-
-

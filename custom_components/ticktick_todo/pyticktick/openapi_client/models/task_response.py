@@ -16,14 +16,13 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import \
-    TaskResponseAllOfCompletedTime
 
 
 class TaskResponse(BaseModel):
@@ -34,21 +33,34 @@ class TaskResponse(BaseModel):
     is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     content: Optional[StrictStr] = Field(default=None, description="Task content")
     desc: Optional[StrictStr] = Field(default=None, description="Task description of checklist")
-    due_date: Optional[Any] = Field(default=None, alias="dueDate")
+    due_date: Optional[datetime] = Field(default=None, alias="dueDate",
+                                         description="Task due date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     items: Optional[conlist(ChecklistItem)] = Field(default=None, description="Subtasks of Task")
     priority: Optional[StrictInt] = Field(default=None, description="Task priority")
     reminders: Optional[conlist(StrictStr)] = Field(default=None, description="List of reminder triggers")
     repeat_flag: Optional[StrictStr] = Field(default=None, alias="repeatFlag", description="Recurring rules of task")
     sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Task sort order")
-    start_date: Optional[Any] = Field(default=None, alias="startDate")
+    start_date: Optional[datetime] = Field(default=None, alias="startDate",
+                                           description="Start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     id: Optional[StrictStr] = Field(default=None, description="Task identifier")
     project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
-    completed_time: Optional[TaskResponseAllOfCompletedTime] = Field(default=None, alias="completedTime")
+    completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
+                                               description="Task completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     status: Optional[Status] = None
     additional_properties: Dict[str, Any] = {}
     __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
                     "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status"]
+
+    @validator('due_date')
+    def due_date_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
+        return value
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -58,6 +70,26 @@ class TaskResponse(BaseModel):
 
         if value not in (0, 1, 3, 5):
             raise ValueError("must be one of enum values (0, 1, 3, 5)")
+        return value
+
+    @validator('start_date')
+    def start_date_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
+        return value
+
+    @validator('completed_time')
+    def completed_time_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
         return value
 
     class Config:
@@ -92,9 +124,6 @@ class TaskResponse(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['items'] = _items
-        # override the default output from pydantic by calling `to_dict()` of completed_time
-        if self.completed_time:
-            _dict['completedTime'] = self.completed_time.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -127,8 +156,7 @@ class TaskResponse(BaseModel):
             "time_zone": obj.get("timeZone"),
             "id": obj.get("id"),
             "project_id": obj.get("projectId"),
-            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get(
-                "completedTime") is not None else None,
+            "completed_time": obj.get("completedTime"),
             "status": obj.get("status")
         })
         # store additional fields in additional_properties

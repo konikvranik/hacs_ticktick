@@ -27,4 +27,3 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_re
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime

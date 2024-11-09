@@ -7,10 +7,10 @@ Name | Type | Description | Notes
 **id** | **str** | Subtask identifier | [optional] 
 **title** | **str** | Subtask title | [optional] 
 **status** | **object** |  | [optional] 
-**completed_time** | **object** |  | [optional] 
+**completed_time** | **datetime** | Subtask completed time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **is_all_day** | **bool** | All day | [optional] 
 **sort_order** | **int** | Subtask sort order | [optional] 
-**start_date** | **object** |  | [optional] 
+**start_date** | **datetime** | Subtask start date time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **time_zone** | **object** |  | [optional] 
 
 ## Example

@@ -8,13 +8,13 @@ Name | Type | Description | Notes
 **is_all_day** | **bool** | All day | [optional] 
 **content** | **str** | Task content | [optional] 
 **desc** | **str** | Task description of checklist | [optional] 
-**due_date** | **object** |  | [optional] 
+**due_date** | **datetime** | Task due date time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **items** | [**List[ChecklistItem]**](ChecklistItem.md) | Subtasks of Task | [optional] 
 **priority** | **int** | Task priority | [optional] 
 **reminders** | **List[str]** | List of reminder triggers | [optional] 
 **repeat_flag** | **str** | Recurring rules of task | [optional] 
 **sort_order** | **int** | Task sort order | [optional] 
-**start_date** | **object** |  | [optional] 
+**start_date** | **datetime** | Start date time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **time_zone** | **object** |  | [optional] 
 
 ## Example

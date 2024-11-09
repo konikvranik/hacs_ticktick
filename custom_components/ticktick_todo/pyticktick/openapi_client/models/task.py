@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
@@ -31,17 +32,29 @@ class Task(BaseModel):
     is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     content: Optional[StrictStr] = Field(default=None, description="Task content")
     desc: Optional[StrictStr] = Field(default=None, description="Task description of checklist")
-    due_date: Optional[Any] = Field(default=None, alias="dueDate")
+    due_date: Optional[datetime] = Field(default=None, alias="dueDate",
+                                         description="Task due date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     items: Optional[conlist(ChecklistItem)] = Field(default=None, description="Subtasks of Task")
     priority: Optional[StrictInt] = Field(default=None, description="Task priority")
     reminders: Optional[conlist(StrictStr)] = Field(default=None, description="List of reminder triggers")
     repeat_flag: Optional[StrictStr] = Field(default=None, alias="repeatFlag", description="Recurring rules of task")
     sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Task sort order")
-    start_date: Optional[Any] = Field(default=None, alias="startDate")
+    start_date: Optional[datetime] = Field(default=None, alias="startDate",
+                                           description="Start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     additional_properties: Dict[str, Any] = {}
     __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
                     "sortOrder", "startDate", "timeZone"]
+
+    @validator('due_date')
+    def due_date_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
+        return value
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -51,6 +64,16 @@ class Task(BaseModel):
 
         if value not in (0, 1, 3, 5):
             raise ValueError("must be one of enum values (0, 1, 3, 5)")
+        return value
+
+    @validator('start_date')
+    def start_date_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
+            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
         return value
 
     class Config:
