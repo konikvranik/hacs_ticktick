@@ -37,7 +37,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
                             async_add_entities: AddEntitiesCallback) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    async with hass.data[DOMAIN][config_entry.entry_id]["ticktick_api_instance"] as api_instance:
+    with hass.data[DOMAIN][config_entry.entry_id]["ticktick_api_instance"] as api_instance:
         # Get User Project.
         async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
                                                            identifiers={(DOMAIN, config_entry.entry_id)}),
