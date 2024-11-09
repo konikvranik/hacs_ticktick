@@ -205,7 +205,7 @@ components:
         tasks:
           type: array
           items:
-            - $ref: "#/components/schemas/ProjectResponse"
+            - $ref: "#/components/schemas/TaskResponse"
         columns:
           type: array
           items:
