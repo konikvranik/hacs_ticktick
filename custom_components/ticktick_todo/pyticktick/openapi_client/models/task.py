@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 
 import json
@@ -19,8 +18,9 @@ import pprint
 import re  # noqa: F401
 from typing import Any, Optional
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
+
+from .checklist_item import ChecklistItem
 
 
 class Task(BaseModel):
@@ -39,7 +39,8 @@ class Task(BaseModel):
     sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Task sort order")
     start_date: Optional[Any] = Field(default=None, alias="startDate")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone"]
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
+                    "sortOrder", "startDate", "timeZone"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -99,7 +100,8 @@ class Task(BaseModel):
             "content": obj.get("content"),
             "desc": obj.get("desc"),
             "due_date": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get(
+                "items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
             "repeat_flag": obj.get("repeatFlag"),
@@ -108,5 +110,3 @@ class Task(BaseModel):
             "time_zone": obj.get("timeZone")
         })
         return _obj
-
-

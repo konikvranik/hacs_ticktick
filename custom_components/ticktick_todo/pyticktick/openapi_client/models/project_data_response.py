@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 
 import json
@@ -19,9 +18,10 @@ import pprint
 import re  # noqa: F401
 from typing import Optional
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 from pydantic import BaseModel, StrictStr, conlist
+
+from .column import Column
+from .project_response import ProjectResponse
 
 
 class ProjectDataResponse(BaseModel):
@@ -81,8 +81,7 @@ class ProjectDataResponse(BaseModel):
         _obj = ProjectDataResponse.parse_obj({
             "project": ProjectResponse.from_dict(obj.get("project")) if obj.get("project") is not None else None,
             "tasks": obj.get("tasks"),
-            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get("columns") is not None else None
+            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get(
+                "columns") is not None else None
         })
         return _obj
-
-

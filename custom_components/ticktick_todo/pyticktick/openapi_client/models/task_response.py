@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 
 import json
@@ -19,12 +18,13 @@ import pprint
 import re  # noqa: F401
 from typing import Any, Optional
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import \
-    TaskResponseAllOfCompletedTime
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import \
-    TaskResponseAllOfStatus
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
+
+from .checklist_item import ChecklistItem
+from .task_response_all_of_completed_time import \
+    TaskResponseAllOfCompletedTime
+from .task_response_all_of_status import \
+    TaskResponseAllOfStatus
 
 
 class TaskResponse(BaseModel):
@@ -47,7 +47,8 @@ class TaskResponse(BaseModel):
     project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     completed_time: Optional[TaskResponseAllOfCompletedTime] = Field(default=None, alias="completedTime")
     status: Optional[TaskResponseAllOfStatus] = None
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status"]
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
+                    "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -113,7 +114,8 @@ class TaskResponse(BaseModel):
             "content": obj.get("content"),
             "desc": obj.get("desc"),
             "due_date": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get(
+                "items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
             "repeat_flag": obj.get("repeatFlag"),
@@ -122,9 +124,8 @@ class TaskResponse(BaseModel):
             "time_zone": obj.get("timeZone"),
             "id": obj.get("id"),
             "project_id": obj.get("projectId"),
-            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get("completedTime") is not None else None,
+            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get(
+                "completedTime") is not None else None,
             "status": TaskResponseAllOfStatus.from_dict(obj.get("status")) if obj.get("status") is not None else None
         })
         return _obj
-
-

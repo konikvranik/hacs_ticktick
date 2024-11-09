@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import io
 import json
 import logging
@@ -19,7 +18,8 @@ import re
 import ssl
 
 import urllib3
-from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiException, UnauthorizedException, \
+
+from .exceptions import ApiException, UnauthorizedException, \
     ForbiddenException, NotFoundException, ServiceException, ApiValueError, BadRequestException
 
 logger = logging.getLogger(__name__)
@@ -79,7 +79,6 @@ class RESTClientObject:
         if configuration.tls_server_name:
             addition_pool_args['server_hostname'] = configuration.tls_server_name
 
-
         if configuration.socket_options is not None:
             addition_pool_args['socket_options'] = configuration.socket_options
 
@@ -94,14 +93,14 @@ class RESTClientObject:
             if is_socks_proxy_url(configuration.proxy):
                 from urllib3.contrib.socks import SOCKSProxyManager
                 self.pool_manager = SOCKSProxyManager(
-                        cert_reqs=cert_reqs,
-                        ca_certs=configuration.ssl_ca_cert,
-                        cert_file=configuration.cert_file,
-                        key_file=configuration.key_file,
-                        proxy_url=configuration.proxy,
-                        headers=configuration.proxy_headers,
-                        **addition_pool_args
-                    )
+                    cert_reqs=cert_reqs,
+                    ca_certs=configuration.ssl_ca_cert,
+                    cert_file=configuration.cert_file,
+                    key_file=configuration.key_file,
+                    proxy_url=configuration.proxy,
+                    headers=configuration.proxy_headers,
+                    **addition_pool_args
+                )
             else:
                 self.pool_manager = urllib3.ProxyManager(
                     num_pools=pools_size,
@@ -163,7 +162,7 @@ class RESTClientObject:
 
         timeout = None
         if _request_timeout:
-            if isinstance(_request_timeout, (int,float)):  # noqa: E501,F821
+            if isinstance(_request_timeout, (int, float)):  # noqa: E501,F821
                 timeout = urllib3.Timeout(total=_request_timeout)
             elif (isinstance(_request_timeout, tuple) and
                   len(_request_timeout) == 2):
@@ -260,7 +259,7 @@ class RESTClientObject:
         return r
 
     def get_request(self, url, headers=None, query_params=None, _preload_content=True,
-            _request_timeout=None):
+                    _request_timeout=None):
         return self.request("GET", url,
                             headers=headers,
                             _preload_content=_preload_content,
@@ -268,7 +267,7 @@ class RESTClientObject:
                             query_params=query_params)
 
     def head_request(self, url, headers=None, query_params=None, _preload_content=True,
-             _request_timeout=None):
+                     _request_timeout=None):
         return self.request("HEAD", url,
                             headers=headers,
                             _preload_content=_preload_content,
@@ -276,7 +275,7 @@ class RESTClientObject:
                             query_params=query_params)
 
     def options_request(self, url, headers=None, query_params=None, post_params=None,
-                body=None, _preload_content=True, _request_timeout=None):
+                        body=None, _preload_content=True, _request_timeout=None):
         return self.request("OPTIONS", url,
                             headers=headers,
                             query_params=query_params,
@@ -286,7 +285,7 @@ class RESTClientObject:
                             body=body)
 
     def delete_request(self, url, headers=None, query_params=None, body=None,
-               _preload_content=True, _request_timeout=None):
+                       _preload_content=True, _request_timeout=None):
         return self.request("DELETE", url,
                             headers=headers,
                             query_params=query_params,
@@ -295,7 +294,7 @@ class RESTClientObject:
                             body=body)
 
     def post_request(self, url, headers=None, query_params=None, post_params=None,
-             body=None, _preload_content=True, _request_timeout=None):
+                     body=None, _preload_content=True, _request_timeout=None):
         return self.request("POST", url,
                             headers=headers,
                             query_params=query_params,
@@ -305,7 +304,7 @@ class RESTClientObject:
                             body=body)
 
     def put_request(self, url, headers=None, query_params=None, post_params=None,
-            body=None, _preload_content=True, _request_timeout=None):
+                    body=None, _preload_content=True, _request_timeout=None):
         return self.request("PUT", url,
                             headers=headers,
                             query_params=query_params,
@@ -315,7 +314,7 @@ class RESTClientObject:
                             body=body)
 
     def patch_request(self, url, headers=None, query_params=None, post_params=None,
-              body=None, _preload_content=True, _request_timeout=None):
+                      body=None, _preload_content=True, _request_timeout=None):
         return self.request("PATCH", url,
                             headers=headers,
                             query_params=query_params,

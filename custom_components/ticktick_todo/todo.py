@@ -11,7 +11,7 @@ from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from custom_components.ticktick_todo.pyticktick import openapi_client
+from .pyticktick import openapi_client
 from . import DOMAIN
 
 DOMAIN = DOMAIN
