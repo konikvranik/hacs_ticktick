@@ -55,8 +55,11 @@ class TickTickAuthImplementation(AuthImplementation):
 
         data["scope"] = "tasks:write tasks:read"
 
-        _LOGGER.debug("Sending token request to %s", self.token_url)
+        _LOGGER.warning("Sending token request to %s", self.token_url)
         resp = await session.post(self.token_url, data=data, auth=BasicAuth(self.client_id, self.client_secret))
+
+        _LOGGER.warning("Received token response: %s", resp)
+
         if resp.status >= 400:
             try:
                 error_response = await resp.json()
