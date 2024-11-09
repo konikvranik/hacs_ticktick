@@ -11,23 +11,23 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import atexit
 import datetime
+from dateutil.parser import parse
 import json
 import mimetypes
 import os
 import re
 import tempfile
-from multiprocessing.pool import ThreadPool
+
 from urllib.parse import quote
 
-from dateutil.parser import parse
-
-from . import models
-from . import rest
-from .api_response import ApiResponse
-from .configuration import Configuration
-from .exceptions import ApiValueError, ApiException
+from custom_components.ticktick_todo.pyticktick.openapi_client.configuration import Configuration
+from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
+import custom_components.ticktick_todo.pyticktick.openapi_client.models
+from custom_components.ticktick_todo.pyticktick.openapi_client import rest
+from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiValueError, ApiException
 
 
 class ApiClient:
@@ -44,14 +44,12 @@ class ApiClient:
         the API.
     :param cookie: a cookie to include in the header when making calls
         to the API
-    :param pool_threads: The number of threads to use for async requests
-        to the API. More threads means more concurrent API requests.
     """
 
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         'int': int,
-        'long': int,  # TODO remove as only py3 is supported?
+        'long': int, # TODO remove as only py3 is supported?
         'float': float,
         'str': str,
         'bool': bool,
@@ -62,12 +60,11 @@ class ApiClient:
     _pool = None
 
     def __init__(self, configuration=None, header_name=None, header_value=None,
-                 cookie=None, pool_threads=1) -> None:
+                 cookie=None) -> None:
         # use default configuration if none is provided
         if configuration is None:
             configuration = Configuration.get_default()
         self.configuration = configuration
-        self.pool_threads = pool_threads
 
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
@@ -78,29 +75,14 @@ class ApiClient:
         self.user_agent = 'OpenAPI-Generator/1.0.0/python'
         self.client_side_validation = configuration.client_side_validation
 
-    def __enter__(self):
+    async def __aenter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        await self.close()
 
-    def close(self):
-        if self._pool:
-            self._pool.close()
-            self._pool.join()
-            self._pool = None
-            if hasattr(atexit, 'unregister'):
-                atexit.unregister(self.close)
-
-    @property
-    def pool(self):
-        """Create thread pool on first request
-         avoids instantiating unused threadpool for blocking clients.
-        """
-        if self._pool is None:
-            atexit.register(self.close)
-            self._pool = ThreadPool(self.pool_threads)
-        return self._pool
+    async def close(self):
+        await self.rest_client.close()
 
     @property
     def user_agent(self):
@@ -113,6 +95,7 @@ class ApiClient:
 
     def set_default_header(self, header_name, header_value):
         self.default_headers[header_name] = header_value
+
 
     _default = None
 
@@ -140,7 +123,7 @@ class ApiClient:
         """
         cls._default = default
 
-    def __call_api(
+    async def __call_api(
             self, resource_path, method, path_params=None,
             query_params=None, header_params=None, body=None, post_params=None,
             files=None, response_types_map=None, auth_settings=None,
@@ -206,7 +189,7 @@ class ApiClient:
 
         try:
             # perform request and return response
-            response_data = self.request(
+            response_data = await self.request(
                 method, url,
                 query_params=query_params,
                 headers=header_params,
@@ -220,39 +203,39 @@ class ApiClient:
 
         self.last_response = response_data
 
-        return_data = None  # assuming deserialization is not needed
+        return_data = None # assuming deserialization is not needed
         # data needs deserialization or returns HTTP data (deserialized) only
         if _preload_content or _return_http_data_only:
-            response_type = response_types_map.get(str(response_data.status), None)
-            if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
-                # if not found, look for '1XX', '2XX', etc.
-                response_type = response_types_map.get(str(response_data.status)[0] + "XX", None)
+          response_type = response_types_map.get(str(response_data.status), None)
+          if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
+              # if not found, look for '1XX', '2XX', etc.
+              response_type = response_types_map.get(str(response_data.status)[0] + "XX", None)
 
-            if response_type == "bytearray":
-                response_data.data = response_data.data
-            else:
-                match = None
-                content_type = response_data.getheader('content-type')
-                if content_type is not None:
-                    match = re.search(r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type)
-                encoding = match.group(1) if match else "utf-8"
-                response_data.data = response_data.data.decode(encoding)
+          if response_type == "bytearray":
+              response_data.data = response_data.data
+          else:
+              match = None
+              content_type = response_data.getheader('content-type')
+              if content_type is not None:
+                  match = re.search(r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type)
+              encoding = match.group(1) if match else "utf-8"
+              response_data.data = response_data.data.decode(encoding)
 
-            # deserialize response data
-            if response_type == "bytearray":
-                return_data = response_data.data
-            elif response_type:
-                return_data = self.deserialize(response_data, response_type)
-            else:
-                return_data = None
+          # deserialize response data
+          if response_type == "bytearray":
+              return_data = response_data.data
+          elif response_type:
+              return_data = self.deserialize(response_data, response_type)
+          else:
+              return_data = None
 
         if _return_http_data_only:
             return return_data
         else:
-            return ApiResponse(status_code=response_data.status,
-                               data=return_data,
-                               headers=response_data.getheaders(),
-                               raw_data=response_data.data)
+            return ApiResponse(status_code = response_data.status,
+                           data = return_data,
+                           headers = response_data.getheaders(),
+                           raw_data = response_data.data)
 
     def sanitize_for_serialization(self, obj):
         """Builds a JSON POST object.
@@ -342,7 +325,7 @@ class ApiClient:
             if klass in self.NATIVE_TYPES_MAPPING:
                 klass = self.NATIVE_TYPES_MAPPING[klass]
             else:
-                klass = getattr(models, klass)
+                klass = getattr(custom_components.ticktick_todo.pyticktick.openapi_client.models, klass)
 
         if klass in self.PRIMITIVE_TYPES:
             return self.__deserialize_primitive(data, klass)
@@ -355,16 +338,14 @@ class ApiClient:
         else:
             return self.__deserialize_model(data, klass)
 
-    def call_api(self, resource_path, method,
+    async def call_api(self, resource_path, method,
                  path_params=None, query_params=None, header_params=None,
                  body=None, post_params=None, files=None,
                  response_types_map=None, auth_settings=None,
-                 async_req=None, _return_http_data_only=None,
+                 _return_http_data_only=None,
                  collection_formats=None, _preload_content=True,
                  _request_timeout=None, _host=None, _request_auth=None):
         """Makes the HTTP request (synchronous) and returns deserialized data.
-
-        To make an async_req request, set the async_req parameter.
 
         :param resource_path: Path to method endpoint.
         :param method: Method to call.
@@ -379,7 +360,6 @@ class ApiClient:
         :param response: Response data type.
         :param files dict: key -> filename, value -> filepath,
             for `multipart/form-data`.
-        :param async_req bool: execute request asynchronously
         :param _return_http_data_only: response data instead of ApiResponse
                                        object with status code, headers, etc
         :param _preload_content: if False, the ApiResponse.data will
@@ -397,11 +377,7 @@ class ApiClient:
                               in the spec for a single request.
         :type _request_token: dict, optional
         :return:
-            If async_req parameter is True,
-            the request will be called asynchronously.
-            The method will return the request thread.
-            If parameter async_req is False or missing,
-            then the method will return the response directly.
+            The response.
         """
         args = (
             resource_path,
@@ -421,64 +397,61 @@ class ApiClient:
             _host,
             _request_auth,
         )
-        if not async_req:
-            return self.__call_api(*args)
+        return await self.__call_api(*args)
 
-        return self.pool.apply_async(self.__call_api, args)
-
-    def request(self, method, url, query_params=None, headers=None,
+    async def request(self, method, url, query_params=None, headers=None,
                 post_params=None, body=None, _preload_content=True,
                 _request_timeout=None):
         """Makes the HTTP request using RESTClient."""
         if method == "GET":
-            return self.rest_client.get_request(url,
-                                                query_params=query_params,
-                                                _preload_content=_preload_content,
-                                                _request_timeout=_request_timeout,
-                                                headers=headers)
+            return await self.rest_client.get_request(url,
+                                        query_params=query_params,
+                                        _preload_content=_preload_content,
+                                        _request_timeout=_request_timeout,
+                                        headers=headers)
         elif method == "HEAD":
-            return self.rest_client.head_request(url,
-                                                 query_params=query_params,
-                                                 _preload_content=_preload_content,
-                                                 _request_timeout=_request_timeout,
-                                                 headers=headers)
+            return await self.rest_client.head_request(url,
+                                         query_params=query_params,
+                                         _preload_content=_preload_content,
+                                         _request_timeout=_request_timeout,
+                                         headers=headers)
         elif method == "OPTIONS":
-            return self.rest_client.options_request(url,
-                                                    query_params=query_params,
-                                                    headers=headers,
-                                                    _preload_content=_preload_content,
-                                                    _request_timeout=_request_timeout)
+            return await self.rest_client.options_request(url,
+                                            query_params=query_params,
+                                            headers=headers,
+                                            _preload_content=_preload_content,
+                                            _request_timeout=_request_timeout)
         elif method == "POST":
-            return self.rest_client.post_request(url,
-                                                 query_params=query_params,
-                                                 headers=headers,
-                                                 post_params=post_params,
-                                                 _preload_content=_preload_content,
-                                                 _request_timeout=_request_timeout,
-                                                 body=body)
+            return await self.rest_client.post_request(url,
+                                         query_params=query_params,
+                                         headers=headers,
+                                         post_params=post_params,
+                                         _preload_content=_preload_content,
+                                         _request_timeout=_request_timeout,
+                                         body=body)
         elif method == "PUT":
-            return self.rest_client.put_request(url,
-                                                query_params=query_params,
-                                                headers=headers,
-                                                post_params=post_params,
-                                                _preload_content=_preload_content,
-                                                _request_timeout=_request_timeout,
-                                                body=body)
+            return await self.rest_client.put_request(url,
+                                        query_params=query_params,
+                                        headers=headers,
+                                        post_params=post_params,
+                                        _preload_content=_preload_content,
+                                        _request_timeout=_request_timeout,
+                                        body=body)
         elif method == "PATCH":
-            return self.rest_client.patch_request(url,
-                                                  query_params=query_params,
-                                                  headers=headers,
-                                                  post_params=post_params,
-                                                  _preload_content=_preload_content,
-                                                  _request_timeout=_request_timeout,
-                                                  body=body)
+            return await self.rest_client.patch_request(url,
+                                          query_params=query_params,
+                                          headers=headers,
+                                          post_params=post_params,
+                                          _preload_content=_preload_content,
+                                          _request_timeout=_request_timeout,
+                                          body=body)
         elif method == "DELETE":
-            return self.rest_client.delete_request(url,
-                                                   query_params=query_params,
-                                                   headers=headers,
-                                                   _preload_content=_preload_content,
-                                                   _request_timeout=_request_timeout,
-                                                   body=body)
+            return await self.rest_client.delete_request(url,
+                                           query_params=query_params,
+                                           headers=headers,
+                                           _preload_content=_preload_content,
+                                           _request_timeout=_request_timeout,
+                                           body=body)
         else:
             raise ApiValueError(
                 "http method must be `GET`, `HEAD`, `OPTIONS`,"

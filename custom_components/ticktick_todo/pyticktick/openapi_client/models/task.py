@@ -11,17 +11,16 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-from __future__ import annotations
 
-import json
+from __future__ import annotations
 import pprint
 import re  # noqa: F401
-from typing import Any, Optional
+import json
 
+
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
-
-from .checklist_item import ChecklistItem
-
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
 
 class Task(BaseModel):
     """
@@ -39,8 +38,8 @@ class Task(BaseModel):
     sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Task sort order")
     start_date: Optional[Any] = Field(default=None, alias="startDate")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
-                    "sortOrder", "startDate", "timeZone"]
+    additional_properties: Dict[str, Any] = {}
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -74,6 +73,7 @@ class Task(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
+                            "additional_properties"
                           },
                           exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in items (list)
@@ -83,6 +83,11 @@ class Task(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['items'] = _items
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -100,8 +105,7 @@ class Task(BaseModel):
             "content": obj.get("content"),
             "desc": obj.get("desc"),
             "due_date": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get(
-                "items") is not None else None,
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
             "repeat_flag": obj.get("repeatFlag"),
@@ -109,4 +113,11 @@ class Task(BaseModel):
             "start_date": obj.get("startDate"),
             "time_zone": obj.get("timeZone")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+

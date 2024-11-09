@@ -75,14 +75,14 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     oauth_token_post_request = custom_components.ticktick_todo.pyticktick.openapi_client.OauthTokenPostRequest() # OauthTokenPostRequest |  (optional)
 
     try:
         # Get token
-        api_response = api_instance.oauth_token_post(oauth_token_post_request=oauth_token_post_request)
+        api_response = await api_instance.oauth_token_post(oauth_token_post_request=oauth_token_post_request)
         print("The response of DefaultApi->oauth_token_post:\n")
         pprint(api_response)
     except ApiException as e:

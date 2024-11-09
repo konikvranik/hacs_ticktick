@@ -55,14 +55,14 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     oauth_token_post_request = custom_components.ticktick_todo.pyticktick.openapi_client.OauthTokenPostRequest() # OauthTokenPostRequest |  (optional)
 
     try:
         # Get token
-        api_response = api_instance.oauth_token_post(oauth_token_post_request=oauth_token_post_request)
+        api_response = await api_instance.oauth_token_post(oauth_token_post_request=oauth_token_post_request)
         print("The response of DefaultApi->oauth_token_post:\n")
         pprint(api_response)
     except Exception as e:
@@ -133,13 +133,13 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
 
     try:
         # Get User Project.
-        api_response = api_instance.open_v1_project_get()
+        api_response = await api_instance.open_v1_project_get()
         print("The response of DefaultApi->open_v1_project_get:\n")
         pprint(api_response)
     except Exception as e:
@@ -211,14 +211,14 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project = custom_components.ticktick_todo.pyticktick.openapi_client.Project() # Project | 
 
     try:
         # Create Project
-        api_response = api_instance.open_v1_project_post(project)
+        api_response = await api_instance.open_v1_project_post(project)
         print("The response of DefaultApi->open_v1_project_post:\n")
         pprint(api_response)
     except Exception as e:
@@ -293,13 +293,13 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
 
     try:
-        api_response = api_instance.open_v1_project_project_id_data_get(project_id)
+        api_response = await api_instance.open_v1_project_project_id_data_get(project_id)
         print("The response of DefaultApi->open_v1_project_project_id_data_get:\n")
         pprint(api_response)
     except Exception as e:
@@ -372,13 +372,13 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
 
     try:
-        api_instance.open_v1_project_project_id_delete(project_id)
+        await api_instance.open_v1_project_project_id_delete(project_id)
     except Exception as e:
         print("Exception when calling DefaultApi->open_v1_project_project_id_delete: %s\n" % e)
 ```
@@ -450,13 +450,13 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
 
     try:
-        api_response = api_instance.open_v1_project_project_id_get(project_id)
+        api_response = await api_instance.open_v1_project_project_id_get(project_id)
         print("The response of DefaultApi->open_v1_project_project_id_get:\n")
         pprint(api_response)
     except Exception as e:
@@ -531,7 +531,7 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
@@ -539,7 +539,7 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
     try:
         # Update Project
-        api_response = api_instance.open_v1_project_project_id_post(project_id, open_v1_project_project_id_post_request)
+        api_response = await api_instance.open_v1_project_project_id_post(project_id, open_v1_project_project_id_post_request)
         print("The response of DefaultApi->open_v1_project_project_id_post:\n")
         pprint(api_response)
     except Exception as e:
@@ -615,7 +615,7 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
@@ -624,7 +624,7 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
     try:
         # Update Task
-        api_instance.open_v1_project_project_id_task_task_id_complete_post(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request)
+        await api_instance.open_v1_project_project_id_task_task_id_complete_post(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request)
     except Exception as e:
         print("Exception when calling DefaultApi->open_v1_project_project_id_task_task_id_complete_post: %s\n" % e)
 ```
@@ -698,7 +698,7 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
@@ -706,7 +706,7 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
     try:
         # Delete task.
-        api_instance.open_v1_project_project_id_task_task_id_delete(project_id, task_id)
+        await api_instance.open_v1_project_project_id_task_task_id_delete(project_id, task_id)
     except Exception as e:
         print("Exception when calling DefaultApi->open_v1_project_project_id_task_task_id_delete: %s\n" % e)
 ```
@@ -779,7 +779,7 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     project_id = 'project_id_example' # str | Project identifier
@@ -787,7 +787,7 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
     try:
         # Get Task By Project ID And Task ID.
-        api_response = api_instance.open_v1_project_project_id_task_task_id_get(project_id, task_id)
+        api_response = await api_instance.open_v1_project_project_id_task_task_id_get(project_id, task_id)
         print("The response of DefaultApi->open_v1_project_project_id_task_task_id_get:\n")
         pprint(api_response)
     except Exception as e:
@@ -863,14 +863,14 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     task = custom_components.ticktick_todo.pyticktick.openapi_client.Task() # Task | 
 
     try:
         # Create Task
-        api_response = api_instance.open_v1_task_post(task)
+        api_response = await api_instance.open_v1_task_post(task)
         print("The response of DefaultApi->open_v1_task_post:\n")
         pprint(api_response)
     except Exception as e:
@@ -946,7 +946,7 @@ configuration = custom_components.ticktick_todo.pyticktick.openapi_client.Config
 )
 
 # Enter a context with an instance of the API client
-with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
+async with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = custom_components.ticktick_todo.pyticktick.openapi_client.DefaultApi(api_client)
     task_id = 'task_id_example' # str | Task identifier
@@ -954,7 +954,7 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
     try:
         # Update Task
-        api_response = api_instance.open_v1_task_task_id_post(task_id, open_v1_task_task_id_post_request)
+        api_response = await api_instance.open_v1_task_task_id_post(task_id, open_v1_task_task_id_post_request)
         print("The response of DefaultApi->open_v1_task_task_id_post:\n")
         pprint(api_response)
     except Exception as e:

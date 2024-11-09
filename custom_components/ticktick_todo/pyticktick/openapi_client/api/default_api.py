@@ -11,34 +11,36 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import re  # noqa: F401
+import io
+import warnings
+
+from pydantic import validate_arguments, ValidationError
+from typing import overload, Optional, Union, Awaitable
+
+from typing_extensions import Annotated
+from pydantic import Field, StrictStr
+
 from typing import List, Optional
 
-from pydantic import Field, StrictStr
-from pydantic import validate_arguments
-from typing_extensions import Annotated
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 
-from ..api_client import ApiClient
-from ..api_response import ApiResponse
-from ..exceptions import (  # noqa: F401
+from custom_components.ticktick_todo.pyticktick.openapi_client.api_client import ApiClient
+from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import (  # noqa: F401
     ApiTypeError,
     ApiValueError
 )
-from ..models.oauth_token_post200_response import \
-    OauthTokenPost200Response
-from ..models.oauth_token_post_request import \
-    OauthTokenPostRequest
-from ..models.open_v1_project_project_id_post_request import \
-    OpenV1ProjectProjectIdPostRequest
-from ..models.open_v1_project_project_id_task_task_id_complete_post_request import \
-    OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
-from ..models.open_v1_task_task_id_post_request import \
-    OpenV1TaskTaskIdPostRequest
-from ..models.project import Project
-from ..models.project_data_response import ProjectDataResponse
-from ..models.project_response import ProjectResponse
-from ..models.task import Task
-from ..models.task_response import TaskResponse
 
 
 class DefaultApi:
@@ -54,21 +56,13 @@ class DefaultApi:
         self.api_client = api_client
 
     @validate_arguments
-    def oauth_token_post(self, oauth_token_post_request: Optional[OauthTokenPostRequest] = None,
-                         **kwargs) -> OauthTokenPost200Response:  # noqa: E501
+    async def oauth_token_post(self, oauth_token_post_request : Optional[OauthTokenPostRequest] = None, **kwargs) -> OauthTokenPost200Response:  # noqa: E501
         """Get token  # noqa: E501
 
         client_id and :client_secret are passes to basic auth as username and password  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.oauth_token_post(oauth_token_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param oauth_token_post_request:
         :type oauth_token_post_request: OauthTokenPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -82,24 +76,16 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the oauth_token_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.oauth_token_post_with_http_info(oauth_token_post_request, **kwargs)  # noqa: E501
+        return await self.oauth_token_post_with_http_info(oauth_token_post_request, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def oauth_token_post_with_http_info(self, oauth_token_post_request: Optional[OauthTokenPostRequest] = None,
-                                        **kwargs) -> ApiResponse:  # noqa: E501
+    async def oauth_token_post_with_http_info(self, oauth_token_post_request : Optional[OauthTokenPostRequest] = None, **kwargs) -> ApiResponse:  # noqa: E501
         """Get token  # noqa: E501
 
         client_id and :client_secret are passes to basic auth as username and password  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.oauth_token_post_with_http_info(oauth_token_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param oauth_token_post_request:
         :type oauth_token_post_request: OauthTokenPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -130,7 +116,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -173,10 +158,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['BasicAuth']  # noqa: E501
@@ -185,7 +170,7 @@ class DefaultApi:
             '200': "OauthTokenPost200Response",
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/oauth/token', 'POST',
             _path_params,
             _query_params,
@@ -195,7 +180,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -203,17 +187,10 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_get(self, **kwargs) -> List[ProjectResponse]:  # noqa: E501
+    async def open_v1_project_get(self, **kwargs) -> List[ProjectResponse]:  # noqa: E501
         """Get User Project.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.open_v1_project_get(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -227,20 +204,13 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_get_with_http_info(**kwargs)  # noqa: E501
+        return await self.open_v1_project_get_with_http_info(**kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_get_with_http_info(self, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_get_with_http_info(self, **kwargs) -> ApiResponse:  # noqa: E501
         """Get User Project.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.open_v1_project_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -270,7 +240,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -318,7 +287,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project', 'GET',
             _path_params,
             _query_params,
@@ -328,7 +297,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -336,19 +304,12 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_post(self, project: Project, **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_post(self, project : Project, **kwargs) -> ProjectResponse:  # noqa: E501
         """Create Project  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_post(project, async_req=True)
-        >>> result = thread.get()
 
         :param project: (required)
         :type project: Project
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -362,22 +323,15 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_post_with_http_info(project, **kwargs)  # noqa: E501
+        return await self.open_v1_project_post_with_http_info(project, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_post_with_http_info(self, project: Project, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_post_with_http_info(self, project : Project, **kwargs) -> ApiResponse:  # noqa: E501
         """Create Project  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_post_with_http_info(project, async_req=True)
-        >>> result = thread.get()
 
         :param project: (required)
         :type project: Project
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -408,7 +362,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -451,10 +404,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
@@ -467,7 +420,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project', 'POST',
             _path_params,
             _query_params,
@@ -477,7 +430,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -485,20 +437,12 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_data_get(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectDataResponse:  # noqa: E501
+    async def open_v1_project_project_id_data_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectDataResponse:  # noqa: E501
         """open_v1_project_project_id_data_get  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_data_get(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -512,23 +456,15 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_data_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_data_get_with_http_info(project_id, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_data_get_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_data_get_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_data_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_data_get  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_data_get_with_http_info(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -559,7 +495,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -586,6 +521,7 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -609,7 +545,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}/data', 'GET',
             _path_params,
             _query_params,
@@ -619,7 +555,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -627,20 +562,12 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_delete(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_delete(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> None:  # noqa: E501
         """open_v1_project_project_id_delete  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_delete(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -654,23 +581,15 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_delete_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_delete_with_http_info(project_id, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_delete_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_delete_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_delete_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_delete  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_delete_with_http_info(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -701,7 +620,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -728,6 +646,7 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -742,7 +661,7 @@ class DefaultApi:
 
         _response_types_map = {}
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}', 'DELETE',
             _path_params,
             _query_params,
@@ -752,7 +671,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -760,21 +678,12 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_get(self,
-                                       project_id: Annotated[StrictStr, Field(..., description="Project identifier")],
-                                       **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_project_id_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectResponse:  # noqa: E501
         """open_v1_project_project_id_get  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_get(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -788,23 +697,15 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_get_with_http_info(project_id, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_get_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_get_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_get  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_get_with_http_info(project_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -835,7 +736,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -862,6 +762,7 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -885,7 +786,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}', 'GET',
             _path_params,
             _query_params,
@@ -895,7 +796,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -903,24 +803,14 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_post(self,
-                                        project_id: Annotated[StrictStr, Field(..., description="Project identifier")],
-                                        open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest,
-                                        **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_project_id_post(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], open_v1_project_project_id_post_request : OpenV1ProjectProjectIdPostRequest, **kwargs) -> ProjectResponse:  # noqa: E501
         """Update Project  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_post(project_id, open_v1_project_project_id_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param open_v1_project_project_id_post_request: (required)
         :type open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -934,28 +824,17 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_post_with_http_info(project_id, open_v1_project_project_id_post_request,
-                                                                   **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_post_with_http_info(project_id, open_v1_project_project_id_post_request, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_post_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")],
-                                                       open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest,
-                                                       **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_post_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], open_v1_project_project_id_post_request : OpenV1ProjectProjectIdPostRequest, **kwargs) -> ApiResponse:  # noqa: E501
         """Update Project  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_post_with_http_info(project_id, open_v1_project_project_id_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param open_v1_project_project_id_post_request: (required)
         :type open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -987,7 +866,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1014,6 +892,7 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1032,10 +911,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
@@ -1048,7 +927,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}', 'POST',
             _path_params,
             _query_params,
@@ -1058,7 +937,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -1066,18 +944,9 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_complete_post(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")],
-                                                              open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest,
-                                                              **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_complete_post(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_project_project_id_task_task_id_complete_post_request : OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest, **kwargs) -> None:  # noqa: E501
         """Update Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_complete_post(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
@@ -1085,8 +954,6 @@ class DefaultApi:
         :type task_id: str
         :param open_v1_project_project_id_task_task_id_complete_post_request: (required)
         :type open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -1100,23 +967,12 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_complete_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_task_task_id_complete_post_with_http_info(project_id, task_id,
-                                                                                         open_v1_project_project_id_task_task_id_complete_post_request,
-                                                                                         **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_complete_post_with_http_info(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_complete_post_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")],
-                                                                             open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest,
-                                                                             **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_complete_post_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_project_project_id_task_task_id_complete_post_request : OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest, **kwargs) -> ApiResponse:  # noqa: E501
         """Update Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_complete_post_with_http_info(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
@@ -1124,8 +980,6 @@ class DefaultApi:
         :type task_id: str
         :param open_v1_project_project_id_task_task_id_complete_post_request: (required)
         :type open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -1158,7 +1012,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1188,6 +1041,7 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1202,17 +1056,17 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {}
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}/task/{taskId}/complete', 'POST',
             _path_params,
             _query_params,
@@ -1222,7 +1076,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -1230,23 +1083,14 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_delete(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")], **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_delete(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> None:  # noqa: E501
         """Delete task.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_delete(project_id, task_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param task_id: Task identifier (required)
         :type task_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -1260,27 +1104,17 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_delete_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_task_task_id_delete_with_http_info(project_id, task_id,
-                                                                                  **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_delete_with_http_info(project_id, task_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_delete_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_delete_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """Delete task.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_delete_with_http_info(project_id, task_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param task_id: Task identifier (required)
         :type task_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -1312,7 +1146,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1342,6 +1175,7 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1356,7 +1190,7 @@ class DefaultApi:
 
         _response_types_map = {}
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}/task/{taskId}', 'DELETE',
             _path_params,
             _query_params,
@@ -1366,7 +1200,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -1374,23 +1207,14 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_get(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")], **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> TaskResponse:  # noqa: E501
         """Get Task By Project ID And Task ID.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_get(project_id, task_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param task_id: Task identifier (required)
         :type task_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -1404,27 +1228,17 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_project_project_id_task_task_id_get_with_http_info(project_id, task_id,
-                                                                               **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_get_with_http_info(project_id, task_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_project_project_id_task_task_id_get_with_http_info(self, project_id: Annotated[
-        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """Get Task By Project ID And Task ID.  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_project_project_id_task_task_id_get_with_http_info(project_id, task_id, async_req=True)
-        >>> result = thread.get()
 
         :param project_id: Project identifier (required)
         :type project_id: str
         :param task_id: Task identifier (required)
         :type task_id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -1456,7 +1270,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1486,6 +1299,7 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1509,7 +1323,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/project/{projectId}/task/{taskId}', 'GET',
             _path_params,
             _query_params,
@@ -1519,7 +1333,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -1527,19 +1340,12 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_task_post(self, task: Task, **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_task_post(self, task : Task, **kwargs) -> TaskResponse:  # noqa: E501
         """Create Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_task_post(task, async_req=True)
-        >>> result = thread.get()
 
         :param task: (required)
         :type task: Task
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -1553,22 +1359,15 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_task_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_task_post_with_http_info(task, **kwargs)  # noqa: E501
+        return await self.open_v1_task_post_with_http_info(task, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_task_post_with_http_info(self, task: Task, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_task_post_with_http_info(self, task : Task, **kwargs) -> ApiResponse:  # noqa: E501
         """Create Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_task_post_with_http_info(task, async_req=True)
-        >>> result = thread.get()
 
         :param task: (required)
         :type task: Task
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -1599,7 +1398,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1642,10 +1440,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
@@ -1658,7 +1456,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/task', 'POST',
             _path_params,
             _query_params,
@@ -1668,7 +1466,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
@@ -1676,23 +1473,14 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def open_v1_task_task_id_post(self, task_id: Annotated[StrictStr, Field(..., description="Task identifier")],
-                                  open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest,
-                                  **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_task_task_id_post(self, task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_task_task_id_post_request : OpenV1TaskTaskIdPostRequest, **kwargs) -> TaskResponse:  # noqa: E501
         """Update Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_task_task_id_post(task_id, open_v1_task_task_id_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param task_id: Task identifier (required)
         :type task_id: str
         :param open_v1_task_task_id_post_request: (required)
         :type open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
                If one number provided, it will be total request
                timeout. It can also be a pair (tuple) of
@@ -1706,28 +1494,17 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_task_task_id_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.open_v1_task_task_id_post_with_http_info(task_id, open_v1_task_task_id_post_request,
-                                                             **kwargs)  # noqa: E501
+        return await self.open_v1_task_task_id_post_with_http_info(task_id, open_v1_task_task_id_post_request, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def open_v1_task_task_id_post_with_http_info(self, task_id: Annotated[
-        StrictStr, Field(..., description="Task identifier")],
-                                                 open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest,
-                                                 **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_task_task_id_post_with_http_info(self, task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_task_task_id_post_request : OpenV1TaskTaskIdPostRequest, **kwargs) -> ApiResponse:  # noqa: E501
         """Update Task  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.open_v1_task_task_id_post_with_http_info(task_id, open_v1_task_task_id_post_request, async_req=True)
-        >>> result = thread.get()
 
         :param task_id: Task identifier (required)
         :type task_id: str
         :param open_v1_task_task_id_post_request: (required)
         :type open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
                                  be set to none and raw_data will store the
                                  HTTP response body without reading/decoding.
@@ -1759,7 +1536,6 @@ class DefaultApi:
         ]
         _all_params.extend(
             [
-                'async_req',
                 '_return_http_data_only',
                 '_preload_content',
                 '_request_timeout',
@@ -1786,6 +1562,7 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
+
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1804,10 +1581,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-                                          self.api_client.select_header_content_type(
-                                              ['application/json']))
+            self.api_client.select_header_content_type(
+                ['application/json']))
         if _content_types_list:
-            _header_params['Content-Type'] = _content_types_list
+                _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
@@ -1820,7 +1597,7 @@ class DefaultApi:
             '404': None,
         }
 
-        return self.api_client.call_api(
+        return await self.api_client.call_api(
             '/open/v1/task/{taskId}', 'POST',
             _path_params,
             _query_params,
@@ -1830,7 +1607,6 @@ class DefaultApi:
             files=_files,
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
-            async_req=_params.get('async_req'),
             _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),

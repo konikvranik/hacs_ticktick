@@ -13,14 +13,13 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Any, Optional
+import json
 
+
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field
-
 
 class OauthTokenPostRequest(BaseModel):
     """
@@ -30,6 +29,7 @@ class OauthTokenPostRequest(BaseModel):
     grant_type: Optional[Any] = Field(default=None, description="grant type, now only authorization_code")
     scope: Optional[Any] = Field(default=None, description="spaces-separated permission scope. The currently available scopes are tasks:write, tasks:read")
     redirect_uri: Optional[Any] = Field(default=None, description="user-configured redirect url")
+    additional_properties: Dict[str, Any] = {}
     __properties = ["code", "grant_type", "scope", "redirect_uri"]
 
     class Config:
@@ -54,8 +54,14 @@ class OauthTokenPostRequest(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
+                            "additional_properties"
                           },
                           exclude_none=True)
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         # set to None if code (nullable) is None
         # and __fields_set__ contains the field
         if self.code is None and "code" in self.__fields_set__:
@@ -93,6 +99,11 @@ class OauthTokenPostRequest(BaseModel):
             "scope": obj.get("scope"),
             "redirect_uri": obj.get("redirect_uri")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

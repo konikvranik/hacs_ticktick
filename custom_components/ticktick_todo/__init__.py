@@ -15,6 +15,8 @@ from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.typing import ConfigType
 from voluptuous import ALLOW_EXTRA
 
+from custom_components.ticktick_todo.pyticktick import openapi_client
+
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.info('Starting tictick_todo')
 
@@ -69,9 +71,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
 
-    hass.data[DOMAIN][config_entry.entry_id] = {
-        "ticktick_auth": session.token
-    }
+    async with openapi_client.ApiClient(openapi_client.Configuration(access_token=session.token)) as api_client:
+        hass.data[DOMAIN][config_entry.entry_id] = {
+            "ticktick_api_instance": (openapi_client.DefaultApi(api_client))
+        }
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
     return True

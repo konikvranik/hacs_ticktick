@@ -13,14 +13,13 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
+import json
 
+
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field, StrictInt, StrictStr, validator
-
 
 class OpenV1ProjectProjectIdPostRequest(BaseModel):
     """
@@ -32,6 +31,7 @@ class OpenV1ProjectProjectIdPostRequest(BaseModel):
     view_mode: Optional[StrictStr] = Field(default=None, alias="viewMode", description="view mode, \"list\", \"kanban\", \"timeline\"")
     kind: Optional[StrictStr] = Field(default=None, description="project kind, \"TASK\", \"NOTE\"")
     project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="project identifier")
+    additional_properties: Dict[str, Any] = {}
     __properties = ["name", "color", "sortOrder", "viewMode", "kind", "projectId"]
 
     @validator('view_mode')
@@ -76,8 +76,14 @@ class OpenV1ProjectProjectIdPostRequest(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
+                            "additional_properties"
                           },
                           exclude_none=True)
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -97,6 +103,11 @@ class OpenV1ProjectProjectIdPostRequest(BaseModel):
             "kind": obj.get("kind"),
             "project_id": obj.get("projectId")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

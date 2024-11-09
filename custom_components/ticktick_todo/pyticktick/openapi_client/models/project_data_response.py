@@ -11,18 +11,17 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-from __future__ import annotations
 
-import json
+from __future__ import annotations
 import pprint
 import re  # noqa: F401
-from typing import Optional
+import json
 
+
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr, conlist
-
-from .column import Column
-from .project_response import ProjectResponse
-
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 
 class ProjectDataResponse(BaseModel):
     """
@@ -31,6 +30,7 @@ class ProjectDataResponse(BaseModel):
     project: Optional[ProjectResponse] = None
     tasks: Optional[conlist(StrictStr)] = None
     columns: Optional[conlist(Column)] = None
+    additional_properties: Dict[str, Any] = {}
     __properties = ["project", "tasks", "columns"]
 
     class Config:
@@ -55,6 +55,7 @@ class ProjectDataResponse(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
+                            "additional_properties"
                           },
                           exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of project
@@ -67,6 +68,11 @@ class ProjectDataResponse(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['columns'] = _items
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -81,7 +87,13 @@ class ProjectDataResponse(BaseModel):
         _obj = ProjectDataResponse.parse_obj({
             "project": ProjectResponse.from_dict(obj.get("project")) if obj.get("project") is not None else None,
             "tasks": obj.get("tasks"),
-            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get(
-                "columns") is not None else None
+            "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get("columns") is not None else None
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+
