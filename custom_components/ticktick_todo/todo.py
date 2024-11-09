@@ -68,7 +68,7 @@ class TickTickTodo(TodoListEntity):
             await self._api_instance.open_v1_project_project_id_data_get(self._id))
         _LOGGER.debug("Project data: %s", project_data)
         self._attr_todo_items = [
-            TodoItem(uid=t.id, summary=t.title, description=t.content, due=datetime.fromisoformat(t.due_date),
+            TodoItem(uid=t.id, summary=t.title, description=t.content, due=t.due_date,
                      status=[homeassistant.components.todo.const.TodoItemStatus.NEEDS_ACTION,
                              homeassistant.components.todo.const.TodoItemStatus.COMPLETED][t.status]) for t in
             project_data.tasks]
