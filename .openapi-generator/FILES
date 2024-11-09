@@ -3,8 +3,6 @@
 .gitlab-ci.yml
 .travis.yml
 README.md
-custom_components/__init__.py
-custom_components/ticktick_todo/__init__.py
 custom_components/ticktick_todo/pyticktick/__init__.py
 custom_components/ticktick_todo/pyticktick/openapi_client/__init__.py
 custom_components/ticktick_todo/pyticktick/openapi_client/api/__init__.py
