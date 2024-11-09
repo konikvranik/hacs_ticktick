@@ -33,9 +33,8 @@ components:
       description: Task completion status
       type: integer
       enum:
-        - Normal
-        -
-        - Completed
+        - 0 # Normal
+        - 2 # Completed
 
     DateTime:
       example: "2019-11-13T03:00:00+0000"
@@ -108,12 +107,10 @@ components:
           description: Task priority
           type: integer
           enum:
-            - None
-            - Low
-            -
-            - Medium
-            -
-            - High5
+            - 0 # None
+            - 1 # Low
+            - 3 # Medium
+            - 5 # High
         reminders:
           description: List of reminder triggers
           example: [ "TRIGGER:P0DT9H0M0S", "TRIGGER:PT0S" ]
@@ -248,4 +245,4 @@ components:
           items:
             $ref: "#/components/schemas/Column"
 
-paths: {}
+paths: { }
