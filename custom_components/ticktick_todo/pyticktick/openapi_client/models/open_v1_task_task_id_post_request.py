@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 
 import json
@@ -50,7 +49,8 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
     status: Optional[TaskResponseAllOfStatus] = None
     task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
     additional_properties: Dict[str, Any] = {}
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
+                    "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -58,7 +58,7 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
         if value is None:
             return value
 
-        if value not in (null, null, null, null, null, null):
+        if value not in (None, None, None, None, None, None):
             raise ValueError("must be one of enum values (null, null, null, null, null, null)")
         return value
 
@@ -84,7 +84,7 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
-                            "additional_properties"
+                              "additional_properties"
                           },
                           exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in items (list)
@@ -122,7 +122,8 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
             "content": obj.get("content"),
             "desc": obj.get("desc"),
             "due_date": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get(
+                "items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
             "repeat_flag": obj.get("repeatFlag"),
@@ -131,7 +132,8 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
             "time_zone": obj.get("timeZone"),
             "id": obj.get("id"),
             "project_id": obj.get("projectId"),
-            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get("completedTime") is not None else None,
+            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get(
+                "completedTime") is not None else None,
             "status": TaskResponseAllOfStatus.from_dict(obj.get("status")) if obj.get("status") is not None else None,
             "task_id": obj.get("taskId")
         })
@@ -141,5 +143,3 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
-
-

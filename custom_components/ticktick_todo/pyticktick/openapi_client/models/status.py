@@ -29,9 +29,7 @@ class Status(int, Enum):
     """
     allowed enum values
     """
-    NUMBER_null = null
-    NUMBER_null = null
-    NUMBER_null = null
+    NUMBER_null = None
 
     @classmethod
     def from_json(cls, json_str: str) -> Status:

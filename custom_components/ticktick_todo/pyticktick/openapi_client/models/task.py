@@ -11,16 +11,17 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Any, Dict, Optional
 
-
-from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
+
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+
 
 class Task(BaseModel):
     """
@@ -39,7 +40,8 @@ class Task(BaseModel):
     start_date: Optional[Any] = Field(default=None, alias="startDate")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     additional_properties: Dict[str, Any] = {}
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone"]
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
+                    "sortOrder", "startDate", "timeZone"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -47,7 +49,7 @@ class Task(BaseModel):
         if value is None:
             return value
 
-        if value not in (null, null, null, null, null, null):
+        if value not in (None, None, None, None, None, None):
             raise ValueError("must be one of enum values (null, null, null, null, null, null)")
         return value
 
@@ -73,7 +75,7 @@ class Task(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
-                            "additional_properties"
+                              "additional_properties"
                           },
                           exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in items (list)
@@ -105,7 +107,8 @@ class Task(BaseModel):
             "content": obj.get("content"),
             "desc": obj.get("desc"),
             "due_date": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get(
+                "items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
             "repeat_flag": obj.get("repeatFlag"),
@@ -119,5 +122,3 @@ class Task(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
-
-
