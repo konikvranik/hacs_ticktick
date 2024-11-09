@@ -2,7 +2,7 @@ import logging
 from json import JSONDecodeError
 from typing import cast
 
-from aiohttp import ClientError, BasicAuth
+from aiohttp import ClientError
 from homeassistant.components.application_credentials import AuthorizationServer, ClientCredential, AuthImplementation
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow, http
@@ -58,7 +58,7 @@ class TickTickAuthImplementation(AuthImplementation):
         data["scope"] = "tasks:write tasks:read"
 
         _LOGGER.warning("Sending token request to %s", self.token_url)
-        resp = await session.post(self.token_url, data=data, auth=BasicAuth(self.client_id, self.client_secret))
+        resp = await session.post(self.token_url, data=data, auth=(self.client_id, self.client_secret))
 
         _LOGGER.warning("Received token response: %s", resp)
 
