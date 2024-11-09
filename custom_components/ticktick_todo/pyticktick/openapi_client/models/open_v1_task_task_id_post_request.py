@@ -13,95 +13,75 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List
-from typing import Optional, Set
+import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing_extensions import Self
 
+from typing import Any, List, Optional
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import \
-    TaskResponseAllOfCompletedTime
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import \
-    TaskResponseAllOfStatus
-
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.object import object
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus
 
 class OpenV1TaskTaskIdPostRequest(BaseModel):
     """
     OpenV1TaskTaskIdPostRequest
-    """ # noqa: E501
+    """
     title: Optional[StrictStr] = Field(default=None, description="Task title")
-    is_all_day: Optional[StrictBool] = Field(default=None, description="All day", alias="isAllDay")
+    is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     content: Optional[StrictStr] = Field(default=None, description="Task content")
     desc: Optional[StrictStr] = Field(default=None, description="Task description of checklist")
     due_date: Optional[Any] = Field(default=None, alias="dueDate")
-    items: Optional[List[ChecklistItem]] = Field(default=None, description="Subtasks of Task")
+    items: Optional[conlist(ChecklistItem)] = Field(default=None, description="Subtasks of Task")
     priority: Optional[StrictInt] = Field(default=None, description="Task priority")
-    reminders: Optional[List[StrictStr]] = Field(default=None, description="List of reminder triggers")
-    repeat_flag: Optional[StrictStr] = Field(default=None, description="Recurring rules of task", alias="repeatFlag")
-    sort_order: Optional[StrictInt] = Field(default=None, description="Task sort order", alias="sortOrder")
+    reminders: Optional[conlist(StrictStr)] = Field(default=None, description="List of reminder triggers")
+    repeat_flag: Optional[StrictStr] = Field(default=None, alias="repeatFlag", description="Recurring rules of task")
+    sort_order: Optional[StrictInt] = Field(default=None, alias="sortOrder", description="Task sort order")
     start_date: Optional[Any] = Field(default=None, alias="startDate")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     id: Optional[StrictStr] = Field(default=None, description="Task identifier")
-    project_id: Optional[StrictStr] = Field(default=None, description="Task project id", alias="projectId")
+    project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     completed_time: Optional[TaskResponseAllOfCompletedTime] = Field(default=None, alias="completedTime")
     status: Optional[TaskResponseAllOfStatus] = None
-    task_id: Optional[StrictStr] = Field(default=None, description="Task identifier", alias="taskId")
-    __properties: ClassVar[List[str]] = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
+    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
+    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
 
-    @field_validator('priority')
+    @validator('priority')
     def priority_validate_enum(cls, value):
         """Validates the enum"""
         if value is None:
             return value
 
-        if value not in set([null, null, null, null, null, null]):
+        if value not in (null, null, null, null, null, null):
             raise ValueError("must be one of enum values (null, null, null, null, null, null)")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
-
+    class Config:
+        """Pydantic configuration"""
+        allow_population_by_field_name = True
+        validate_assignment = True
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.model_dump(by_alias=True))
+        return pprint.pformat(self.dict(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Optional[Self]:
+    def from_json(cls, json_str: str) -> OpenV1TaskTaskIdPostRequest:
         """Create an instance of OpenV1TaskTaskIdPostRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Return the dictionary representation of the model using alias.
-
-        This has the following differences from calling pydantic's
-        `self.model_dump(by_alias=True)`:
-
-        * `None` is only added to the output dict for nullable fields that
-          were set at model initialization. Other fields with value `None`
-          are ignored.
-        """
-        excluded_fields: Set[str] = set([
-        ])
-
-        _dict = self.model_dump(
-            by_alias=True,
-            exclude=excluded_fields,
-            exclude_none=True,
-        )
+    def to_dict(self):
+        """Returns the dictionary representation of the model using alias"""
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in items (list)
         _items = []
         if self.items:
@@ -118,32 +98,32 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
+    def from_dict(cls, obj: dict) -> OpenV1TaskTaskIdPostRequest:
         """Create an instance of OpenV1TaskTaskIdPostRequest from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+            return OpenV1TaskTaskIdPostRequest.parse_obj(obj)
 
-        _obj = cls.model_validate({
+        _obj = OpenV1TaskTaskIdPostRequest.parse_obj({
             "title": obj.get("title"),
-            "isAllDay": obj.get("isAllDay"),
+            "is_all_day": obj.get("isAllDay"),
             "content": obj.get("content"),
             "desc": obj.get("desc"),
-            "dueDate": obj.get("dueDate"),
-            "items": [ChecklistItem.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "due_date": obj.get("dueDate"),
+            "items": [ChecklistItem.from_dict(_item) for _item in obj.get("items")] if obj.get("items") is not None else None,
             "priority": obj.get("priority"),
             "reminders": obj.get("reminders"),
-            "repeatFlag": obj.get("repeatFlag"),
-            "sortOrder": obj.get("sortOrder"),
-            "startDate": obj.get("startDate"),
-            "timeZone": obj.get("timeZone"),
+            "repeat_flag": obj.get("repeatFlag"),
+            "sort_order": obj.get("sortOrder"),
+            "start_date": obj.get("startDate"),
+            "time_zone": obj.get("timeZone"),
             "id": obj.get("id"),
-            "projectId": obj.get("projectId"),
-            "completedTime": TaskResponseAllOfCompletedTime.from_dict(obj["completedTime"]) if obj.get("completedTime") is not None else None,
-            "status": TaskResponseAllOfStatus.from_dict(obj["status"]) if obj.get("status") is not None else None,
-            "taskId": obj.get("taskId")
+            "project_id": obj.get("projectId"),
+            "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get("completedTime") is not None else None,
+            "status": TaskResponseAllOfStatus.from_dict(obj.get("status")) if obj.get("status") is not None else None,
+            "task_id": obj.get("taskId")
         })
         return _obj
 

@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 
@@ -16,7 +15,7 @@ json = "{}"
 # create an instance of TaskResponseAllOfCompletedTime from a JSON string
 task_response_all_of_completed_time_instance = TaskResponseAllOfCompletedTime.from_json(json)
 # print the JSON string representation of the object
-print(TaskResponseAllOfCompletedTime.to_json())
+print TaskResponseAllOfCompletedTime.to_json()
 
 # convert the object into a dict
 task_response_all_of_completed_time_dict = task_response_all_of_completed_time_instance.to_dict()

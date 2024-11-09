@@ -28,8 +28,9 @@ client_id and :client_secret are passes to basic auth as username and password
 ### Example
 
 * Basic Authentication (BasicAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
@@ -72,7 +73,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **oauth_token_post_request** | [**OauthTokenPostRequest**](OauthTokenPostRequest.md)|  | [optional] 
@@ -91,7 +91,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Successfully authorized |  -  |
@@ -107,8 +106,9 @@ Get User Project.
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
@@ -149,7 +149,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 
 ### Parameters
-
 This endpoint does not need any parameter.
 
 ### Return type
@@ -166,7 +165,6 @@ This endpoint does not need any parameter.
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -185,8 +183,9 @@ Create Project
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
@@ -230,7 +229,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project** | [**Project**](Project.md)|  | 
@@ -249,7 +247,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -269,8 +266,9 @@ Name | Type | Description  | Notes
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
@@ -312,7 +310,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -331,7 +328,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -350,8 +346,9 @@ Name | Type | Description  | Notes
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
@@ -390,7 +387,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -409,7 +405,6 @@ void (empty response body)
  - **Accept**: Not defined
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -428,8 +423,9 @@ void (empty response body)
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
@@ -471,7 +467,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -490,7 +485,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -509,8 +503,9 @@ Update Project
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
@@ -555,7 +550,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -575,7 +569,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -595,8 +588,9 @@ Update Task
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
@@ -639,7 +633,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -660,7 +653,6 @@ void (empty response body)
  - **Accept**: Not defined
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -680,8 +672,9 @@ Delete task.
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
@@ -722,7 +715,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -742,7 +734,6 @@ void (empty response body)
  - **Accept**: Not defined
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -761,8 +752,9 @@ Get Task By Project ID And Task ID.
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
@@ -806,7 +798,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **project_id** | **str**| Project identifier | 
@@ -826,7 +817,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -845,8 +835,9 @@ Create Task
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
@@ -890,7 +881,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task** | [**Task**](Task.md)|  | 
@@ -909,7 +899,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -929,8 +918,9 @@ Update Task
 
 * OAuth Authentication (OAuth2):
 * Bearer Authentication (BearerAuth):
-
 ```python
+import time
+import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
@@ -975,7 +965,6 @@ with custom_components.ticktick_todo.pyticktick.openapi_client.ApiClient(configu
 
 ### Parameters
 
-
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| Task identifier | 
@@ -995,7 +984,6 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |

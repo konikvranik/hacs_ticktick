@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **code** | **object** | The code obtained in the second step | [optional] 
@@ -20,7 +19,7 @@ json = "{}"
 # create an instance of OauthTokenPostRequest from a JSON string
 oauth_token_post_request_instance = OauthTokenPostRequest.from_json(json)
 # print the JSON string representation of the object
-print(OauthTokenPostRequest.to_json())
+print OauthTokenPostRequest.to_json()
 
 # convert the object into a dict
 oauth_token_post_request_dict = oauth_token_post_request_instance.to_dict()

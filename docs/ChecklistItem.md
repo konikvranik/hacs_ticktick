@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **str** | Subtask identifier | [optional] 
@@ -24,7 +23,7 @@ json = "{}"
 # create an instance of ChecklistItem from a JSON string
 checklist_item_instance = ChecklistItem.from_json(json)
 # print the JSON string representation of the object
-print(ChecklistItem.to_json())
+print ChecklistItem.to_json()
 
 # convert the object into a dict
 checklist_item_dict = checklist_item_instance.to_dict()

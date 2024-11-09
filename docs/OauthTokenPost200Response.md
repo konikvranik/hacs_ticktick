@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **access_token** | **str** |  | [optional] 
@@ -17,7 +16,7 @@ json = "{}"
 # create an instance of OauthTokenPost200Response from a JSON string
 oauth_token_post200_response_instance = OauthTokenPost200Response.from_json(json)
 # print the JSON string representation of the object
-print(OauthTokenPost200Response.to_json())
+print OauthTokenPost200Response.to_json()
 
 # convert the object into a dict
 oauth_token_post200_response_dict = oauth_token_post200_response_instance.to_dict()

@@ -1,0 +1,15 @@
+plugins {
+	id "org.openapi.generator" version "7.8.0"
+}
+
+openApiGenerate {
+	inputSpec = 'openapi.yaml'
+	//inputSpecRootDirectory = 'custom_components/ticktick_todo/pyticktick'
+	generatorName = 'python'
+	//outputDir = 'custom_components/ticktick_todo/pyticktick/generated'
+	auth = "bearer"
+}
+
+openApiValidate {
+	inputSpec = 'openapi.yaml'
+}

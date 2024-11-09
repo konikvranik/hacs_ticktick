@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **project_id** | **str** |  | [optional] 
@@ -18,7 +17,7 @@ json = "{}"
 # create an instance of OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest from a JSON string
 open_v1_project_project_id_task_task_id_complete_post_request_instance = OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest.from_json(json)
 # print the JSON string representation of the object
-print(OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest.to_json())
+print OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest.to_json()
 
 # convert the object into a dict
 open_v1_project_project_id_task_task_id_complete_post_request_dict = open_v1_project_project_id_task_task_id_complete_post_request_instance.to_dict()

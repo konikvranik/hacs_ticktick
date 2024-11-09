@@ -1,20 +1,17 @@
 """ mqtt-mediaplayer """
-import logging
-
 import homeassistant.helpers.config_validation as cv
+import logging
 import voluptuous as vol
 from homeassistant.components.media_player import PLATFORM_SCHEMA, MediaPlayerState
 from homeassistant.components.todo import TodoListEntity, TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_NAME, CONF_ACCESS_TOKEN, )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from custom_components.ticktick_todo.pyticktick import openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client import DefaultApi
 from . import DOMAIN
 
 DOMAIN = DOMAIN
@@ -42,6 +39,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
     api_instance = openapi_client.ApiClient(
         openapi_client.Configuration(access_token=hass.data[DOMAIN][config_entry.entry_id]["ticktick_auth"]))
 
+    # api_instance = tick_tick_api_client.AuthenticatedClient(
+    #     token=hass.data[DOMAIN][config_entry.entry_id]["ticktick_auth"])
+
     async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
                                                        identifiers={(DOMAIN, config_entry.entry_id)}),
                                       l.id,
@@ -56,7 +56,7 @@ class TickTickTodo(TodoListEntity, OAuth2Session):
     """MQTTMediaPlayer"""
 
     def __init__(self, hass: HomeAssistant, device_info: DeviceInfo, id: str, name: str,
-                 api_instance: DefaultApi) -> None:
+                 api_instance: openapi_client.DefaultApi) -> None:
         """Initialize"""
 
         self._attr_device_info = device_info

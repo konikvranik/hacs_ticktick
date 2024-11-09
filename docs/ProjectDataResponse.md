@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **project** | [**ProjectResponse**](ProjectResponse.md) |  | [optional] 
@@ -19,7 +18,7 @@ json = "{}"
 # create an instance of ProjectDataResponse from a JSON string
 project_data_response_instance = ProjectDataResponse.from_json(json)
 # print the JSON string representation of the object
-print(ProjectDataResponse.to_json())
+print ProjectDataResponse.to_json()
 
 # convert the object into a dict
 project_data_response_dict = project_data_response_instance.to_dict()

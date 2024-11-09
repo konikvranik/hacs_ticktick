@@ -2,7 +2,6 @@
 
 
 ## Properties
-
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **str** | Column identifier | [optional] 
@@ -20,7 +19,7 @@ json = "{}"
 # create an instance of Column from a JSON string
 column_instance = Column.from_json(json)
 # print the JSON string representation of the object
-print(Column.to_json())
+print Column.to_json()
 
 # convert the object into a dict
 column_dict = column_instance.to_dict()
