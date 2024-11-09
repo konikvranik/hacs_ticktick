@@ -64,7 +64,7 @@ class TickTickTodo(TodoListEntity, OAuth2Session):
 
     def async_update(self):
         """ Update the States"""
-        async with self._api_instance.open_v1_project_project_id_data_get() as data:
+        async with self._api_instance.open_v1_project_project_id_data_get(self._id) as data:
             self._attr_todo_items = [
                 TodoItem(uid=t.id, summary=t.title, description=t.content, due=t.due_date, status=t.status) for t in
                 data.tasks]
