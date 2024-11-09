@@ -1,5 +1,6 @@
 """ mqtt-mediaplayer """
 import logging
+from json import dumps
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -64,6 +65,9 @@ class TickTickTodo(TodoListEntity, OAuth2Session):
 
     async def async_update(self):
         """ Update the States"""
+        project_data = (await self._api_instance.open_v1_project_project_id_data_get(self._id))
+        _LOGGER.debug("Project data: %s", project_data)
+        _LOGGER.debug("Project data: %s", dumps(project_data))
         self._attr_todo_items = [
             TodoItem(uid=t.id, summary=t.title, description=t.content, due=t.due_date, status=t.status) for t in
-            (await self._api_instance.open_v1_project_project_id_data_get(self._id)).tasks]
+            project_data.tasks]
