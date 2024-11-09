@@ -1,7 +1,5 @@
 {
 	"name": "TickTick TODO list",
-	"description": "TickTick TODO list",
-	"topics" : ["todo", "ticktick"],
 	"country": [
 		"CZ"
 	],

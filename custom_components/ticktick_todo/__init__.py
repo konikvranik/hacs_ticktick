@@ -11,9 +11,8 @@ from homeassistant.const import (CONF_NAME, CONF_FORCE_UPDATE, CONF_HOST, Platfo
                                  CONF_ACCESS_TOKEN)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers import config_entry_oauth2_flow, aiohttp_client
-from homeassistant.util import aiohttp
-from pydantic.v1.config import ConfigType
+from homeassistant.helpers import config_entry_oauth2_flow
+from homeassistant.helpers.typing import ConfigType
 from voluptuous import ALLOW_EXTRA
 
 _LOGGER = logging.getLogger(__name__)
@@ -39,6 +38,7 @@ CONFIG_SCHEMA = vol.Schema({vol.Optional(DOMAIN): vol.Schema(SCHEMA)}, extra=ALL
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Netatmo component."""
     hass.data[DOMAIN] = {}
+
     return True
 
 
