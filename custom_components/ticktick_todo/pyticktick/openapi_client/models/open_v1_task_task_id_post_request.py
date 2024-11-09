@@ -58,8 +58,8 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
         if value is None:
             return value
 
-        if value not in (None, None, None, None, None, None):
-            raise ValueError("must be one of enum values (null, null, null, null, null, null)")
+        if value not in (0, 1, 3, 5):
+            raise ValueError("must be one of enum values (0, 1, 3, 5)")
         return value
 
     class Config:
