@@ -1,14 +1,16 @@
+import logging
 from json import JSONDecodeError
 from typing import cast
 
 from aiohttp import ClientError, BasicAuth
 from homeassistant.components.application_credentials import AuthorizationServer, ClientCredential, AuthImplementation
-from homeassistant.core import HomeAssistant, _LOGGER
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow, http
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.config_entry_oauth2_flow import MY_AUTH_CALLBACK_PATH, HEADER_FRONTEND_BASE, \
     AUTH_CALLBACK_PATH
-from homeassistant.util import aiohttp
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_get_auth_implementation(
