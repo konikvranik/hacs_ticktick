@@ -28,4 +28,3 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.models.status imp
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import TaskResponseAllOfCompletedTime
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import TaskResponseAllOfStatus

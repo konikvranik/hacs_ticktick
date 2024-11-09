@@ -150,9 +150,7 @@ components:
                 - description: Task completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
                 - $ref: "#/components/schemas/DateTime"
             status:
-              allOf:
-                - description: Task completion status
-                - $ref: "#/components/schemas/Status"
+              $ref: "#/components/schemas/Status"
 
     Project:
       type: object

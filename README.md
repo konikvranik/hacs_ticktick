@@ -126,7 +126,6 @@ Class | Method | HTTP request | Description
  - [Task](docs/Task.md)
  - [TaskResponse](docs/TaskResponse.md)
  - [TaskResponseAllOfCompletedTime](docs/TaskResponseAllOfCompletedTime.md)
- - [TaskResponseAllOfStatus](docs/TaskResponseAllOfStatus.md)
 
 
 <a id="documentation-for-authorization"></a>

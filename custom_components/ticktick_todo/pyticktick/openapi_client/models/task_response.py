@@ -21,10 +21,9 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_completed_time import \
     TaskResponseAllOfCompletedTime
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response_all_of_status import \
-    TaskResponseAllOfStatus
 
 
 class TaskResponse(BaseModel):
@@ -46,7 +45,7 @@ class TaskResponse(BaseModel):
     id: Optional[StrictStr] = Field(default=None, description="Task identifier")
     project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     completed_time: Optional[TaskResponseAllOfCompletedTime] = Field(default=None, alias="completedTime")
-    status: Optional[TaskResponseAllOfStatus] = None
+    status: Optional[Status] = None
     additional_properties: Dict[str, Any] = {}
     __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
                     "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status"]
@@ -96,9 +95,6 @@ class TaskResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of completed_time
         if self.completed_time:
             _dict['completedTime'] = self.completed_time.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of status
-        if self.status:
-            _dict['status'] = self.status.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -133,7 +129,7 @@ class TaskResponse(BaseModel):
             "project_id": obj.get("projectId"),
             "completed_time": TaskResponseAllOfCompletedTime.from_dict(obj.get("completedTime")) if obj.get(
                 "completedTime") is not None else None,
-            "status": TaskResponseAllOfStatus.from_dict(obj.get("status")) if obj.get("status") is not None else None
+            "status": obj.get("status")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

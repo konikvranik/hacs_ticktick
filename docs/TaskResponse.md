@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 **id** | **str** | Task identifier | [optional] 
 **project_id** | **str** | Task project id | [optional] 
 **completed_time** | [**TaskResponseAllOfCompletedTime**](TaskResponseAllOfCompletedTime.md) |  | [optional] 
-**status** | [**TaskResponseAllOfStatus**](TaskResponseAllOfStatus.md) |  | [optional] 
+**status** | [**Status**](Status.md) |  | [optional] 
 
 ## Example
 

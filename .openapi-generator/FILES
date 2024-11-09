@@ -26,7 +26,6 @@ custom_components/ticktick_todo/pyticktick/openapi_client/models/status.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/task.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/task_response.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/task_response_all_of_completed_time.py
-custom_components/ticktick_todo/pyticktick/openapi_client/models/task_response_all_of_status.py
 custom_components/ticktick_todo/pyticktick/openapi_client/py.typed
 custom_components/ticktick_todo/pyticktick/openapi_client/rest.py
 docs/ChecklistItem.md
@@ -44,7 +43,6 @@ docs/Status.md
 docs/Task.md
 docs/TaskResponse.md
 docs/TaskResponseAllOfCompletedTime.md
-docs/TaskResponseAllOfStatus.md
 git_push.sh
 pyproject.toml
 requirements.txt
