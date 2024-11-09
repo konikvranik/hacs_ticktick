@@ -56,7 +56,7 @@ class TickTickTodo(TodoListEntity, OAuth2Session):
         """Initialize"""
 
         self._attr_device_info = device_info
-        _LOGGER.debug("TickTickTodo.__init__(%s, %s, %s, %s)" % (name))
+        _LOGGER.debug("TickTickTodo.__init__(%s, %s)" % (id, name))
         self.hass = hass
         self._api_instance = api_instance
         self._id = id
