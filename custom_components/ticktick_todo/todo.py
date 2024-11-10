@@ -17,6 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import DOMAIN
 from .pyticktick import openapi_client
+from .pyticktick.openapi_client import TaskResponse
 
 DOMAIN = DOMAIN
 # SCAN_INTERVAL = timedelta(minutes=1)
@@ -81,18 +82,21 @@ class TickTickTodo(TodoListEntity):
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         task = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
+        _LOGGER.debug("Original task: %s", task)
         task.project_id = self._id
-        task.task_id = task.id
-        task = await self._api_instance.open_v1_task_task_id_post(task.id,
-                                                                  await TickTickTodo._task_response_to_task_request(
-                                                                      task))
+        task.task_id = item.uid
+        task_ = await TickTickTodo._task_response_to_task_request(task)
+        _LOGGER.debug("Updated task: %s", task_)
+        task = await self._api_instance.open_v1_task_task_id_post(item.uid, task_)
         self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
-        task = await TickTickTodo._todo_item_to_task_response(item)
-        await self._api_instance.open_v1_task_task_id_post(task.id,
-                                                           await TickTickTodo._task_response_to_task_request(task))
+        task = await TickTickTodo._merge_todo_item_and_task_response(item,
+                                                                     await self._api_instance.open_v1_project_project_id_task_task_id_get(
+                                                                         self._id, item.uid))
+        task_ = await TickTickTodo._task_response_to_task_request(task)
+        await self._api_instance.open_v1_task_task_id_post(task.id, task_)
 
     async def async_delete_todo_items(self, uids: list[str]) -> None:
         """Delete an item from the to-do list."""
@@ -113,10 +117,20 @@ class TickTickTodo(TodoListEntity):
 
     @staticmethod
     async def _todo_item_to_task_response(todo_item: TodoItem) -> openapi_client.TaskResponse:
-        return openapi_client.TaskResponse(id=todo_item.uid, task_is=todo_item.uid, title=todo_item.summary,
+        return openapi_client.TaskResponse(id=todo_item.uid, task_id=todo_item.uid, title=todo_item.summary,
                                            desc=todo_item.description,
                                            status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
                                            due_date=todo_item.due)
+
+    @staticmethod
+    async def _merge_todo_item_and_task_response(todo_item: TodoItem,
+                                                 task_response: TaskResponse) -> openapi_client.TaskResponse:
+        task_response.task_id = todo_item.uid
+        task_response.status = TickTickTodo._todo_item_status_to_task_status(todo_item)
+        task_response.title = todo_item.summary
+        task_response.desc = todo_item.description
+        task_response.due_date = todo_item.due
+        return task_response
 
     @staticmethod
     async def _task_status_to_todo_item_status(task_response: openapi_client.TaskResponse) -> TodoItemStatus | None:
@@ -144,19 +158,16 @@ class TickTickTodo(TodoListEntity):
             is_all_day=response.is_all_day,
             content=response.content,
             desc=response.desc,
-
             items=response.items,
             priority=response.priority,
             reminders=response.reminders,
             repeat_flag=response.repeat_flag,
             sort_order=response.sort_order,
             start_date=response.start_date,
-
             time_zone=response.time_zone,
             id=response.id,
             task_id=response.task_id,
             project_id=response.project_id,
             completed_time=response.completed_time,
-
             status=response.status
         )
