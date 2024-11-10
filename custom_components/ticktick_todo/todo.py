@@ -82,14 +82,14 @@ class TickTickTodo(TodoListEntity):
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         _LOGGER.debug("Source item: %s", item)
-        task = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
-        _LOGGER.debug("Original task: %s", task)
-        task.project_id = self._id
-        task.task_id = task.id
-        task_ = await TickTickTodo._task_response_to_task_request(task)
-        _LOGGER.debug("Updated task: %s", task_)
-        task = await self._api_instance.open_v1_task_task_id_post(item.uid, task_)
-        self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
+        current_task_ = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
+        _LOGGER.debug("Original task: %s", current_task_)
+        current_task_.project_id = self._id
+        current_task_.task_id = item.uid
+        updated_task_ = await TickTickTodo._task_response_to_task_request(current_task_)
+        _LOGGER.debug("Updated task: %s", updated_task_)
+        self.todo_items.append(await TickTickTodo._task_response_to_todo_item(
+            await self._api_instance.open_v1_task_task_id_post(item.uid, updated_task_)))
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
