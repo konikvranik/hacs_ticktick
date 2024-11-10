@@ -66,7 +66,7 @@ class TickTickTodo(TodoListEntity):
         self._api_instance = api_instance
         self._id = id
         self._attr_name = name
-        self._attr_supported_features |= TodoListEntityFeature.CREATE_TODO_ITEM
+        self._attr_supported_features = TodoListEntityFeature.CREATE_TODO_ITEM
         # self._attr_supported_features |= TodoListEntityFeature.DELETE_TODO_ITEM
         # self._attr_supported_features |= TodoListEntityFeature.UPDATE_TODO_ITEM
         self._attr_supported_features |= TodoListEntityFeature.SET_DESCRIPTION_ON_ITEM
