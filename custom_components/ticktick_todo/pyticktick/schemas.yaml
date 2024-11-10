@@ -144,6 +144,9 @@ components:
             id:
               description: Task identifier
               type: string
+            taskId:
+              description: Task identifier
+              type: string
             projectId:
               description: Task project id
               type: string

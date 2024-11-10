@@ -94,7 +94,7 @@ class TickTickTodo(TodoListEntity):
 
     @staticmethod
     async def _todo_item_to_task(todo_item: TodoItem) -> openapi_client.Task:
-        return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
+        return openapi_client.Task(id=todo_item.uid,  title=todo_item.summary, desc=todo_item.description,
                                    status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
                                    due_date=todo_item.due)
 

@@ -17,10 +17,10 @@ Name | Type | Description | Notes
 **start_date** | **datetime** | Start date time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **time_zone** | **object** |  | [optional] 
 **id** | **str** | Task identifier | [optional] 
+**task_id** | **str** | Task identifier | [optional] 
 **project_id** | **str** | Task project id | [optional] 
 **completed_time** | **datetime** | Task completed time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **status** | [**Status**](Status.md) |  | [optional] 
-**task_id** | **str** | Task identifier | [optional] 
 
 ## Example
 

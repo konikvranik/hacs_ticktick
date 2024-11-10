@@ -44,14 +44,14 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
                                            description="Start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     id: Optional[StrictStr] = Field(default=None, description="Task identifier")
+    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
     project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
                                                description="Task completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     status: Optional[Status] = None
-    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
     additional_properties: Dict[str, Any] = {}
     __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
-                    "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
+                    "sortOrder", "startDate", "timeZone", "id", "taskId", "projectId", "completedTime", "status"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -126,10 +126,10 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
             "start_date": obj.get("startDate"),
             "time_zone": obj.get("timeZone"),
             "id": obj.get("id"),
+            "task_id": obj.get("taskId"),
             "project_id": obj.get("projectId"),
             "completed_time": obj.get("completedTime"),
-            "status": obj.get("status"),
-            "task_id": obj.get("taskId")
+            "status": obj.get("status")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
