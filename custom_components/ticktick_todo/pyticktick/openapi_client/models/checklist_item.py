@@ -19,7 +19,7 @@ import re  # noqa: F401
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, validator
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 
 class ChecklistItem(BaseModel):
@@ -38,26 +38,6 @@ class ChecklistItem(BaseModel):
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     additional_properties: Dict[str, Any] = {}
     __properties = ["id", "title", "status", "completedTime", "isAllDay", "sortOrder", "startDate", "timeZone"]
-
-    @validator('completed_time')
-    def completed_time_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
-            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
-        return value
-
-    @validator('start_date')
-    def start_date_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
-            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
-        return value
 
     class Config:
         """Pydantic configuration"""

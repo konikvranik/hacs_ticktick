@@ -1,10 +1,12 @@
 """ mqtt-mediaplayer """
 import logging
-from datetime import datetime
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.media_player import PLATFORM_SCHEMA, MediaPlayerState
+from homeassistant.components.todo import (
+    TodoItemStatus,
+)
 from homeassistant.components.todo import TodoListEntity, TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_NAME, CONF_ACCESS_TOKEN, )
@@ -69,6 +71,5 @@ class TickTickTodo(TodoListEntity):
         _LOGGER.debug("Project data: %s", project_data)
         self._attr_todo_items = [
             TodoItem(uid=t.id, summary=t.title, description=t.content, due=t.due_date,
-                     status=[homeassistant.components.todo.const.TodoItemStatus.NEEDS_ACTION,
-                             homeassistant.components.todo.const.TodoItemStatus.COMPLETED][t.status]) for t in
+                     status=[TodoItemStatus.NEEDS_ACTION, TodoItemStatus.COMPLETED][t.status]) for t in
             project_data.tasks]

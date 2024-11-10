@@ -53,16 +53,6 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
     __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
                     "sortOrder", "startDate", "timeZone", "id", "projectId", "completedTime", "status", "taskId"]
 
-    @validator('due_date')
-    def due_date_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
-            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
-        return value
-
     @validator('priority')
     def priority_validate_enum(cls, value):
         """Validates the enum"""
@@ -71,26 +61,6 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
 
         if value not in (0, 1, 3, 5):
             raise ValueError("must be one of enum values (0, 1, 3, 5)")
-        return value
-
-    @validator('start_date')
-    def start_date_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
-            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
-        return value
-
-    @validator('completed_time')
-    def completed_time_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"yyyy-MM-dd\'T\'HH:mm:ssZ", value):
-            raise ValueError(r"must validate the regular expression /yyyy-MM-dd'T'HH:mm:ssZ/")
         return value
 
     class Config:

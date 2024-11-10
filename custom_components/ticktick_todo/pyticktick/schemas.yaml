@@ -58,7 +58,6 @@ components:
           example: "2019-11-13T03:00:00+0000"
           type: string
           format: date-time
-          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
 
         isAllDay:
           description: All day
@@ -72,7 +71,6 @@ components:
           example: "2019-11-13T03:00:00+0000"
           type: string
           format: date-time
-          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
 
         timeZone:
           allOf:
@@ -99,7 +97,6 @@ components:
           example: "2019-11-13T03:00:00+0000"
           type: string
           format: date-time
-          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
 
         items:
           description: Subtasks of Task
@@ -133,7 +130,6 @@ components:
           example: "2019-11-13T03:00:00+0000"
           type: string
           format: date-time
-          pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
 
         timeZone:
           allOf:
@@ -156,7 +152,6 @@ components:
               example: "2019-11-13T03:00:00+0000"
               type: string
               format: date-time
-              pattern: "yyyy-MM-dd'T'HH:mm:ssZ"
 
             status:
               $ref: "#/components/schemas/Status"
