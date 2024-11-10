@@ -31,6 +31,8 @@ class TicktickFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, do
     async def async_step_user(self, user_input: dict | None = None) -> ConfigFlowResult:
         """Handle a flow start."""
 
+        await self.async_set_unique_id(DOMAIN)
+
         if DEBUG:
             return self.async_create_entry(
                 title="Title of the entry",
@@ -41,7 +43,6 @@ class TicktickFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, do
                 },
             )
 
-        await self.async_set_unique_id(DOMAIN)
 
         if (self.source !=
                 SOURCE_REAUTH and self._async_current_entries()):
