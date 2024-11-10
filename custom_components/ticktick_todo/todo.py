@@ -81,6 +81,8 @@ class TickTickTodo(TodoListEntity):
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         task = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
+        task.project_id = self._id
+        task = await self._api_instance.open_v1_task_task_id_post(task)
         self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
 
     @staticmethod
