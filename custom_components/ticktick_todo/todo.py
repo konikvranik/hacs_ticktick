@@ -67,8 +67,8 @@ class TickTickTodo(TodoListEntity):
         self._id = id
         self._attr_name = name
         self._attr_supported_features = TodoListEntityFeature.CREATE_TODO_ITEM
-        # self._attr_supported_features |= TodoListEntityFeature.DELETE_TODO_ITEM
-        # self._attr_supported_features |= TodoListEntityFeature.UPDATE_TODO_ITEM
+        self._attr_supported_features |= TodoListEntityFeature.DELETE_TODO_ITEM
+        self._attr_supported_features |= TodoListEntityFeature.UPDATE_TODO_ITEM
         self._attr_supported_features |= TodoListEntityFeature.SET_DESCRIPTION_ON_ITEM
         self._attr_supported_features |= TodoListEntityFeature.SET_DUE_DATETIME_ON_ITEM
 
@@ -87,6 +87,16 @@ class TickTickTodo(TodoListEntity):
         task = await self._api_instance.open_v1_task_task_id_post(task.id, TaskMapper(task))
         self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
 
+    async def async_update_todo_item(self, item: TodoItem) -> None:
+        """Add an item to the To-do list."""
+        task = await TickTickTodo._todo_item_to_task_response(item)
+        await self._api_instance.open_v1_task_task_id_post(task.id, TaskMapper(task))
+
+    async def async_delete_todo_items(self, uids: list[str]) -> None:
+        """Delete an item from the to-do list."""
+        for uid in uids:
+            await self._api_instance.open_v1_project_project_id_task_task_id_delete(self._id, uid)
+
     @staticmethod
     async def _task_response_to_todo_item(task_response: openapi_client.TaskResponse) -> TodoItem:
         return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
@@ -98,6 +108,13 @@ class TickTickTodo(TodoListEntity):
         return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
                                    due_date=todo_item.due)
+
+    @staticmethod
+    async def _todo_item_to_task_response(todo_item: TodoItem) -> openapi_client.TaskResponse:
+        return openapi_client.TaskResponse(id=todo_item.uid, task_is=todo_item.uid, title=todo_item.summary,
+                                           desc=todo_item.description,
+                                           status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
+                                           due_date=todo_item.due)
 
     @staticmethod
     async def _task_status_to_todo_item_status(task_response: openapi_client.TaskResponse) -> TodoItemStatus | None:
