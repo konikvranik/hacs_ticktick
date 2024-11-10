@@ -2,6 +2,7 @@ import json
 import logging
 import os
 from http import HTTPStatus
+from pathlib import Path
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -27,6 +28,8 @@ DEFAULT_NAME = MANIFEST[CONF_NAME]
 PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
 
+DEBUG = False
+
 SCHEMA = {
     vol.Required(CONF_HOST): cv.string,
     vol.Required(CONF_ACCESS_TOKEN): cv.string,
@@ -47,18 +50,23 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    implementation = (
-        await config_entry_oauth2_flow.async_get_config_entry_implementation(
-            hass, config_entry
-        )
-    )
+    token_ = open(f'{Path.home()}/.ticktick_token').read().strip() if DEBUG else await _get_valid_token(config_entry,
+                                                                                                        hass)
+    hass.data[DOMAIN][config_entry.entry_id] = {
+        "ticktick_api_instance": (openapi_client.DefaultApi(
+            openapi_client.ApiClient(openapi_client.Configuration(access_token=token_))))
+    }
 
+    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
+    return True
+
+
+async def _get_valid_token(config_entry, hass):
+    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
     # Set unique id if non was set (migration)
     if not config_entry.unique_id:
         hass.config_entries.async_update_entry(config_entry, unique_id=DOMAIN)
-
     session = config_entry_oauth2_flow.OAuth2Session(hass, config_entry, implementation)
-
     try:
         await session.async_ensure_token_valid()
     except ClientResponseError as ex:
@@ -70,14 +78,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         ):
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
-
-    hass.data[DOMAIN][config_entry.entry_id] = {
-        "ticktick_api_instance": (openapi_client.DefaultApi(
-            openapi_client.ApiClient(openapi_client.Configuration(access_token=session.token["access_token"]))))
-    }
-
-    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
-    return True
+    return session.token["access_token"]
 
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
