@@ -17,6 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import DOMAIN
 from .pyticktick import openapi_client
+from .pyticktick.openapi_client import OpenV1TaskTaskIdPostRequest
 
 DOMAIN = DOMAIN
 # SCAN_INTERVAL = timedelta(minutes=1)
@@ -83,7 +84,7 @@ class TickTickTodo(TodoListEntity):
         task = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
         task.project_id = self._id
         task.task_id = task.id
-        task = await self._api_instance.open_v1_task_task_id_post(task)
+        task = await self._api_instance.open_v1_task_task_id_post(task.id, TaskMapper(task))
         self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
 
     @staticmethod
@@ -94,7 +95,7 @@ class TickTickTodo(TodoListEntity):
 
     @staticmethod
     async def _todo_item_to_task(todo_item: TodoItem) -> openapi_client.Task:
-        return openapi_client.Task(id=todo_item.uid,  title=todo_item.summary, desc=todo_item.description,
+        return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
                                    due_date=todo_item.due)
 
@@ -115,3 +116,16 @@ class TickTickTodo(TodoListEntity):
             return 0
         else:
             return None
+
+
+class TaskMapper(OpenV1TaskTaskIdPostRequest):
+
+    def __init__(self, task_response: openapi_client.TaskResponse) -> None:
+        super().__init__()
+        self._task_response = task_response
+
+    def __getattr__(self, item):
+        return getattr(self._task_response, item)
+
+    def __setattr__(self, key, value):
+        setattr(self._task_response, key, value)
