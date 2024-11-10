@@ -41,13 +41,14 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
 
     api_instance = hass.data[DOMAIN][config_entry.entry_id]["ticktick_api_instance"]
     # Get User Project.
+    projects_ = await api_instance.open_v1_project_get()
     async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
                                                        identifiers={(DOMAIN, config_entry.entry_id)}),
                                       l.id,
                                       l.name,
                                       api_instance
-                                      )) for l in (await api_instance.open_v1_project_get())],
-                       True)
+                                      )) for l in projects_],
+                       False)
 
 
 class TickTickTodo(TodoListEntity):
