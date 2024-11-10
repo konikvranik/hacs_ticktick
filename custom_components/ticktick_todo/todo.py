@@ -97,17 +97,17 @@ class TickTickTodo(TodoListEntity):
     @staticmethod
     async def _task_status_to_todo_item_status(task_response: openapi_client.TaskResponse) -> TodoItemStatus | None:
         if task_response.status == 0:
-            return TodoItemStatus.COMPLETED
-        elif task_response.status == 2:
             return TodoItemStatus.NEEDS_ACTION
+        elif task_response.status == 2:
+            return TodoItemStatus.COMPLETED
         else:
             return None
 
     @staticmethod
     async def _todo_item_status_to_task_status(todo_item):
         if todo_item.status == TodoItemStatus.COMPLETED:
-            return 0
-        elif todo_item.status == TodoItemStatus.NEEDS_ACTION:
             return 2
+        elif todo_item.status == TodoItemStatus.NEEDS_ACTION:
+            return 0
         else:
             return None
