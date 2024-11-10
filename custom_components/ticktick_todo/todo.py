@@ -140,9 +140,16 @@ class TaskMapper(OpenV1TaskTaskIdPostRequest):
     def __init__(self, task_response: openapi_client.TaskResponse) -> None:
         super().__init__()
         self._task_response = task_response
+        self._task_response_methods = [f for f in dir(openapi_client.TaskResponse) if not f.startswith('_')]
 
     def __getattr__(self, item):
-        return getattr(self._task_response, item)
+        def method(*args):
+            if item in self._task_response_methods:
+                return getattr(self._task_response_methods, item)(*args)
+            else:
+                raise AttributeError
+
+        return method
 
     def __setattr__(self, key, value):
         setattr(self._task_response, key, value)
