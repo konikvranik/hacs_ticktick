@@ -17,7 +17,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import DOMAIN
 from .pyticktick import openapi_client
-from .pyticktick.openapi_client import OpenV1TaskTaskIdPostRequest
 
 DOMAIN = DOMAIN
 # SCAN_INTERVAL = timedelta(minutes=1)
@@ -84,13 +83,16 @@ class TickTickTodo(TodoListEntity):
         task = await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
         task.project_id = self._id
         task.task_id = task.id
-        task = await self._api_instance.open_v1_task_task_id_post(task.id, TaskMapper(task))
+        task = await self._api_instance.open_v1_task_task_id_post(task.id,
+                                                                  await TickTickTodo._task_response_to_task_request(
+                                                                      task))
         self.todo_items.append(await TickTickTodo._task_response_to_todo_item(task))
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         task = await TickTickTodo._todo_item_to_task_response(item)
-        await self._api_instance.open_v1_task_task_id_post(task.id, TaskMapper(task))
+        await self._api_instance.open_v1_task_task_id_post(task.id,
+                                                           await TickTickTodo._task_response_to_task_request(task))
 
     async def async_delete_todo_items(self, uids: list[str]) -> None:
         """Delete an item from the to-do list."""
@@ -134,22 +136,27 @@ class TickTickTodo(TodoListEntity):
         else:
             return None
 
+    @staticmethod
+    async def _task_response_to_task_request(
+            response: openapi_client.TaskResponse) -> openapi_client.OpenV1TaskTaskIdPostRequest:
+        return openapi_client.OpenV1TaskTaskIdPostRequest(
+            title=response.title,
+            is_all_day=response.is_all_day,
+            content=response.content,
+            desc=response.desc,
 
-class TaskMapper(OpenV1TaskTaskIdPostRequest):
+            items=response.items,
+            priority=response.priority,
+            reminders=response.reminders,
+            repeat_flag=response.repeat_flag,
+            sort_order=response.sort_order,
+            start_date=response.start_date,
 
-    def __init__(self, task_response: openapi_client.TaskResponse) -> None:
-        super().__init__()
-        self._task_response = task_response
-        self._task_response_methods = [f for f in dir(openapi_client.TaskResponse) if not f.startswith('_')]
+            time_zone=response.time_zone,
+            id=response.id,
+            task_id=response.task_id,
+            project_id=response.project_id,
+            completed_time=response.completed_time,
 
-    def __getattr__(self, item):
-        def method(*args):
-            if item in self._task_response_methods:
-                return getattr(self._task_response_methods, item)(*args)
-            else:
-                raise AttributeError
-
-        return method
-
-    def __setattr__(self, key, value):
-        setattr(self._task_response, key, value)
+            status=response.status
+        )
