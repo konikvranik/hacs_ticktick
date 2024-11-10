@@ -50,12 +50,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    token_ = open(f'{Path.home()}/.ticktick_token').read().strip() if DEBUG else await _get_valid_token(config_entry,
-                                                                                                        hass)
-    hass.data[DOMAIN][config_entry.entry_id] = {
-        "ticktick_api_instance": (openapi_client.DefaultApi(
-            openapi_client.ApiClient(openapi_client.Configuration(access_token=token_))))
-    }
+    token_ = await hass.async_add_executor_job(
+        (lambda: open(f'{Path.home()}/.ticktick_token').read().strip())) if DEBUG else await _get_valid_token(
+        config_entry, hass)
+
+    api_client_ =  openapi_client.ApiClient(openapi_client.Configuration(access_token=token_))
+    api_instance_ = openapi_client.DefaultApi(api_client_)
+    hass.data[DOMAIN][config_entry.entry_id] = {"ticktick_api_instance": api_instance_}
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
     return True
