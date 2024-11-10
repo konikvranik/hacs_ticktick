@@ -1,5 +1,4 @@
 """ mqtt-mediaplayer """
-import datetime
 import logging
 
 import homeassistant.helpers.config_validation as cv
@@ -77,18 +76,38 @@ class TickTickTodo(TodoListEntity):
         project_data: openapi_client.models.ProjectDataResponse = (
             await self._api_instance.open_v1_project_project_id_data_get(self._id))
         _LOGGER.debug("Project data: %s", project_data)
-        self._attr_todo_items = [await self._task_Response_to_todo_item(t) for t in project_data.tasks]
-
-    async def _task_Response_to_todo_item(self, task_response: openapi_client.TaskResponse) -> TodoItem:
-        return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
-                        status=TodoItemStatus.COMPLETED if task_response.status == 0 else TodoItemStatus.NEEDS_ACTION if task_response.status == 2 else None,
-                        due=task_response.due_date)
+        self._attr_todo_items = [await TickTickTodo._task_response_to_todo_item(t) for t in project_data.tasks]
 
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
-        await self._api_instance.open_v1_task_post(await self._todo_item_to_task(item))
+        await self._api_instance.open_v1_task_post(await TickTickTodo._todo_item_to_task(item))
 
-    async def _todo_item_to_task(self, todo_item: TodoItem) -> openapi_client.Task:
+    @staticmethod
+    async def _task_response_to_todo_item(task_response: openapi_client.TaskResponse) -> TodoItem:
+        return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
+                        status=await TickTickTodo._task_status_to_todo_item_status(task_response),
+                        due=task_response.due_date)
+
+    @staticmethod
+    async def _todo_item_to_task(todo_item: TodoItem) -> openapi_client.Task:
         return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
-                                   status=0 if todo_item.status == TodoItemStatus.COMPLETED else 2 if todo_item.status == TodoItemStatus.NEEDS_ACTION else -1,
+                                   status=await TickTickTodo._todo_item_status_to_task_status(todo_item),
                                    due_date=todo_item.due)
+
+    @staticmethod
+    async def _task_status_to_todo_item_status(task_response: openapi_client.TaskResponse) -> TodoItemStatus | None:
+        if task_response.status == 0:
+            return TodoItemStatus.COMPLETED
+        elif task_response.status == 2:
+            return TodoItemStatus.NEEDS_ACTION
+        else:
+            return None
+
+    @staticmethod
+    async def _todo_item_status_to_task_status(todo_item):
+        if todo_item.status == TodoItemStatus.COMPLETED:
+            return 0
+        elif todo_item.status == TodoItemStatus.NEEDS_ACTION:
+            return 2
+        else:
+            return None
