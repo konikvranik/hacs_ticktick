@@ -77,124 +77,18 @@ class TickTickTodo(TodoListEntity):
         project_data: openapi_client.models.ProjectDataResponse = (
             await self._api_instance.open_v1_project_project_id_data_get(self._id))
         _LOGGER.debug("Project data: %s", project_data)
-        self._attr_todo_items = [TickTickTodoItem(t) for t in project_data.tasks]
+        self._attr_todo_items = [await self._task_Response_to_todo_item(t) for t in project_data.tasks]
+
+    async def _task_Response_to_todo_item(self, task_response: openapi_client.TaskResponse) -> TodoItem:
+        return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
+                        status=TodoItemStatus.COMPLETED if task_response.status == 0 else TodoItemStatus.NEEDS_ACTION if task_response.status == 2 else None,
+                        due=task_response.due_date)
 
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
-        await self._api_instance.open_v1_task_post(TickTickTask(item))
+        await self._api_instance.open_v1_task_post(await self._todo_item_to_task(item))
 
-
-class TickTickTodoItem(TodoItem, openapi_client.TaskResponse):
-
-    def __init__(self, task_response: openapi_client.TaskResponse):
-        super().__init__()
-        self._task_response = task_response
-
-    @property
-    def task_response(self):
-        return self._task_response
-
-    @property
-    def summary(self) -> str:
-        return self._task_response.title
-
-    @summary.setter
-    def summary(self, summary: str):
-        self._task_response.title = summary
-
-    @property
-    def status(self) -> TodoItemStatus:
-        if self._task_response.status == 0:
-            return TodoItemStatus.COMPLETED
-        elif self._task_response.status == 2:
-            return TodoItemStatus.NEEDS_ACTION
-        else:
-            return None
-
-    @status.setter
-    def status(self, status: TodoItemStatus):
-        if status == TodoItemStatus.COMPLETED:
-            self._task_response.status = 0
-        elif status == TodoItemStatus.NEEDS_ACTION:
-            self._task_response.status = 2
-        else:
-            self._task_response.status = None
-
-    @property
-    def due(self):
-        return self._task_response.due_date
-
-    @due.setter
-    def due(self, due_date: datetime.datetime):
-        self._task_response.due_date = due_date
-
-    @property
-    def description(self):
-        return self._task_response.desc
-
-    @description.setter
-    def description(self, description: str):
-        self._task_response.desc = description
-
-    @property
-    def uid(self):
-        return self._task_response.id
-
-    @uid.setter
-    def uid(self, uuid: str):
-        self._task_response.id = uuid
-
-
-class TickTickTask(openapi_client.Task):
-
-    def __init__(self, item: TodoItem) -> None:
-        super().__init__()
-        self._todo_item = item
-
-    @property
-    def id(self):
-        return self._todo_item.uid
-
-    @id.setter
-    def id(self, id: str):
-        self._todo_item.uid = id
-
-    @property
-    def title(self):
-        return self._todo_item.summary
-
-    @title.setter
-    def title(self, title: str):
-        self._todo_item.summary = title
-
-    @property
-    def desc(self):
-        return self._todo_item.description
-
-    @desc.setter
-    def desc(self, desc: str):
-        self._todo_item.description = desc
-
-    @property
-    def due_date(self):
-        return self._todo_item.due
-
-    @due_date.setter
-    def due_date(self, due_date: datetime.datetime):
-        self._todo_item.due = due_date
-
-    @property
-    def status(self):
-        if self._todo_item.status == TodoItemStatus.COMPLETED:
-            return 0
-        elif self._todo_item.status == TodoItemStatus.NEEDS_ACTION:
-            return 2
-        else:
-            return None
-
-    @status.setter
-    def status(self, status: int):
-        if status == 0:
-            self._todo_item.status = TodoItemStatus.COMPLETED
-        elif status == 2:
-            self._todo_item.status == TodoItemStatus.NEEDS_ACTION
+    async def _todo_item_to_task(self, todo_item: TodoItem) -> openapi_client.Task:
+        return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
+                                   status=0 if todo_item.status == TodoItemStatus.COMPLETED else 2 if todo_item.status == TodoItemStatus.NEEDS_ACTION else -1,
+                                   due_date=todo_item.due)
