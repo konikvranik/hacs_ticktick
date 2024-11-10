@@ -90,11 +90,9 @@ class TickTickTodoItem(TodoItem, openapi_client.TaskResponse):
         super().__init__()
         self._task_response = task_response
 
-    def __getattr__(self, item):
-        return getattr(self._task_response, item)
-
-    def __setattr__(self, key, value):
-        return setattr(self._task_response, key, value)
+    @property
+    def task_response(self):
+        return self._task_response
 
     @property
     def summary(self) -> str:
@@ -152,12 +150,6 @@ class TickTickTask(openapi_client.Task):
     def __init__(self, item: TodoItem) -> None:
         super().__init__()
         self._todo_item = item
-
-    def __getattr__(self, item):
-        return getattr(self._todo_item, item)
-
-    def __setattr__(self, key, value):
-        return setattr(self._todo_item, key, value)
 
     @property
     def id(self):
