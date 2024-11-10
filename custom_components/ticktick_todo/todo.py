@@ -138,6 +138,14 @@ class TickTickTodoItem(TodoItem, openapi_client.TaskResponse):
     def description(self, description: str):
         self._task_response.desc = description
 
+    @property
+    def uid(self):
+        return self._task_response.id
+
+    @uid.setter
+    def uid(self, uuid: str):
+        self._task_response.id = uuid
+
 
 class TickTickTask(openapi_client.Task):
 
@@ -150,6 +158,14 @@ class TickTickTask(openapi_client.Task):
 
     def __setattr__(self, key, value):
         return setattr(self._todo_item, key, value)
+
+    @property
+    def id(self):
+        return self._todo_item.uid
+
+    @id.setter
+    def id(self, id: str):
+        self._todo_item.uid = id
 
     @property
     def title(self):
