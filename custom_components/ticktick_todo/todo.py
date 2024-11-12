@@ -1,5 +1,6 @@
 """ mqtt-mediaplayer """
 import logging
+import re
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -119,18 +120,22 @@ class TickTickTodo(TodoListEntity):
 
     @staticmethod
     def _todo_item_to_task(project_id: str, todo_item: TodoItem) -> openapi_client.Task:
-        return openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
+        priority = TickTickTodo._resolve_priority(todo_item)
+        task = openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=TickTickTodo._todo_item_status_to_task_status(todo_item),
-                                   due_date=todo_item.due, project_id=project_id)
+                                   due_date=todo_item.due, project_id=project_id, priority=priority)
+        return task
 
     @staticmethod
     def _merge_todo_item_and_task_response(todo_item: TodoItem,
                                            task_response: openapi_client.Task) -> openapi_client.Task:
+        priority = TickTickTodo._resolve_priority(todo_item)
         task_response.task_id = todo_item.uid
         task_response.status = TickTickTodo._todo_item_status_to_task_status(todo_item)
         task_response.title = todo_item.summary
         task_response.desc = todo_item.description
         task_response.due_date = todo_item.due
+        task_response.priority = priority
         return task_response
 
     @staticmethod
@@ -143,7 +148,7 @@ class TickTickTodo(TodoListEntity):
             return None
 
     @staticmethod
-    def _todo_item_status_to_task_status(todo_item):
+    def _todo_item_status_to_task_status(todo_item: TodoItem) -> int:
         if todo_item.status == TodoItemStatus.COMPLETED:
             return 2
         else:
@@ -170,3 +175,9 @@ class TickTickTodo(TodoListEntity):
             completed_time=response.completed_time,
             status=response.status
         )
+
+    @staticmethod
+    def _resolve_priority(todo_item):
+        result = re.compile("^(!*)(.*)$").match(todo_item.summary)
+        todo_item.summary = result.group(2)
+        return len(result.group(1)) * 2 - 1
