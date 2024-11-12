@@ -135,7 +135,8 @@ class TickTickTodo(TodoListEntity):
         task_response.title = todo_item.summary
         task_response.desc = todo_item.description
         task_response.due_date = todo_item.due
-        task_response.priority = priority
+        if priority:
+            task_response.priority = priority
         return task_response
 
     @staticmethod
@@ -178,6 +179,7 @@ class TickTickTodo(TodoListEntity):
 
     @staticmethod
     def _resolve_priority(todo_item):
-        result = re.compile("^(!*)(.*)$").match(todo_item.summary)
+        result = re.compile("^(!*)\\s*(.*)$").match(todo_item.summary)
         todo_item.summary = result.group(2)
-        return len(result.group(1)) * 2 - 1
+        priority = len(result.group(1)) * 2 - 1
+        return 0 if todo_item.summary.startswith(" ") else max(priority, 0)
