@@ -120,11 +120,9 @@ Class | Method | HTTP request | Description
  - [OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest](docs/OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest.md)
  - [OpenV1TaskTaskIdPostRequest](docs/OpenV1TaskTaskIdPostRequest.md)
  - [Project](docs/Project.md)
- - [ProjectDataResponse](docs/ProjectDataResponse.md)
- - [ProjectResponse](docs/ProjectResponse.md)
+ - [ProjectData](docs/ProjectData.md)
  - [Status](docs/Status.md)
  - [Task](docs/Task.md)
- - [TaskResponse](docs/TaskResponse.md)
 
 
 <a id="documentation-for-authorization"></a>

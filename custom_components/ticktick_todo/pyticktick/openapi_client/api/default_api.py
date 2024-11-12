@@ -11,29 +11,12 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import re  # noqa: F401
-import io
-import warnings
-
-from pydantic import validate_arguments, ValidationError
-from typing import overload, Optional, Union, Awaitable
-
-from typing_extensions import Annotated
-from pydantic import Field, StrictStr
-
 from typing import List, Optional
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+from pydantic import Field, StrictStr
+from pydantic import validate_arguments
+from typing_extensions import Annotated
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.api_client import ApiClient
 from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
@@ -41,6 +24,19 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import
     ApiTypeError,
     ApiValueError
 )
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import \
+    OauthTokenPost200Response
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import \
+    OauthTokenPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import \
+    OpenV1ProjectProjectIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_task_task_id_complete_post_request import \
+    OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import \
+    OpenV1TaskTaskIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data import ProjectData
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 
 
 class DefaultApi:
@@ -56,7 +52,8 @@ class DefaultApi:
         self.api_client = api_client
 
     @validate_arguments
-    async def oauth_token_post(self, oauth_token_post_request : Optional[OauthTokenPostRequest] = None, **kwargs) -> OauthTokenPost200Response:  # noqa: E501
+    async def oauth_token_post(self, oauth_token_post_request: Optional[OauthTokenPostRequest] = None,
+                               **kwargs) -> OauthTokenPost200Response:  # noqa: E501
         """Get token  # noqa: E501
 
         client_id and :client_secret are passes to basic auth as username and password  # noqa: E501
@@ -79,7 +76,8 @@ class DefaultApi:
         return await self.oauth_token_post_with_http_info(oauth_token_post_request, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def oauth_token_post_with_http_info(self, oauth_token_post_request : Optional[OauthTokenPostRequest] = None, **kwargs) -> ApiResponse:  # noqa: E501
+    async def oauth_token_post_with_http_info(self, oauth_token_post_request: Optional[OauthTokenPostRequest] = None,
+                                              **kwargs) -> ApiResponse:  # noqa: E501
         """Get token  # noqa: E501
 
         client_id and :client_secret are passes to basic auth as username and password  # noqa: E501
@@ -158,10 +156,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['BasicAuth']  # noqa: E501
@@ -187,7 +185,7 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_get(self, **kwargs) -> List[ProjectResponse]:  # noqa: E501
+    async def open_v1_project_get(self, **kwargs) -> List[Project]:  # noqa: E501
         """Get User Project.  # noqa: E501
 
 
@@ -198,7 +196,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: List[ProjectResponse]
+        :rtype: List[Project]
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -231,7 +229,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(List[ProjectResponse], status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(List[Project], status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -281,7 +279,7 @@ class DefaultApi:
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "List[ProjectResponse]",
+            '200': "List[Project]",
             '401': None,
             '403': None,
             '404': None,
@@ -304,7 +302,7 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_post(self, project : Project, **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_post(self, project: Project, **kwargs) -> Project:  # noqa: E501
         """Create Project  # noqa: E501
 
 
@@ -317,7 +315,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: ProjectResponse
+        :rtype: Project
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -326,7 +324,7 @@ class DefaultApi:
         return await self.open_v1_project_post_with_http_info(project, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_post_with_http_info(self, project : Project, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_post_with_http_info(self, project: Project, **kwargs) -> ApiResponse:  # noqa: E501
         """Create Project  # noqa: E501
 
 
@@ -352,7 +350,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(ProjectResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Project, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -404,16 +402,16 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "ProjectResponse",
+            '200': "Project",
             '201': None,
             '401': None,
             '403': None,
@@ -437,7 +435,8 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_data_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectDataResponse:  # noqa: E501
+    async def open_v1_project_project_id_data_get(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectData:  # noqa: E501
         """open_v1_project_project_id_data_get  # noqa: E501
 
 
@@ -450,7 +449,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: ProjectDataResponse
+        :rtype: ProjectData
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -459,7 +458,8 @@ class DefaultApi:
         return await self.open_v1_project_project_id_data_get_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_data_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_data_get_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_data_get  # noqa: E501
 
 
@@ -485,7 +485,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(ProjectDataResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(ProjectData, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -521,7 +521,6 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -539,7 +538,7 @@ class DefaultApi:
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "ProjectDataResponse",
+            '200': "ProjectData",
             '401': None,
             '403': None,
             '404': None,
@@ -562,7 +561,8 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_delete(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_delete(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> None:  # noqa: E501
         """open_v1_project_project_id_delete  # noqa: E501
 
 
@@ -584,7 +584,8 @@ class DefaultApi:
         return await self.open_v1_project_project_id_delete_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_delete_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_delete_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_delete  # noqa: E501
 
 
@@ -646,7 +647,6 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -678,7 +678,8 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_project_id_get(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> Project:  # noqa: E501
         """open_v1_project_project_id_get  # noqa: E501
 
 
@@ -691,7 +692,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: ProjectResponse
+        :rtype: Project
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -700,7 +701,8 @@ class DefaultApi:
         return await self.open_v1_project_project_id_get_with_http_info(project_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_get_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """open_v1_project_project_id_get  # noqa: E501
 
 
@@ -726,7 +728,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(ProjectResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Project, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -762,7 +764,6 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -780,7 +781,7 @@ class DefaultApi:
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "ProjectResponse",
+            '200': "Project",
             '401': None,
             '403': None,
             '404': None,
@@ -803,7 +804,10 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_post(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], open_v1_project_project_id_post_request : OpenV1ProjectProjectIdPostRequest, **kwargs) -> ProjectResponse:  # noqa: E501
+    async def open_v1_project_project_id_post(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")],
+                                              open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest,
+                                              **kwargs) -> Project:  # noqa: E501
         """Update Project  # noqa: E501
 
 
@@ -818,16 +822,21 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: ProjectResponse
+        :rtype: Project
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return await self.open_v1_project_project_id_post_with_http_info(project_id, open_v1_project_project_id_post_request, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_post_with_http_info(project_id,
+                                                                         open_v1_project_project_id_post_request,
+                                                                         **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_post_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], open_v1_project_project_id_post_request : OpenV1ProjectProjectIdPostRequest, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_post_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")],
+                                                             open_v1_project_project_id_post_request: OpenV1ProjectProjectIdPostRequest,
+                                                             **kwargs) -> ApiResponse:  # noqa: E501
         """Update Project  # noqa: E501
 
 
@@ -855,7 +864,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(ProjectResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Project, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -892,7 +901,6 @@ class DefaultApi:
         if _params['project_id'] is not None:
             _path_params['projectId'] = _params['project_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -911,16 +919,16 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "ProjectResponse",
+            '200': "Project",
             '201': None,
             '401': None,
             '403': None,
@@ -944,7 +952,11 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_complete_post(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_project_project_id_task_task_id_complete_post_request : OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest, **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_complete_post(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")],
+                                                                    open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest,
+                                                                    **kwargs) -> None:  # noqa: E501
         """Update Task  # noqa: E501
 
 
@@ -967,10 +979,16 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_complete_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return await self.open_v1_project_project_id_task_task_id_complete_post_with_http_info(project_id, task_id, open_v1_project_project_id_task_task_id_complete_post_request, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_complete_post_with_http_info(project_id, task_id,
+                                                                                               open_v1_project_project_id_task_task_id_complete_post_request,
+                                                                                               **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_complete_post_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_project_project_id_task_task_id_complete_post_request : OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_complete_post_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")],
+                                                                                   open_v1_project_project_id_task_task_id_complete_post_request: OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest,
+                                                                                   **kwargs) -> ApiResponse:  # noqa: E501
         """Update Task  # noqa: E501
 
 
@@ -1041,7 +1059,6 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1056,10 +1073,10 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
@@ -1083,7 +1100,9 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_delete(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> None:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_delete(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")], **kwargs) -> None:  # noqa: E501
         """Delete task.  # noqa: E501
 
 
@@ -1104,10 +1123,13 @@ class DefaultApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_delete_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return await self.open_v1_project_project_id_task_task_id_delete_with_http_info(project_id, task_id, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_delete_with_http_info(project_id, task_id,
+                                                                                        **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_delete_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_delete_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """Delete task.  # noqa: E501
 
 
@@ -1175,7 +1197,6 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1207,7 +1228,9 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_get(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_get(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")], **kwargs) -> Task:  # noqa: E501
         """Get Task By Project ID And Task ID.  # noqa: E501
 
 
@@ -1222,16 +1245,19 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: TaskResponse
+        :rtype: Task
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_project_project_id_task_task_id_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return await self.open_v1_project_project_id_task_task_id_get_with_http_info(project_id, task_id, **kwargs)  # noqa: E501
+        return await self.open_v1_project_project_id_task_task_id_get_with_http_info(project_id, task_id,
+                                                                                     **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_project_project_id_task_task_id_get_with_http_info(self, project_id : Annotated[StrictStr, Field(..., description="Project identifier")], task_id : Annotated[StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_project_project_id_task_task_id_get_with_http_info(self, project_id: Annotated[
+        StrictStr, Field(..., description="Project identifier")], task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")], **kwargs) -> ApiResponse:  # noqa: E501
         """Get Task By Project ID And Task ID.  # noqa: E501
 
 
@@ -1259,7 +1285,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(TaskResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Task, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -1299,7 +1325,6 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1317,7 +1342,7 @@ class DefaultApi:
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "TaskResponse",
+            '200': "Task",
             '401': None,
             '403': None,
             '404': None,
@@ -1340,7 +1365,7 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_task_post(self, task : Task, **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_task_post(self, task: Task, **kwargs) -> Task:  # noqa: E501
         """Create Task  # noqa: E501
 
 
@@ -1353,7 +1378,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: TaskResponse
+        :rtype: Task
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -1362,7 +1387,7 @@ class DefaultApi:
         return await self.open_v1_task_post_with_http_info(task, **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_task_post_with_http_info(self, task : Task, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_task_post_with_http_info(self, task: Task, **kwargs) -> ApiResponse:  # noqa: E501
         """Create Task  # noqa: E501
 
 
@@ -1388,7 +1413,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(TaskResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Task, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -1440,16 +1465,16 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "TaskResponse",
+            '200': "Task",
             '201': None,
             '401': None,
             '403': None,
@@ -1473,7 +1498,9 @@ class DefaultApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    async def open_v1_task_task_id_post(self, task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_task_task_id_post_request : OpenV1TaskTaskIdPostRequest, **kwargs) -> TaskResponse:  # noqa: E501
+    async def open_v1_task_task_id_post(self, task_id: Annotated[StrictStr, Field(..., description="Task identifier")],
+                                        open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest,
+                                        **kwargs) -> Task:  # noqa: E501
         """Update Task  # noqa: E501
 
 
@@ -1488,16 +1515,20 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: TaskResponse
+        :rtype: Task
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
             message = "Error! Please call the open_v1_task_task_id_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return await self.open_v1_task_task_id_post_with_http_info(task_id, open_v1_task_task_id_post_request, **kwargs)  # noqa: E501
+        return await self.open_v1_task_task_id_post_with_http_info(task_id, open_v1_task_task_id_post_request,
+                                                                   **kwargs)  # noqa: E501
 
     @validate_arguments
-    async def open_v1_task_task_id_post_with_http_info(self, task_id : Annotated[StrictStr, Field(..., description="Task identifier")], open_v1_task_task_id_post_request : OpenV1TaskTaskIdPostRequest, **kwargs) -> ApiResponse:  # noqa: E501
+    async def open_v1_task_task_id_post_with_http_info(self, task_id: Annotated[
+        StrictStr, Field(..., description="Task identifier")],
+                                                       open_v1_task_task_id_post_request: OpenV1TaskTaskIdPostRequest,
+                                                       **kwargs) -> ApiResponse:  # noqa: E501
         """Update Task  # noqa: E501
 
 
@@ -1525,7 +1556,7 @@ class DefaultApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(TaskResponse, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(Task, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -1562,7 +1593,6 @@ class DefaultApi:
         if _params['task_id'] is not None:
             _path_params['taskId'] = _params['task_id']
 
-
         # process the query parameters
         _query_params = []
         # process the header parameters
@@ -1581,16 +1611,16 @@ class DefaultApi:
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+                                          self.api_client.select_header_content_type(
+                                              ['application/json']))
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['OAuth2', 'BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "TaskResponse",
+            '200': "Task",
             '201': None,
             '401': None,
             '403': None,

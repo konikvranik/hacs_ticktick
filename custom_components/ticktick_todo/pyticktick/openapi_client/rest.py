@@ -11,15 +11,14 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import io
 import json
 import logging
 import re
 import ssl
+from urllib.parse import urlencode
 
 import aiohttp
-from urllib.parse import urlencode, quote_plus
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiException, ApiValueError
 
@@ -183,7 +182,7 @@ class RESTClientObject:
         return r
 
     async def get_request(self, url, headers=None, query_params=None,
-                  _preload_content=True, _request_timeout=None):
+                          _preload_content=True, _request_timeout=None):
         return (await self.request("GET", url,
                                    headers=headers,
                                    _preload_content=_preload_content,
@@ -191,7 +190,7 @@ class RESTClientObject:
                                    query_params=query_params))
 
     async def head_request(self, url, headers=None, query_params=None,
-                   _preload_content=True, _request_timeout=None):
+                           _preload_content=True, _request_timeout=None):
         return (await self.request("HEAD", url,
                                    headers=headers,
                                    _preload_content=_preload_content,
@@ -199,8 +198,8 @@ class RESTClientObject:
                                    query_params=query_params))
 
     async def options_request(self, url, headers=None, query_params=None,
-                      post_params=None, body=None, _preload_content=True,
-                      _request_timeout=None):
+                              post_params=None, body=None, _preload_content=True,
+                              _request_timeout=None):
         return (await self.request("OPTIONS", url,
                                    headers=headers,
                                    query_params=query_params,
@@ -210,7 +209,7 @@ class RESTClientObject:
                                    body=body))
 
     async def delete_request(self, url, headers=None, query_params=None, body=None,
-                     _preload_content=True, _request_timeout=None):
+                             _preload_content=True, _request_timeout=None):
         return (await self.request("DELETE", url,
                                    headers=headers,
                                    query_params=query_params,
@@ -219,8 +218,8 @@ class RESTClientObject:
                                    body=body))
 
     async def post_request(self, url, headers=None, query_params=None,
-                   post_params=None, body=None, _preload_content=True,
-                   _request_timeout=None):
+                           post_params=None, body=None, _preload_content=True,
+                           _request_timeout=None):
         return (await self.request("POST", url,
                                    headers=headers,
                                    query_params=query_params,
@@ -230,7 +229,7 @@ class RESTClientObject:
                                    body=body))
 
     async def put_request(self, url, headers=None, query_params=None, post_params=None,
-                  body=None, _preload_content=True, _request_timeout=None):
+                          body=None, _preload_content=True, _request_timeout=None):
         return (await self.request("PUT", url,
                                    headers=headers,
                                    query_params=query_params,
@@ -240,8 +239,8 @@ class RESTClientObject:
                                    body=body))
 
     async def patch_request(self, url, headers=None, query_params=None,
-                    post_params=None, body=None, _preload_content=True,
-                    _request_timeout=None):
+                            post_params=None, body=None, _preload_content=True,
+                            _request_timeout=None):
         return (await self.request("PATCH", url,
                                    headers=headers,
                                    query_params=query_params,

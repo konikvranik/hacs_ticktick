@@ -29,7 +29,13 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
     """
     OpenV1TaskTaskIdPostRequest
     """
+    id: Optional[StrictStr] = Field(default=None, description="Task identifier")
+    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
+    project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     title: Optional[StrictStr] = Field(default=None, description="Task title")
+    completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
+                                               description="Task completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
+    status: Optional[Status] = None
     is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     content: Optional[StrictStr] = Field(default=None, description="Task content")
     desc: Optional[StrictStr] = Field(default=None, description="Task description of checklist")
@@ -43,15 +49,9 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
     start_date: Optional[datetime] = Field(default=None, alias="startDate",
                                            description="Start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
-    id: Optional[StrictStr] = Field(default=None, description="Task identifier")
-    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
-    project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
-    completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
-                                               description="Task completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
-    status: Optional[Status] = None
     additional_properties: Dict[str, Any] = {}
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
-                    "sortOrder", "startDate", "timeZone", "id", "taskId", "projectId", "completedTime", "status"]
+    __properties = ["id", "taskId", "projectId", "title", "completedTime", "status", "isAllDay", "content", "desc",
+                    "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -112,7 +112,12 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
             return OpenV1TaskTaskIdPostRequest.parse_obj(obj)
 
         _obj = OpenV1TaskTaskIdPostRequest.parse_obj({
+            "id": obj.get("id"),
+            "task_id": obj.get("taskId"),
+            "project_id": obj.get("projectId"),
             "title": obj.get("title"),
+            "completed_time": obj.get("completedTime"),
+            "status": obj.get("status"),
             "is_all_day": obj.get("isAllDay"),
             "content": obj.get("content"),
             "desc": obj.get("desc"),
@@ -124,12 +129,7 @@ class OpenV1TaskTaskIdPostRequest(BaseModel):
             "repeat_flag": obj.get("repeatFlag"),
             "sort_order": obj.get("sortOrder"),
             "start_date": obj.get("startDate"),
-            "time_zone": obj.get("timeZone"),
-            "id": obj.get("id"),
-            "task_id": obj.get("taskId"),
-            "project_id": obj.get("projectId"),
-            "completed_time": obj.get("completedTime"),
-            "status": obj.get("status")
+            "time_zone": obj.get("timeZone")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

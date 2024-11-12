@@ -22,13 +22,20 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, conlist, validator
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
 
 
 class Task(BaseModel):
     """
     Task
     """
+    id: Optional[StrictStr] = Field(default=None, description="Task identifier")
+    task_id: Optional[StrictStr] = Field(default=None, alias="taskId", description="Task identifier")
+    project_id: Optional[StrictStr] = Field(default=None, alias="projectId", description="Task project id")
     title: Optional[StrictStr] = Field(default=None, description="Task title")
+    completed_time: Optional[datetime] = Field(default=None, alias="completedTime",
+                                               description="Task completed time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
+    status: Optional[Status] = None
     is_all_day: Optional[StrictBool] = Field(default=None, alias="isAllDay", description="All day")
     content: Optional[StrictStr] = Field(default=None, description="Task content")
     desc: Optional[StrictStr] = Field(default=None, description="Task description of checklist")
@@ -43,8 +50,8 @@ class Task(BaseModel):
                                            description="Start date time in \"yyyy-MM-dd'T'HH:mm:ssZ\"")
     time_zone: Optional[Any] = Field(default=None, alias="timeZone")
     additional_properties: Dict[str, Any] = {}
-    __properties = ["title", "isAllDay", "content", "desc", "dueDate", "items", "priority", "reminders", "repeatFlag",
-                    "sortOrder", "startDate", "timeZone"]
+    __properties = ["id", "taskId", "projectId", "title", "completedTime", "status", "isAllDay", "content", "desc",
+                    "dueDate", "items", "priority", "reminders", "repeatFlag", "sortOrder", "startDate", "timeZone"]
 
     @validator('priority')
     def priority_validate_enum(cls, value):
@@ -105,7 +112,12 @@ class Task(BaseModel):
             return Task.parse_obj(obj)
 
         _obj = Task.parse_obj({
+            "id": obj.get("id"),
+            "task_id": obj.get("taskId"),
+            "project_id": obj.get("projectId"),
             "title": obj.get("title"),
+            "completed_time": obj.get("completedTime"),
+            "status": obj.get("status"),
             "is_all_day": obj.get("isAllDay"),
             "content": obj.get("content"),
             "desc": obj.get("desc"),

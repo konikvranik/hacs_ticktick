@@ -28,7 +28,7 @@ DEFAULT_NAME = MANIFEST[CONF_NAME]
 PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
 
-DEBUG = False
+DEBUG = True
 
 SCHEMA = {
     vol.Required(CONF_HOST): cv.string,
@@ -50,11 +50,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    token_ = await hass.async_add_executor_job(
-        (lambda: open(f'{Path.home()}/.ticktick_token').read().strip())) if DEBUG else await _get_valid_token(
-        config_entry, hass)
-
-    api_client_ =  openapi_client.ApiClient(openapi_client.Configuration(access_token=token_))
+    token_ = await _get_valid_token(config_entry, hass)
+    api_client_ = openapi_client.ApiClient(openapi_client.Configuration(access_token=token_))
     api_instance_ = openapi_client.DefaultApi(api_client_)
     hass.data[DOMAIN][config_entry.entry_id] = {"ticktick_api_instance": api_instance_}
 
@@ -63,10 +60,15 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
 
 async def _get_valid_token(config_entry, hass):
-    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
     # Set unique id if non was set (migration)
     if not config_entry.unique_id:
         hass.config_entries.async_update_entry(config_entry, unique_id=DOMAIN)
+
+    if DEBUG:
+        return await hass.async_add_executor_job(
+            (lambda: open(f'{Path.home()}/.ticktick_token').read().strip()))
+
+    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
     session = config_entry_oauth2_flow.OAuth2Session(hass, config_entry, implementation)
     try:
         await session.async_ensure_token_valid()

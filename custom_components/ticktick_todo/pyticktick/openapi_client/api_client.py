@@ -11,22 +11,21 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import atexit
 import datetime
-from dateutil.parser import parse
 import json
 import mimetypes
 import os
 import re
 import tempfile
-
 from urllib.parse import quote
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.configuration import Configuration
-from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
+from dateutil.parser import parse
+
 import custom_components.ticktick_todo.pyticktick.openapi_client.models
 from custom_components.ticktick_todo.pyticktick.openapi_client import rest
+from custom_components.ticktick_todo.pyticktick.openapi_client.api_response import ApiResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.configuration import Configuration
 from custom_components.ticktick_todo.pyticktick.openapi_client.exceptions import ApiValueError, ApiException
 
 
@@ -49,7 +48,7 @@ class ApiClient:
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         'int': int,
-        'long': int, # TODO remove as only py3 is supported?
+        'long': int,  # TODO remove as only py3 is supported?
         'float': float,
         'str': str,
         'bool': bool,
@@ -95,7 +94,6 @@ class ApiClient:
 
     def set_default_header(self, header_name, header_value):
         self.default_headers[header_name] = header_value
-
 
     _default = None
 
@@ -203,39 +201,39 @@ class ApiClient:
 
         self.last_response = response_data
 
-        return_data = None # assuming deserialization is not needed
+        return_data = None  # assuming deserialization is not needed
         # data needs deserialization or returns HTTP data (deserialized) only
         if _preload_content or _return_http_data_only:
-          response_type = response_types_map.get(str(response_data.status), None)
-          if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
-              # if not found, look for '1XX', '2XX', etc.
-              response_type = response_types_map.get(str(response_data.status)[0] + "XX", None)
+            response_type = response_types_map.get(str(response_data.status), None)
+            if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
+                # if not found, look for '1XX', '2XX', etc.
+                response_type = response_types_map.get(str(response_data.status)[0] + "XX", None)
 
-          if response_type == "bytearray":
-              response_data.data = response_data.data
-          else:
-              match = None
-              content_type = response_data.getheader('content-type')
-              if content_type is not None:
-                  match = re.search(r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type)
-              encoding = match.group(1) if match else "utf-8"
-              response_data.data = response_data.data.decode(encoding)
+            if response_type == "bytearray":
+                response_data.data = response_data.data
+            else:
+                match = None
+                content_type = response_data.getheader('content-type')
+                if content_type is not None:
+                    match = re.search(r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type)
+                encoding = match.group(1) if match else "utf-8"
+                response_data.data = response_data.data.decode(encoding)
 
-          # deserialize response data
-          if response_type == "bytearray":
-              return_data = response_data.data
-          elif response_type:
-              return_data = self.deserialize(response_data, response_type)
-          else:
-              return_data = None
+            # deserialize response data
+            if response_type == "bytearray":
+                return_data = response_data.data
+            elif response_type:
+                return_data = self.deserialize(response_data, response_type)
+            else:
+                return_data = None
 
         if _return_http_data_only:
             return return_data
         else:
-            return ApiResponse(status_code = response_data.status,
-                           data = return_data,
-                           headers = response_data.getheaders(),
-                           raw_data = response_data.data)
+            return ApiResponse(status_code=response_data.status,
+                               data=return_data,
+                               headers=response_data.getheaders(),
+                               raw_data=response_data.data)
 
     def sanitize_for_serialization(self, obj):
         """Builds a JSON POST object.
@@ -339,12 +337,12 @@ class ApiClient:
             return self.__deserialize_model(data, klass)
 
     async def call_api(self, resource_path, method,
-                 path_params=None, query_params=None, header_params=None,
-                 body=None, post_params=None, files=None,
-                 response_types_map=None, auth_settings=None,
-                 _return_http_data_only=None,
-                 collection_formats=None, _preload_content=True,
-                 _request_timeout=None, _host=None, _request_auth=None):
+                       path_params=None, query_params=None, header_params=None,
+                       body=None, post_params=None, files=None,
+                       response_types_map=None, auth_settings=None,
+                       _return_http_data_only=None,
+                       collection_formats=None, _preload_content=True,
+                       _request_timeout=None, _host=None, _request_auth=None):
         """Makes the HTTP request (synchronous) and returns deserialized data.
 
         :param resource_path: Path to method endpoint.
@@ -400,58 +398,58 @@ class ApiClient:
         return await self.__call_api(*args)
 
     async def request(self, method, url, query_params=None, headers=None,
-                post_params=None, body=None, _preload_content=True,
-                _request_timeout=None):
+                      post_params=None, body=None, _preload_content=True,
+                      _request_timeout=None):
         """Makes the HTTP request using RESTClient."""
         if method == "GET":
             return await self.rest_client.get_request(url,
-                                        query_params=query_params,
-                                        _preload_content=_preload_content,
-                                        _request_timeout=_request_timeout,
-                                        headers=headers)
+                                                      query_params=query_params,
+                                                      _preload_content=_preload_content,
+                                                      _request_timeout=_request_timeout,
+                                                      headers=headers)
         elif method == "HEAD":
             return await self.rest_client.head_request(url,
-                                         query_params=query_params,
-                                         _preload_content=_preload_content,
-                                         _request_timeout=_request_timeout,
-                                         headers=headers)
+                                                       query_params=query_params,
+                                                       _preload_content=_preload_content,
+                                                       _request_timeout=_request_timeout,
+                                                       headers=headers)
         elif method == "OPTIONS":
             return await self.rest_client.options_request(url,
-                                            query_params=query_params,
-                                            headers=headers,
-                                            _preload_content=_preload_content,
-                                            _request_timeout=_request_timeout)
+                                                          query_params=query_params,
+                                                          headers=headers,
+                                                          _preload_content=_preload_content,
+                                                          _request_timeout=_request_timeout)
         elif method == "POST":
             return await self.rest_client.post_request(url,
-                                         query_params=query_params,
-                                         headers=headers,
-                                         post_params=post_params,
-                                         _preload_content=_preload_content,
-                                         _request_timeout=_request_timeout,
-                                         body=body)
+                                                       query_params=query_params,
+                                                       headers=headers,
+                                                       post_params=post_params,
+                                                       _preload_content=_preload_content,
+                                                       _request_timeout=_request_timeout,
+                                                       body=body)
         elif method == "PUT":
             return await self.rest_client.put_request(url,
-                                        query_params=query_params,
-                                        headers=headers,
-                                        post_params=post_params,
-                                        _preload_content=_preload_content,
-                                        _request_timeout=_request_timeout,
-                                        body=body)
+                                                      query_params=query_params,
+                                                      headers=headers,
+                                                      post_params=post_params,
+                                                      _preload_content=_preload_content,
+                                                      _request_timeout=_request_timeout,
+                                                      body=body)
         elif method == "PATCH":
             return await self.rest_client.patch_request(url,
-                                          query_params=query_params,
-                                          headers=headers,
-                                          post_params=post_params,
-                                          _preload_content=_preload_content,
-                                          _request_timeout=_request_timeout,
-                                          body=body)
+                                                        query_params=query_params,
+                                                        headers=headers,
+                                                        post_params=post_params,
+                                                        _preload_content=_preload_content,
+                                                        _request_timeout=_request_timeout,
+                                                        body=body)
         elif method == "DELETE":
             return await self.rest_client.delete_request(url,
-                                           query_params=query_params,
-                                           headers=headers,
-                                           _preload_content=_preload_content,
-                                           _request_timeout=_request_timeout,
-                                           body=body)
+                                                         query_params=query_params,
+                                                         headers=headers,
+                                                         _preload_content=_preload_content,
+                                                         _request_timeout=_request_timeout,
+                                                         body=body)
         else:
             raise ApiValueError(
                 "http method must be `GET`, `HEAD`, `OPTIONS`,"

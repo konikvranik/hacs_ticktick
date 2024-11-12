@@ -11,14 +11,10 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import json
-import pprint
 import re  # noqa: F401
-from aenum import Enum, no_arg
 
-
-
+from aenum import Enum
 
 
 class Status(int, Enum):
@@ -36,5 +32,3 @@ class Status(int, Enum):
     def from_json(cls, json_str: str) -> Status:
         """Create an instance of Status from a JSON string"""
         return Status(json.loads(json_str))
-
-

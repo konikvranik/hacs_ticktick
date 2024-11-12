@@ -11,15 +11,15 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
+
 
 class OauthTokenPostRequest(BaseModel):
     """
@@ -27,7 +27,8 @@ class OauthTokenPostRequest(BaseModel):
     """
     code: Optional[Any] = Field(default=None, description="The code obtained in the second step")
     grant_type: Optional[Any] = Field(default=None, description="grant type, now only authorization_code")
-    scope: Optional[Any] = Field(default=None, description="spaces-separated permission scope. The currently available scopes are tasks:write, tasks:read")
+    scope: Optional[Any] = Field(default=None,
+                                 description="spaces-separated permission scope. The currently available scopes are tasks:write, tasks:read")
     redirect_uri: Optional[Any] = Field(default=None, description="user-configured redirect url")
     additional_properties: Dict[str, Any] = {}
     __properties = ["code", "grant_type", "scope", "redirect_uri"]
@@ -54,7 +55,7 @@ class OauthTokenPostRequest(BaseModel):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True,
                           exclude={
-                            "additional_properties"
+                              "additional_properties"
                           },
                           exclude_none=True)
         # puts key-value pairs in additional_properties in the top level
@@ -105,5 +106,3 @@ class OauthTokenPostRequest(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
-
-

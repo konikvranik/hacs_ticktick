@@ -98,7 +98,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_get**
-> List[ProjectResponse] open_v1_project_get()
+> List[Project] open_v1_project_get()
 
 Get User Project.
 
@@ -110,7 +110,7 @@ Get User Project.
 import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -153,7 +153,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List[ProjectResponse]**](ProjectResponse.md)
+[**List[Project]**](Project.md)
 
 ### Authorization
 
@@ -175,7 +175,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_post**
-> ProjectResponse open_v1_project_post(project)
+> Project open_v1_project_post(project)
 
 Create Project
 
@@ -188,7 +188,6 @@ import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -235,7 +234,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ProjectResponse**](ProjectResponse.md)
+[**Project**](Project.md)
 
 ### Authorization
 
@@ -258,7 +257,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_project_id_data_get**
-> ProjectDataResponse open_v1_project_project_id_data_get(project_id)
+> ProjectData open_v1_project_project_id_data_get(project_id)
 
 
 
@@ -270,7 +269,7 @@ Name | Type | Description  | Notes
 import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data import ProjectData
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -316,7 +315,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ProjectDataResponse**](ProjectDataResponse.md)
+[**ProjectData**](ProjectData.md)
 
 ### Authorization
 
@@ -415,7 +414,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_project_id_get**
-> ProjectResponse open_v1_project_project_id_get(project_id)
+> Project open_v1_project_project_id_get(project_id)
 
 
 
@@ -427,7 +426,7 @@ void (empty response body)
 import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -473,7 +472,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ProjectResponse**](ProjectResponse.md)
+[**Project**](Project.md)
 
 ### Authorization
 
@@ -495,7 +494,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_project_id_post**
-> ProjectResponse open_v1_project_project_id_post(project_id, open_v1_project_project_id_post_request)
+> Project open_v1_project_project_id_post(project_id, open_v1_project_project_id_post_request)
 
 Update Project
 
@@ -508,7 +507,7 @@ import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -557,7 +556,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ProjectResponse**](ProjectResponse.md)
+[**Project**](Project.md)
 
 ### Authorization
 
@@ -744,7 +743,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_project_project_id_task_task_id_get**
-> TaskResponse open_v1_project_project_id_task_task_id_get(project_id, task_id)
+> Task open_v1_project_project_id_task_task_id_get(project_id, task_id)
 
 Get Task By Project ID And Task ID.
 
@@ -756,7 +755,7 @@ Get Task By Project ID And Task ID.
 import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -805,7 +804,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**TaskResponse**](TaskResponse.md)
+[**Task**](Task.md)
 
 ### Authorization
 
@@ -827,7 +826,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_task_post**
-> TaskResponse open_v1_task_post(task)
+> Task open_v1_task_post(task)
 
 Create Task
 
@@ -840,7 +839,6 @@ import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -887,7 +885,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**TaskResponse**](TaskResponse.md)
+[**Task**](Task.md)
 
 ### Authorization
 
@@ -910,7 +908,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **open_v1_task_task_id_post**
-> TaskResponse open_v1_task_task_id_post(task_id, open_v1_task_task_id_post_request)
+> Task open_v1_task_task_id_post(task_id, open_v1_task_task_id_post_request)
 
 Update Task
 
@@ -923,7 +921,7 @@ import time
 import os
 import custom_components.ticktick_todo.pyticktick.openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 from custom_components.ticktick_todo.pyticktick.openapi_client.rest import ApiException
 from pprint import pprint
 
@@ -972,7 +970,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**TaskResponse**](TaskResponse.md)
+[**Task**](Task.md)
 
 ### Authorization
 

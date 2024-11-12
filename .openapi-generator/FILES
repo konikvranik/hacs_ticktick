@@ -20,11 +20,9 @@ custom_components/ticktick_todo/pyticktick/openapi_client/models/open_v1_project
 custom_components/ticktick_todo/pyticktick/openapi_client/models/open_v1_project_project_id_task_task_id_complete_post_request.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/open_v1_task_task_id_post_request.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/project.py
-custom_components/ticktick_todo/pyticktick/openapi_client/models/project_data_response.py
-custom_components/ticktick_todo/pyticktick/openapi_client/models/project_response.py
+custom_components/ticktick_todo/pyticktick/openapi_client/models/project_data.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/status.py
 custom_components/ticktick_todo/pyticktick/openapi_client/models/task.py
-custom_components/ticktick_todo/pyticktick/openapi_client/models/task_response.py
 custom_components/ticktick_todo/pyticktick/openapi_client/py.typed
 custom_components/ticktick_todo/pyticktick/openapi_client/rest.py
 docs/ChecklistItem.md
@@ -36,11 +34,9 @@ docs/OpenV1ProjectProjectIdPostRequest.md
 docs/OpenV1ProjectProjectIdTaskTaskIdCompletePostRequest.md
 docs/OpenV1TaskTaskIdPostRequest.md
 docs/Project.md
-docs/ProjectDataResponse.md
-docs/ProjectResponse.md
+docs/ProjectData.md
 docs/Status.md
 docs/Task.md
-docs/TaskResponse.md
 git_push.sh
 pyproject.toml
 requirements.txt

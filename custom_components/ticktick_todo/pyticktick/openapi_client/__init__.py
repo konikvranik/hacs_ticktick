@@ -41,8 +41,6 @@ from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_pr
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import \
     OpenV1TaskTaskIdPostRequest
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data_response import ProjectDataResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_data import ProjectData
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse

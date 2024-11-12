@@ -11,19 +11,19 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import copy
+import http.client as httplib
 import logging
 import sys
-import urllib3
 
-import http.client as httplib
+import urllib3
 
 JSON_SCHEMA_VALIDATION_KEYWORDS = {
     'multipleOf', 'maximum', 'exclusiveMaximum',
     'minimum', 'exclusiveMinimum', 'maxLength',
     'minLength', 'pattern', 'maxItems', 'minItems'
 }
+
 
 class Configuration:
     """This class contains various settings of the API client.
@@ -398,12 +398,12 @@ conf = custom_components.ticktick_todo.pyticktick.openapi_client.Configuration(
 
         :return: The report for debugging.
         """
-        return "Python SDK Debug Report:\n"\
-               "OS: {env}\n"\
-               "Python Version: {pyversion}\n"\
-               "Version of the API: 0.0.1\n"\
-               "SDK Package Version: 1.0.0".\
-               format(env=sys.platform, pyversion=sys.version)
+        return "Python SDK Debug Report:\n" \
+               "OS: {env}\n" \
+               "Python Version: {pyversion}\n" \
+               "Version of the API: 0.0.1\n" \
+               "SDK Package Version: 1.0.0". \
+            format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self):
         """Gets an array of host settings

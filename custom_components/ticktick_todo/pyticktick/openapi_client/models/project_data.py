@@ -21,16 +21,16 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, conlist
 
 from custom_components.ticktick_todo.pyticktick.openapi_client.models.column import Column
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project_response import ProjectResponse
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.task_response import TaskResponse
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.task import Task
 
 
-class ProjectDataResponse(BaseModel):
+class ProjectData(BaseModel):
     """
-    ProjectDataResponse
+    ProjectData
     """
-    project: Optional[ProjectResponse] = None
-    tasks: Optional[conlist(TaskResponse)] = None
+    project: Optional[Project] = None
+    tasks: Optional[conlist(Task)] = None
     columns: Optional[conlist(Column)] = None
     additional_properties: Dict[str, Any] = {}
     __properties = ["project", "tasks", "columns"]
@@ -49,8 +49,8 @@ class ProjectDataResponse(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> ProjectDataResponse:
-        """Create an instance of ProjectDataResponse from a JSON string"""
+    def from_json(cls, json_str: str) -> ProjectData:
+        """Create an instance of ProjectData from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
@@ -85,18 +85,17 @@ class ProjectDataResponse(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> ProjectDataResponse:
-        """Create an instance of ProjectDataResponse from a dict"""
+    def from_dict(cls, obj: dict) -> ProjectData:
+        """Create an instance of ProjectData from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return ProjectDataResponse.parse_obj(obj)
+            return ProjectData.parse_obj(obj)
 
-        _obj = ProjectDataResponse.parse_obj({
-            "project": ProjectResponse.from_dict(obj.get("project")) if obj.get("project") is not None else None,
-            "tasks": [TaskResponse.from_dict(_item) for _item in obj.get("tasks")] if obj.get(
-                "tasks") is not None else None,
+        _obj = ProjectData.parse_obj({
+            "project": Project.from_dict(obj.get("project")) if obj.get("project") is not None else None,
+            "tasks": [Task.from_dict(_item) for _item in obj.get("tasks")] if obj.get("tasks") is not None else None,
             "columns": [Column.from_dict(_item) for _item in obj.get("columns")] if obj.get(
                 "columns") is not None else None
         })

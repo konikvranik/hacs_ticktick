@@ -4,7 +4,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**id** | **str** | Task identifier | [optional] 
+**task_id** | **str** | Task identifier | [optional] 
+**project_id** | **str** | Task project id | [optional] 
 **title** | **str** | Task title | [optional] 
+**completed_time** | **datetime** | Task completed time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
+**status** | [**Status**](Status.md) |  | [optional] 
 **is_all_day** | **bool** | All day | [optional] 
 **content** | **str** | Task content | [optional] 
 **desc** | **str** | Task description of checklist | [optional] 
@@ -16,11 +21,6 @@ Name | Type | Description | Notes
 **sort_order** | **int** | Task sort order | [optional] 
 **start_date** | **datetime** | Start date time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
 **time_zone** | **object** |  | [optional] 
-**id** | **str** | Task identifier | [optional] 
-**task_id** | **str** | Task identifier | [optional] 
-**project_id** | **str** | Task project id | [optional] 
-**completed_time** | **datetime** | Task completed time in \&quot;yyyy-MM-dd&#39;T&#39;HH:mm:ssZ\&quot; | [optional] 
-**status** | [**Status**](Status.md) |  | [optional] 
 
 ## Example
 

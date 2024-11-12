@@ -4,6 +4,129 @@ info:
   description: "[TickTick](https://ticktick.com/) TODO task manager."
   version: 0.0.1
 
+components:
+  schemas:
+
+    TimeZone:
+      example: "America/Los_Angeles"
+      type: string
+
+    Status:
+      description: Task completion status
+      type: integer
+      enum:
+        - 0 # Normal
+        - 2 # Completed
+
+    ChecklistItem:
+      type: object
+      properties:
+        id:
+          description: Subtask identifier
+          type: string
+        title:
+          description: Subtask title
+          type: string
+        status:
+          allOf:
+            - description: The completion status of subtask
+            - $ref: "#/components/schemas/Status"
+        completedTime:
+          description: Subtask completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+        isAllDay:
+          description: All day
+          type: boolean
+        sortOrder:
+          description: Subtask sort order
+          example: 234444
+          type: integer
+        startDate:
+          description: Subtask start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+        timeZone:
+          allOf:
+            - description: Subtask timezone
+            - $ref: "#/components/schemas/TimeZone"
+
+    Task:
+      type: object
+      properties:
+        id:
+          description: Task identifier
+          type: string
+        taskId:
+          description: Task identifier
+          type: string
+        projectId:
+          description: Task project id
+          type: string
+        title:
+          description: Task title
+          type: string
+        completedTime:
+          description: Task completed time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/Status"
+        isAllDay:
+          description: All day
+          type: boolean
+        content:
+          description: Task content
+          type: string
+        desc:
+          description: Task description of checklist
+          type: string
+        dueDate:
+          description: Task due date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+        items:
+          description: Subtasks of Task
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistItem"
+        priority:
+          description: Task priority
+          type: integer
+          enum:
+            - 0 # None
+            - 1 # Low
+            - 3 # Medium
+            - 5 # High
+        reminders:
+          description: List of reminder triggers
+          example: [ "TRIGGER:P0DT9H0M0S", "TRIGGER:PT0S" ]
+          type: array
+          items:
+            type: string
+        repeatFlag:
+          description: Recurring rules of task
+          example: "RRULE:FREQ=DAILY;INTERVAL=1"
+          type: string
+        sortOrder:
+          description: Task sort order
+          example: 12345
+          type: integer
+        startDate:
+          description: Start date time in "yyyy-MM-dd'T'HH:mm:ssZ"
+          example: "2019-11-13T03:00:00+0000"
+          type: string
+          format: date-time
+        timeZone:
+          allOf:
+            - description: Task timezone
+            - $ref: "#/components/schemas/TimeZone"
+
+
 paths:
   /open/v1/project/{projectId}/task/{taskId}:
     get:
@@ -33,7 +156,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "schemas.yaml#/components/schemas/TaskResponse"
+                $ref: "#/components/schemas/Task"
         "401":
           description: Unauthorized
         "403":
@@ -85,14 +208,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "schemas.yaml#/components/schemas/Task"
+              $ref: "#/components/schemas/Task"
       responses:
         "200": # status code
           description: OK
           content:
             application/json:
               schema:
-                $ref: "schemas.yaml#/components/schemas/TaskResponse"
+                $ref: "#/components/schemas/Task"
         "201":
           description: Created
         "401":
@@ -128,14 +251,14 @@ paths:
                     taskId:
                       description: Task identifier
                       type: string
-                - $ref: "schemas.yaml#/components/schemas/TaskResponse"
+                - $ref: "#/components/schemas/Task"
       responses:
         "200": # status code
           description: OK
           content:
             application/json:
               schema:
-                $ref: "schemas.yaml#/components/schemas/TaskResponse"
+                $ref: "#/components/schemas/Task"
         "201":
           description: Created
         "401":

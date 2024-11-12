@@ -115,7 +115,7 @@ class ApiException(OpenApiException):
 
     def __str__(self):
         """Custom error messages for exception"""
-        error_message = "({0})\n"\
+        error_message = "({0})\n" \
                         "Reason: {1}\n".format(self.status, self.reason)
         if self.headers:
             error_message += "HTTP response headers: {0}\n".format(
@@ -126,10 +126,12 @@ class ApiException(OpenApiException):
 
         return error_message
 
+
 class BadRequestException(ApiException):
 
     def __init__(self, status=None, reason=None, http_resp=None) -> None:
         super(BadRequestException, self).__init__(status, reason, http_resp)
+
 
 class NotFoundException(ApiException):
 
