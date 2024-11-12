@@ -143,7 +143,7 @@ class TickTickTodo(TodoListEntity):
             return None
 
     @staticmethod
-    async def _todo_item_status_to_task_status(todo_item):
+    def _todo_item_status_to_task_status(todo_item):
         if todo_item.status == TodoItemStatus.COMPLETED:
             return 2
         else:

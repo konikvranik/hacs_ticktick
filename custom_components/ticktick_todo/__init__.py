@@ -28,7 +28,7 @@ DEFAULT_NAME = MANIFEST[CONF_NAME]
 PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
 
-DEBUG = True
+DEBUG = False
 
 SCHEMA = {
     vol.Required(CONF_HOST): cv.string,
