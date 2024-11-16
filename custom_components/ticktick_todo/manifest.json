@@ -15,5 +15,7 @@
 	"requirements": [
 		"openapi-client",
 		"pydantic"
-	]
+	],
+	"icon": "https://brands.home-assistant.io/ticktick_todo/icon.png",
+	"logo": "https://brands.home-assistant.io/ticktick_todo/logo.png"
 }
