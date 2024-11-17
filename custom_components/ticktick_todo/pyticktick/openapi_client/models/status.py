@@ -16,6 +16,8 @@ import re  # noqa: F401
 
 from aenum import Enum
 
+from . import Status
+
 
 class Status(int, Enum):
     """
