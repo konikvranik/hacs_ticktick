@@ -14,8 +14,8 @@
           <option name="value" value="asyncio" />
         </CliArgumentViewModel>
         <CliArgumentViewModel>
-          <option name="name" value="disallowAdditionalPropertiesIfNotPresent" />
-          <option name="value" value="false" />
+          <option name="name" value="packageName" />
+          <option name="value" value="openapi_client" />
         </CliArgumentViewModel>
       </list>
     </option>

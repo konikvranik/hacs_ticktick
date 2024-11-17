@@ -1,5 +1,5 @@
 {
-	"version": "0.0.10",
+	"version": "0.1.0",
 	"domain": "ticktick_todo",
 	"name": "TickTick todo list",
 	"codeowners": [
