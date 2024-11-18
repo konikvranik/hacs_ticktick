@@ -12,11 +12,12 @@ from homeassistant.components.todo import (
 from homeassistant.components.todo import TodoListEntity, TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_NAME, CONF_ACCESS_TOKEN, )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import DOMAIN
+from . import DOMAIN, TicktickUpdateCoordinator
 from .pyticktick import openapi_client
 
 DOMAIN = DOMAIN
@@ -41,55 +42,44 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
                             async_add_entities: AddEntitiesCallback) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    api_instance = hass.data[DOMAIN][config_entry.entry_id]["ticktick_api_instance"]
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
-                                                       identifiers={(DOMAIN, config_entry.entry_id)}),
-                                      "inbox",
-                                      "INBOX",
-                                      api_instance
-                                      ))],
-                       False)
+    await coordinator.async_config_entry_first_refresh()
 
-    # Get User Project.
-    projects_ = await api_instance.open_v1_project_get()
-    async_add_entities([(TickTickTodo(hass, DeviceInfo(name=config_entry.title,
-                                                       identifiers={(DOMAIN, config_entry.entry_id)}),
-                                      project.id,
-                                      project.name,
-                                      api_instance
-                                      )) for project in projects_],
-                       False)
+    new_entities_ = [
+        TickTickTodo(hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}),
+                     coordinator, id) for id in coordinator.data.keys()]
+    async_add_entities(new_entities_)
 
 
-class TickTickTodo(TodoListEntity):
+class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity):
     """MQTTMediaPlayer"""
 
-    def __init__(self, hass: HomeAssistant, device_info: DeviceInfo, id: str, name: str,
-                 api_instance: openapi_client.DefaultApi) -> None:
+    def __init__(self, hass: HomeAssistant, device_info: DeviceInfo, coordinator: TicktickUpdateCoordinator,
+                 id: str) -> None:
         """Initialize"""
 
-        self._attr_device_info = device_info
-        _LOGGER.debug("TickTickTodo.__init__(%s, %s)" % (id, name))
-        self.hass = hass
-        self._api_instance = api_instance
+        super().__init__(coordinator, context=id)
         self._ticktick_project_id = id
-        self._attr_name = name
+        self._attr_name = coordinator.data[id].project.name
+        self._attr_device_info = device_info
+        _LOGGER.debug("TickTickTodo.__init__(%s, %s)" % (self._ticktick_project_id, self._attr_name))
+        self.hass = hass
         self._attr_supported_features = TodoListEntityFeature.CREATE_TODO_ITEM
         self._attr_supported_features |= TodoListEntityFeature.DELETE_TODO_ITEM
         self._attr_supported_features |= TodoListEntityFeature.UPDATE_TODO_ITEM
         self._attr_supported_features |= TodoListEntityFeature.SET_DESCRIPTION_ON_ITEM
         self._attr_supported_features |= TodoListEntityFeature.SET_DUE_DATETIME_ON_ITEM
 
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._attr_todo_items = [TickTickTodo.task_to_todo_item(t) for t in
+                                 self.coordinator.data[self._ticktick_project_id].tasks]
+        self.async_write_ha_state()
+
     def get_unique_id(self) -> str:
         return f"ticktickt_todo_list_{self._ticktick_project_id}"
-
-    async def async_update(self):
-        """ Update the States"""
-        project_data: openapi_client.models.ProjectData = (
-            await self._api_instance.open_v1_project_project_id_data_get(self._ticktick_project_id))
-        _LOGGER.debug("Project data: %s", project_data)
-        self._attr_todo_items = [TickTickTodo._task_to_todo_item(t) for t in project_data.tasks]
 
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
@@ -113,7 +103,7 @@ class TickTickTodo(TodoListEntity):
             await self._api_instance.open_v1_project_project_id_task_task_id_delete(self._ticktick_project_id, uid)
 
     @staticmethod
-    def _task_to_todo_item(task_response: openapi_client.Task) -> TodoItem:
+    def task_to_todo_item(task_response: openapi_client.Task) -> TodoItem:
         return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
                         status=TickTickTodo._task_status_to_todo_item_status(task_response),
                         due=task_response.due_date)
