@@ -17,7 +17,7 @@ class TaskMapper:
                         due=task_response.due_date)
 
     @staticmethod
-    def _todo_item_to_task(project_id: str, todo_item: TodoItem) -> openapi_client.Task:
+    def todo_item_to_task(project_id: str, todo_item: TodoItem) -> openapi_client.Task:
         priority = TaskMapper._resolve_priority(todo_item)
         task = openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=TaskMapper._todo_item_status_to_task_status(todo_item),
@@ -25,8 +25,8 @@ class TaskMapper:
         return task
 
     @staticmethod
-    def _merge_todo_item_and_task_response(todo_item: TodoItem,
-                                           task_response: openapi_client.Task) -> openapi_client.Task:
+    def merge_todo_item_and_task_response(todo_item: TodoItem,
+                                          task_response: openapi_client.Task) -> openapi_client.Task:
         priority = TaskMapper._resolve_priority(todo_item)
         task_response.task_id = todo_item.uid
         task_response.status = TaskMapper._todo_item_status_to_task_status(todo_item)
@@ -54,7 +54,7 @@ class TaskMapper:
             return 0
 
     @staticmethod
-    def _task_response_to_task_request(
+    def task_response_to_task_request(
             response: openapi_client.Task) -> openapi_client.OpenV1TaskTaskIdPostRequest:
         return openapi_client.OpenV1TaskTaskIdPostRequest(
             title=response.title,

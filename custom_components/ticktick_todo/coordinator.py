@@ -5,11 +5,11 @@ from datetime import timedelta
 import async_timeout
 from homeassistant.components.todo import TodoItem
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.ticktick_todo.helper import TaskMapper
 from custom_components.ticktick_todo.pyticktick import openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectData
+from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectData, ApiException
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,9 +45,11 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         This method will be called automatically during
         coordinator.async_config_entry_first_refresh.
         """
-        async with self._api_call_lock:
-            projects_ = await self._api_instance.open_v1_project_get()
-        self.data = {p.id: ProjectData(project=p) for p in projects_}
+
+        # async with self._api_call_lock:
+        #     projects_ = await self._api_instance.open_v1_project_get()
+        #
+        # self.data = {p.id: ProjectData(project=p) for p in projects_}
 
     async def _async_update_data(self):
         """Fetch data from API endpoint.
@@ -65,17 +67,21 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             _LOGGER.debug("Listening contexts: %s", listening_idx)
 
             async with self._api_call_lock:
-                projects_ = await self._api_instance.open_v1_project_get()
-                result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
+                try:
+                    projects_ = await self._api_instance.open_v1_project_get()
+                    result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
+                    asyncio.timeout(1)
 
-                for idx in result.keys():
-                    if idx in listening_idx or result[idx].tasks is None:
-                        project_data: openapi_client.models.ProjectData = (
-                            await self._api_instance.open_v1_project_project_id_data_get(idx))
-                        _LOGGER.debug("Project data: %s", project_data)
-                        result[project_data.project.id] = project_data
-                        asyncio.timeout(1.2)
+                    for idx in result.keys():
 
+                        if idx in listening_idx or result[idx].tasks is None:
+                            project_data: openapi_client.models.ProjectData = (
+                                await self._api_instance.open_v1_project_project_id_data_get(idx))
+                            _LOGGER.debug("Project data: %s", project_data)
+                            result[project_data.project.id] = project_data
+                            asyncio.timeout(1)
+                except ApiException as err:
+                    raise UpdateFailed(f"Error communicating with API: {err}")
             return result
 
     async def async_create_todo_item(self, project_id: str, item: TodoItem) -> TodoItem:
@@ -83,19 +89,21 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         _LOGGER.debug("Source item: %s", item)
         async with self._api_call_lock:
             current_task_ = await self._api_instance.open_v1_task_post(
-                TaskMapper._todo_item_to_task(project_id, item))
+                TaskMapper.todo_item_to_task(project_id, item))
         item.uid = current_task_.id
+        asyncio.timeout(1)
         await self.async_request_refresh()
         return item
 
     async def async_update_todo_item(self, project_id: str, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         async with self._api_call_lock:
-            task = TaskMapper._merge_todo_item_and_task_response(item,
-                                                                 await self._api_instance.open_v1_project_project_id_task_task_id_get(
-                                                                     project_id, item.uid))
-        task_ = TaskMapper._task_response_to_task_request(task)
+            task = TaskMapper.merge_todo_item_and_task_response(item,
+                                                                await self._api_instance.open_v1_project_project_id_task_task_id_get(
+                                                                    project_id, item.uid))
+        task_ = TaskMapper.task_response_to_task_request(task)
         await self._api_instance.open_v1_task_task_id_post(task.id, task_)
+        asyncio.timeout(1)
         await self.async_request_refresh()
 
     async def async_delete_todo_items(self, project_id: str, uids: list[str]) -> None:
@@ -103,4 +111,5 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         with self._api_call_lock:
             for uid in uids:
                 await self._api_instance.open_v1_project_project_id_task_task_id_delete(project_id, uid)
+        asyncio.timeout(1)
         await self.async_request_refresh()
