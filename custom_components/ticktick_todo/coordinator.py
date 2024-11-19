@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from datetime import timedelta
 
 import async_timeout
 from homeassistant.components.todo import TodoItem
@@ -9,7 +10,6 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from custom_components.ticktick_todo.helper import TaskMapper
 from custom_components.ticktick_todo.pyticktick import openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectData
-from custom_components.ticktick_todo.todo import SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,12 +25,12 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Name of the data. For logging purposes.
             name="TickTick TODO",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=SCAN_INTERVAL,
+            update_interval=timedelta(seconds=30),
             # Set always_update to `False` if the data returned from the
             # api can be compared via `__eq__` to avoid duplicate updates
             # being dispatched to listeners
-            always_update=True,
-            #config_entry=config_entry
+            always_update=False,
+            config_entry=config_entry
         )
         api_client = openapi_client.ApiClient(openapi_client.Configuration(access_token=token))
         self._api_instance = openapi_client.DefaultApi(api_client)
@@ -62,19 +62,19 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Note: using context is not required if there is no need or ability to limit
             # data retrieved from API.
             listening_idx = set(self.async_contexts())
-
             _LOGGER.debug("Listening contexts: %s", listening_idx)
 
-            result = dict()
-
             async with self._api_call_lock:
-                for idx in listening_idx:
-                    # for idx in self.data.keys():
-                    project_data: openapi_client.models.ProjectData = (
-                        await self._api_instance.open_v1_project_project_id_data_get(idx))
-                    _LOGGER.debug("Project data: %s", project_data)
-                    result[project_data.project.id] = project_data
-                    asyncio.timeout(1.2)
+                projects_ = await self._api_instance.open_v1_project_get()
+                result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
+
+                for idx in result.keys():
+                    if idx in listening_idx or result[idx].tasks is None:
+                        project_data: openapi_client.models.ProjectData = (
+                            await self._api_instance.open_v1_project_project_id_data_get(idx))
+                        _LOGGER.debug("Project data: %s", project_data)
+                        result[project_data.project.id] = project_data
+                        asyncio.timeout(1.2)
 
             return result
 

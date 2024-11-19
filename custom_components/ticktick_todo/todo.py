@@ -1,6 +1,5 @@
 """ mqtt-mediaplayer """
 import logging
-from datetime import timedelta
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -14,11 +13,11 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import DOMAIN, TicktickUpdateCoordinator
+from . import DOMAIN, SCAN_INTERVAL, TicktickUpdateCoordinator
 from .helper import TaskMapper
 
 DOMAIN = DOMAIN
-SCAN_INTERVAL = timedelta(seconds=20)
+SCAN_INTERVAL = SCAN_INTERVAL
 _LOGGER = logging.getLogger(__name__)
 _VALID_STATES = [
     MediaPlayerState.ON,
@@ -39,7 +38,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
                             async_add_entities: AddEntitiesCallback) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
     coordinator = config_entry.runtime_data['coordinator']
-    #coordinator = hass.data[DOMAIN][config_entry.entry_id]
+    # coordinator = hass.data[DOMAIN][config_entry.entry_id]
     new_entities_ = [
         TickTickTodo(hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}),
                      coordinator, id) for id in coordinator.data.keys()]

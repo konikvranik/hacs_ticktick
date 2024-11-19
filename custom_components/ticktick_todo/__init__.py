@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from datetime import timedelta
 from http import HTTPStatus
 from pathlib import Path
 
@@ -28,6 +29,7 @@ DOMAIN = MANIFEST[CONF_DOMAIN]
 DEFAULT_NAME = MANIFEST[CONF_NAME]
 PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
+SCAN_INTERVAL = timedelta(seconds=20)
 
 DEBUG = True
 
