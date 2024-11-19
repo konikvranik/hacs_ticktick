@@ -1,12 +1,15 @@
 import asyncio
 import logging
-from datetime import timedelta
 
 import async_timeout
+from homeassistant.components.todo import TodoItem
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
+from custom_components.ticktick_todo.helper import TaskMapper
 from custom_components.ticktick_todo.pyticktick import openapi_client
 from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectData
+from custom_components.ticktick_todo.todo import SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
     """HKO Update Coordinator."""
 
-    def __init__(self, hass, api_client: openapi_client.ApiClient):
+    def __init__(self, hass, config_entry: ConfigEntry, token: str):
         """Initialize my coordinator."""
         super().__init__(
             hass,
@@ -22,13 +25,16 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Name of the data. For logging purposes.
             name="TickTick TODO",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=30),
+            update_interval=SCAN_INTERVAL,
             # Set always_update to `False` if the data returned from the
             # api can be compared via `__eq__` to avoid duplicate updates
             # being dispatched to listeners
-            always_update=True
+            always_update=True,
+            #config_entry=config_entry
         )
+        api_client = openapi_client.ApiClient(openapi_client.Configuration(access_token=token))
         self._api_instance = openapi_client.DefaultApi(api_client)
+        self._api_call_lock = asyncio.Lock()
 
     async def _async_setup(self):
         """Set up the coordinator
@@ -39,7 +45,8 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         This method will be called automatically during
         coordinator.async_config_entry_first_refresh.
         """
-        projects_ = await self._api_instance.open_v1_project_get()
+        async with self._api_call_lock:
+            projects_ = await self._api_instance.open_v1_project_get()
         self.data = {p.id: ProjectData(project=p) for p in projects_}
 
     async def _async_update_data(self):
@@ -56,13 +63,44 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # data retrieved from API.
             listening_idx = set(self.async_contexts())
 
+            _LOGGER.debug("Listening contexts: %s", listening_idx)
+
             result = dict()
-            #for idx in listening_idx:
-            for idx in self.data.keys():
-                project_data: openapi_client.models.ProjectData = (
-                    await self._api_instance.open_v1_project_project_id_data_get(idx))
-                _LOGGER.debug("Project data: %s", project_data)
-                result[project_data.project.id] = project_data
-                asyncio.timeout(.7)
+
+            async with self._api_call_lock:
+                for idx in listening_idx:
+                    # for idx in self.data.keys():
+                    project_data: openapi_client.models.ProjectData = (
+                        await self._api_instance.open_v1_project_project_id_data_get(idx))
+                    _LOGGER.debug("Project data: %s", project_data)
+                    result[project_data.project.id] = project_data
+                    asyncio.timeout(1.2)
 
             return result
+
+    async def async_create_todo_item(self, project_id: str, item: TodoItem) -> TodoItem:
+        """Add an item to the To-do list."""
+        _LOGGER.debug("Source item: %s", item)
+        async with self._api_call_lock:
+            current_task_ = await self._api_instance.open_v1_task_post(
+                TaskMapper._todo_item_to_task(project_id, item))
+        item.uid = current_task_.id
+        await self.async_request_refresh()
+        return item
+
+    async def async_update_todo_item(self, project_id: str, item: TodoItem) -> None:
+        """Add an item to the To-do list."""
+        async with self._api_call_lock:
+            task = TaskMapper._merge_todo_item_and_task_response(item,
+                                                                 await self._api_instance.open_v1_project_project_id_task_task_id_get(
+                                                                     project_id, item.uid))
+        task_ = TaskMapper._task_response_to_task_request(task)
+        await self._api_instance.open_v1_task_task_id_post(task.id, task_)
+        await self.async_request_refresh()
+
+    async def async_delete_todo_items(self, project_id: str, uids: list[str]) -> None:
+        """Delete an item from the to-do list."""
+        with self._api_call_lock:
+            for uid in uids:
+                await self._api_instance.open_v1_project_project_id_task_task_id_delete(project_id, uid)
+        await self.async_request_refresh()

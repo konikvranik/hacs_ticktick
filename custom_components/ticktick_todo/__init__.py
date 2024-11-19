@@ -49,11 +49,23 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up ESPHome binary sensors based on a config entry."""
 
-    coordinator = TicktickUpdateCoordinator(hass, openapi_client.ApiClient(openapi_client.Configuration(access_token=(
-        await _get_valid_token(config_entry, hass)))))
-    hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator
+    coordinator_ = TicktickUpdateCoordinator(hass, config_entry, await _get_valid_token(config_entry, hass))
+    config_entry.runtime_data = {'coordinator': coordinator_}
+    #hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator
+    await coordinator_.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    return await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
+
+
+async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Migrate old entry."""
+    data = {**config_entry.data}
     return True
 
 
@@ -78,14 +90,3 @@ async def _get_valid_token(config_entry, hass):
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
     return session.token["access_token"]
-
-
-async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
-    """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
-
-
-async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
-    """Migrate old entry."""
-    data = {**config_entry.data}
-    return True
