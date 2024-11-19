@@ -31,7 +31,7 @@ PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
 SCAN_INTERVAL = timedelta(seconds=20)
 
-DEBUG = True
+DEBUG = False
 
 SCHEMA = {
     vol.Required(CONF_HOST): cv.string,
