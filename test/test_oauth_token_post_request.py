@@ -13,8 +13,9 @@
 
 
 import unittest
+import datetime
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post_request import OauthTokenPostRequest  # noqa: E501
 
 class TestOauthTokenPostRequest(unittest.TestCase):
     """OauthTokenPostRequest unit test stubs"""
@@ -27,12 +28,12 @@ class TestOauthTokenPostRequest(unittest.TestCase):
 
     def make_instance(self, include_optional) -> OauthTokenPostRequest:
         """Test OauthTokenPostRequest
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `OauthTokenPostRequest`
         """
-        model = OauthTokenPostRequest()
+        model = OauthTokenPostRequest()  # noqa: E501
         if include_optional:
             return OauthTokenPostRequest(
                 code = None,

@@ -44,4 +44,16 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_checklist_item.py
+test/test_column.py
+test/test_default_api.py
+test/test_oauth_token_post200_response.py
+test/test_oauth_token_post_request.py
+test/test_open_v1_project_project_id_post_request.py
+test/test_open_v1_project_project_id_task_task_id_complete_post_request.py
+test/test_open_v1_task_task_id_post_request.py
+test/test_project.py
+test/test_project_data.py
+test/test_status.py
+test/test_task.py
 tox.ini

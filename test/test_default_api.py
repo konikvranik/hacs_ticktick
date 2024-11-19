@@ -11,10 +11,9 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import unittest
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.api.default_api import DefaultApi
+from custom_components.ticktick_todo.pyticktick.openapi_client.api.default_api import DefaultApi  # noqa: E501
 
 
 class TestDefaultApi(unittest.IsolatedAsyncioTestCase):
@@ -29,21 +28,21 @@ class TestDefaultApi(unittest.IsolatedAsyncioTestCase):
     def test_oauth_token_post(self) -> None:
         """Test case for oauth_token_post
 
-        Get token
+        Get token  # noqa: E501
         """
         pass
 
     def test_open_v1_project_get(self) -> None:
         """Test case for open_v1_project_get
 
-        Get User Project.
+        Get User Project.  # noqa: E501
         """
         pass
 
     def test_open_v1_project_post(self) -> None:
         """Test case for open_v1_project_post
 
-        Create Project
+        Create Project  # noqa: E501
         """
         pass
 
@@ -68,42 +67,42 @@ class TestDefaultApi(unittest.IsolatedAsyncioTestCase):
     def test_open_v1_project_project_id_post(self) -> None:
         """Test case for open_v1_project_project_id_post
 
-        Update Project
+        Update Project  # noqa: E501
         """
         pass
 
     def test_open_v1_project_project_id_task_task_id_complete_post(self) -> None:
         """Test case for open_v1_project_project_id_task_task_id_complete_post
 
-        Update Task
+        Update Task  # noqa: E501
         """
         pass
 
     def test_open_v1_project_project_id_task_task_id_delete(self) -> None:
         """Test case for open_v1_project_project_id_task_task_id_delete
 
-        Delete task.
+        Delete task.  # noqa: E501
         """
         pass
 
     def test_open_v1_project_project_id_task_task_id_get(self) -> None:
         """Test case for open_v1_project_project_id_task_task_id_get
 
-        Get Task By Project ID And Task ID.
+        Get Task By Project ID And Task ID.  # noqa: E501
         """
         pass
 
     def test_open_v1_task_post(self) -> None:
         """Test case for open_v1_task_post
 
-        Create Task
+        Create Task  # noqa: E501
         """
         pass
 
     def test_open_v1_task_task_id_post(self) -> None:
         """Test case for open_v1_task_task_id_post
 
-        Update Task
+        Update Task  # noqa: E501
         """
         pass
 

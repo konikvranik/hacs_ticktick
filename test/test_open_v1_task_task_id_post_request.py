@@ -13,8 +13,9 @@
 
 
 import unittest
+import datetime
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_task_task_id_post_request import OpenV1TaskTaskIdPostRequest  # noqa: E501
 
 class TestOpenV1TaskTaskIdPostRequest(unittest.TestCase):
     """OpenV1TaskTaskIdPostRequest unit test stubs"""
@@ -27,41 +28,41 @@ class TestOpenV1TaskTaskIdPostRequest(unittest.TestCase):
 
     def make_instance(self, include_optional) -> OpenV1TaskTaskIdPostRequest:
         """Test OpenV1TaskTaskIdPostRequest
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `OpenV1TaskTaskIdPostRequest`
         """
-        model = OpenV1TaskTaskIdPostRequest()
+        model = OpenV1TaskTaskIdPostRequest()  # noqa: E501
         if include_optional:
             return OpenV1TaskTaskIdPostRequest(
+                id = '',
+                task_id = '',
+                project_id = '',
                 title = '',
+                completed_time = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                status = 0,
                 is_all_day = True,
                 content = '',
                 desc = '',
-                due_date = None,
+                due_date = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 items = [
                     custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item.ChecklistItem(
                         id = '', 
                         title = '', 
                         status = null, 
-                        completed_time = null, 
+                        completed_time = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         is_all_day = True, 
                         sort_order = 234444, 
-                        start_date = null, 
+                        start_date = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         time_zone = null, )
                     ],
-                priority = ERROR_TO_EXAMPLE_VALUE,
+                priority = 0,
                 reminders = [TRIGGER:P0DT9H0M0S, TRIGGER:PT0S],
                 repeat_flag = 'RRULE:FREQ=DAILY;INTERVAL=1',
                 sort_order = 12345,
-                start_date = None,
-                time_zone = None,
-                id = '',
-                project_id = '',
-                completed_time = None,
-                status = None,
-                task_id = ''
+                start_date = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                time_zone = None
             )
         else:
             return OpenV1TaskTaskIdPostRequest(

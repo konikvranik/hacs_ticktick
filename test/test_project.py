@@ -13,8 +13,9 @@
 
 
 import unittest
+import datetime
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.project import Project  # noqa: E501
 
 class TestProject(unittest.TestCase):
     """Project unit test stubs"""
@@ -27,19 +28,23 @@ class TestProject(unittest.TestCase):
 
     def make_instance(self, include_optional) -> Project:
         """Test Project
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `Project`
         """
-        model = Project()
+        model = Project()  # noqa: E501
         if include_optional:
             return Project(
+                id = '',
                 name = '',
                 color = '',
                 sort_order = 56,
                 view_mode = 'list',
-                kind = 'TASK'
+                kind = 'TASK',
+                closed = True,
+                group_id = '',
+                permission = ''
             )
         else:
             return Project(

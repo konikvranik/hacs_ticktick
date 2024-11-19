@@ -11,10 +11,10 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import unittest
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.checklist_item import ChecklistItem  # noqa: E501
+
 
 class TestChecklistItem(unittest.TestCase):
     """ChecklistItem unit test stubs"""
@@ -27,21 +27,21 @@ class TestChecklistItem(unittest.TestCase):
 
     def make_instance(self, include_optional) -> ChecklistItem:
         """Test ChecklistItem
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `ChecklistItem`
         """
-        model = ChecklistItem()
+        model = ChecklistItem()  # noqa: E501
         if include_optional:
             return ChecklistItem(
                 id = '',
                 title = '',
                 status = None,
-                completed_time = None,
+                completed_time = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 is_all_day = True,
                 sort_order = 234444,
-                start_date = None,
+                start_date = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 time_zone = None
             )
         else:
@@ -53,6 +53,7 @@ class TestChecklistItem(unittest.TestCase):
         """Test ChecklistItem"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
+
 
 if __name__ == '__main__':
     unittest.main()

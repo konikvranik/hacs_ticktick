@@ -11,10 +11,11 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import unittest
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import OauthTokenPost200Response
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.oauth_token_post200_response import \
+    OauthTokenPost200Response  # noqa: E501
+
 
 class TestOauthTokenPost200Response(unittest.TestCase):
     """OauthTokenPost200Response unit test stubs"""
@@ -27,12 +28,12 @@ class TestOauthTokenPost200Response(unittest.TestCase):
 
     def make_instance(self, include_optional) -> OauthTokenPost200Response:
         """Test OauthTokenPost200Response
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `OauthTokenPost200Response`
         """
-        model = OauthTokenPost200Response()
+        model = OauthTokenPost200Response()  # noqa: E501
         if include_optional:
             return OauthTokenPost200Response(
                 access_token = ''
@@ -46,6 +47,7 @@ class TestOauthTokenPost200Response(unittest.TestCase):
         """Test OauthTokenPost200Response"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
+
 
 if __name__ == '__main__':
     unittest.main()

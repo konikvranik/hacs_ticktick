@@ -13,8 +13,9 @@
 
 
 import unittest
+import datetime
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.status import Status  # noqa: E501
 
 class TestStatus(unittest.TestCase):
     """Status unit test stubs"""

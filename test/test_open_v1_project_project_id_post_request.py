@@ -13,8 +13,9 @@
 
 
 import unittest
+import datetime
 
-from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest
+from custom_components.ticktick_todo.pyticktick.openapi_client.models.open_v1_project_project_id_post_request import OpenV1ProjectProjectIdPostRequest  # noqa: E501
 
 class TestOpenV1ProjectProjectIdPostRequest(unittest.TestCase):
     """OpenV1ProjectProjectIdPostRequest unit test stubs"""
@@ -27,19 +28,23 @@ class TestOpenV1ProjectProjectIdPostRequest(unittest.TestCase):
 
     def make_instance(self, include_optional) -> OpenV1ProjectProjectIdPostRequest:
         """Test OpenV1ProjectProjectIdPostRequest
-            include_optional is a boolean, when False only required
+            include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
         # uncomment below to create an instance of `OpenV1ProjectProjectIdPostRequest`
         """
-        model = OpenV1ProjectProjectIdPostRequest()
+        model = OpenV1ProjectProjectIdPostRequest()  # noqa: E501
         if include_optional:
             return OpenV1ProjectProjectIdPostRequest(
+                id = '',
                 name = '',
                 color = '',
                 sort_order = 56,
                 view_mode = 'list',
                 kind = 'TASK',
+                closed = True,
+                group_id = '',
+                permission = '',
                 project_id = ''
             )
         else:
