@@ -17,10 +17,10 @@ import unittest
 from custom_components.ticktick_todo.pyticktick.openapi_client.api.default_api import DefaultApi
 
 
-class TestDefaultApi(unittest.TestCase):
+class TestDefaultApi(unittest.IsolatedAsyncioTestCase):
     """DefaultApi unit test stubs"""
 
-    def setUp(self) -> None:
+    async def setUp(self) -> None:
         self.api = DefaultApi()
 
     def tearDown(self) -> None:
