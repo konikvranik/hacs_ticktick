@@ -29,6 +29,6 @@ class Status(int, Enum):
     NUMBER_2 = 2
 
     @classmethod
-    def from_json(cls, json_str: str) -> Status:
+    def from_json(cls, json_str: str) -> 'Status':
         """Create an instance of Status from a JSON string"""
         return Status(json.loads(json_str))
