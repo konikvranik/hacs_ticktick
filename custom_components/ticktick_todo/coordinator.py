@@ -68,6 +68,8 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
 
             async with self._api_call_lock:
                 try:
+                    if self.data is None:
+                        self.data={}
                     projects_ = await self._api_instance.open_v1_project_get()
                     result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
                     asyncio.timeout(1)
