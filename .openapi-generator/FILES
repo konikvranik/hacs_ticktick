@@ -32,4 +32,10 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_checklist_item.py
+test/test_column.py
+test/test_default_api.py
+test/test_project.py
+test/test_project_data.py
+test/test_task.py
 tox.ini
