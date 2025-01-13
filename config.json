@@ -1,0 +1,7 @@
+{
+	"packageName": "custom_components.ticktick_todo.pyticktick.openapi_client",
+	"library": "asyncio",
+	"projectName": "MyAPIClient",
+	"hideGenerationTimestamp": true,
+	"disallowAdditionalPropertiesIfNotPresent": false
+}
