@@ -1,7 +1,8 @@
 {
 	"packageName": "custom_components.ticktick_todo.pyticktick.openapi_client",
 	"library": "asyncio",
-	"projectName": "MyAPIClient",
 	"hideGenerationTimestamp": true,
-	"disallowAdditionalPropertiesIfNotPresent": false
+	"disallowAdditionalPropertiesIfNotPresent": false,
+	"projectName": "TickTick API",
+	"projectDescription": "[TickTick](https://ticktick.com/) TODO task manager."
 }
