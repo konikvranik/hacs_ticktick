@@ -4,15 +4,15 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** | Project identifier | [optional] 
-**name** | **str** | name of the project | 
-**color** | **str** | color of project, eg. \&quot;#F18181\&quot; | [optional] 
-**sort_order** | **int** | sort order value of the project | [optional] 
-**view_mode** | **str** | view mode, \&quot;list\&quot;, \&quot;kanban\&quot;, \&quot;timeline\&quot; | [optional] 
-**kind** | **str** | project kind, \&quot;TASK\&quot;, \&quot;NOTE\&quot; | [optional] 
-**closed** | **bool** | Project closed | [optional] 
-**group_id** | **str** | Project group identifier | [optional] 
-**permission** | **str** | \&quot;read\&quot;, \&quot;write\&quot; or \&quot;comment\&quot; | [optional] 
+**id** | **str** | The ID of project | [optional] 
+**name** | **str** | Name of project | [optional] 
+**color** | **str** | Color of project | [optional] 
+**sort_order** | **int** | Order value of project | [optional] 
+**closed** | **str** | Project closed, true or false | [optional] 
+**group_id** | **str** | ID of project group | [optional] 
+**view_mode** | **str** | View mode of project, \&quot;list\&quot; or \&quot;kanban\&quot; or \&quot;timeline\&quot; | [optional] 
+**permission** | **str** | Permission of project, \&quot;read\&quot; or \&quot;write\&quot; or \&quot;comment\&quot; | [optional] 
+**kind** | **str** | Kind of project, \&quot;Task\&quot; or \&quot;NOTE\&quot; | [optional] 
 
 ## Example
 

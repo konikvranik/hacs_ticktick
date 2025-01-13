@@ -4,10 +4,10 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** | Column identifier | [optional] 
-**project_id** | **str** | Project identifier | [optional] 
-**name** | **str** | Column name | [optional] 
-**sort_order** | **int** | Order value | [optional] 
+**id** | **str** | The ID of column | [optional] 
+**project_id** | **str** | The ID of project which column in | [optional] 
+**name** | **str** | Name of column | [optional] 
+**sort_order** | **int** | Order value of column | [optional] 
 
 ## Example
 
