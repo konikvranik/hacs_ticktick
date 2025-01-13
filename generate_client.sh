@@ -5,4 +5,4 @@ docker run --rm \
   -i https://ticktick.com/openapi.yaml \
   -g python-pydantic-v1 \
   -o /local/ \
-  -c /local/config.json
+  -c /local/client_config.json
