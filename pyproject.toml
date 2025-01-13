@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "custom_components.ticktick_todo.pyticktick.openapi_client"
 version = "1.0.0"
-description = "TickTick API"
+description = "TickTick OpenAPI"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "NoLicense"
 readme = "README.md"

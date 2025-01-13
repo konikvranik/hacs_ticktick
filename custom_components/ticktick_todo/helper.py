@@ -21,7 +21,7 @@ class TaskMapper:
         priority = TaskMapper._resolve_priority(todo_item)
         task = openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=TaskMapper._todo_item_status_to_task_status(todo_item),
-                                   due_date=todo_item.due, project_id=project_id, priority=priority)
+                                   dueDate=todo_item.due, projectId=project_id, priority=priority)
         return task
 
     @staticmethod
@@ -55,23 +55,22 @@ class TaskMapper:
 
     @staticmethod
     def task_response_to_task_request(
-            response: openapi_client.Task) -> openapi_client.OpenV1TaskTaskIdPostRequest:
-        return openapi_client.OpenV1TaskTaskIdPostRequest(
+            response: openapi_client.Task) -> openapi_client.Task:
+        return openapi_client.Task(
             title=response.title,
-            is_all_day=response.is_all_day,
+            isAllDay=response.is_all_day,
             content=response.content,
             desc=response.desc,
             items=response.items,
             priority=response.priority,
             reminders=response.reminders,
-            repeat_flag=response.repeat_flag,
-            sort_order=response.sort_order,
-            start_date=response.start_date,
-            time_zone=response.time_zone,
+            repeatFlag=response.repeat_flag,
+            sortOrder=response.sort_order,
+            startDate=response.start_date,
+            timeZone=response.time_zone,
             id=response.id,
-            task_id=response.task_id,
-            project_id=response.project_id,
-            completed_time=response.completed_time,
+            projectId=response.project_id,
+            completedTime=response.completed_time,
             status=response.status
         )
 
