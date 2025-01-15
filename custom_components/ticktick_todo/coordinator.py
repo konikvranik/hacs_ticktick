@@ -95,14 +95,17 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
     async def async_update_todo_item(self, project_id: str, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         async with self._api_call_lock:
-            project=await self._api_instance.get_project_with_data_by_id(project_id)
-            task = TaskMapper.merge_todo_item_and_task_response(item,
-                                                                await self._api_instance.open_v1_project_project_id_task_task_id_get(
-                                                                    project_id, item.uid))
-        task_ = TaskMapper.task_response_to_task_request(task)
-        await self._api_instance.create_single_task(task_)
-        asyncio.timeout(1)
-        await self.async_request_refresh()
+            await self._api_instance.complete_specify_task_with_http_info
+            project_data = await self._api_instance.get_project_with_data_by_id(project_id)
+            for t in project_data.tasks:
+                if t.id == item.uid:
+                    task = TaskMapper.merge_todo_item_and_task_response(item, t)
+                    task_ = TaskMapper.task_response_to_task_request(task)
+                    await self._api_instance.delete_specify_task(project_id, t.id)
+                    await self._api_instance.create_single_task(task_)
+                    asyncio.timeout(1)
+                    await self.async_request_refresh()
+                    return
 
     async def async_delete_todo_items(self, project_id: str, uids: list[str]) -> None:
         """Delete an item from the to-do list."""
