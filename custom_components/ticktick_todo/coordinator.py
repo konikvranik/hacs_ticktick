@@ -27,8 +27,8 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Polling interval. Will only be polled if there are subscribers.
             update_interval=timedelta(seconds=30)
         )
-        api_client = openapi_client.ApiClient(openapi_client.Configuration(access_token=token))
-        self._api_instance = openapi_client.DefaultApi(api_client)
+        self._api_instance = openapi_client.DefaultApi(
+            openapi_client.ApiClient(openapi_client.Configuration(access_token=token)))
         self._api_call_lock = asyncio.Lock()
 
     async def _async_setup(self):
@@ -78,6 +78,8 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                             result[project_data.project.id] = project_data
                             asyncio.timeout(1)
                 except ApiException as err:
+                    raise UpdateFailed(f"Error communicating with API: {err}")
+                except Exception as err:
                     raise UpdateFailed(f"Error communicating with API: {err}")
             return result
 
