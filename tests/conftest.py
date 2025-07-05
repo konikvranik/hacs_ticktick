@@ -12,13 +12,17 @@ from homeassistant.helpers.device_registry import DeviceInfo
 # Create mock modules
 mock_pyticktick = MagicMock()
 mock_pyticktick.exceptions = MagicMock()
-mock_pyticktick.exceptions.ApiException = type('MockApiException', (Exception,), {})
+mock_pyticktick.exceptions.ApiException = type("MockApiException", (Exception,), {})
 mock_pyticktick.models = MagicMock()
-mock_pyticktick.models.ProjectData = type('MockProjectData', (), {
-    '__init__': lambda self, project=None, tasks=None: (
-        setattr(self, 'project', project) or setattr(self, 'tasks', tasks)
-    )
-})
+mock_pyticktick.models.ProjectData = type(
+    "MockProjectData",
+    (),
+    {
+        "__init__": lambda self, project=None, tasks=None: (
+            setattr(self, "project", project) or setattr(self, "tasks", tasks)
+        )
+    },
+)
 
 # Add mock modules to sys.modules
 sys.modules["pyticktick"] = mock_pyticktick
