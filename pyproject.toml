@@ -1,31 +1,53 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "custom_components.ticktick_todo.pyticktick.openapi_client"
 version = "1.0.0"
 description = "TickTick OpenAPI"
-authors = ["OpenAPI Generator Community <team@openapitools.org>"]
-license = "NoLicense"
 readme = "README.md"
-repository = "https://github.com/GIT_USER_ID/GIT_REPO_ID"
+license = {text = "NoLicense"}
+authors = [
+    {name = "OpenAPI Generator Community", email = "team@openapitools.org"}
+]
 keywords = ["OpenAPI", "OpenAPI-Generator", "TickTick OpenAPI"]
-include = ["custom_components.ticktick_todo.pyticktick.openapi_client/py.typed"]
+requires-python = ">=3.8"
+dependencies = [
+    "urllib3 >= 1.25.3, < 3.0.0",
+    "python-dateutil >= 2.8.2",
+    "aiohttp >= 3.8.4",
+    "pydantic >= 1.10.5, < 2",
+    "aenum >= 3.1.11",
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
+[project.urls]
+Repository = "https://github.com/konikvranik/hacs_ticktick"
 
-urllib3 = ">= 1.25.3"
-python-dateutil = ">=2.8.2"
-aiohttp = ">= 3.8.4"
-pydantic = "^1.10.5, <2"
-aenum = ">=3.1.11"
+[project.optional-dependencies]
+dev = [
+    "pytest >= 7.2.1",
+    "pytest-cov >= 2.8.1",
+    "pytest-randomly >= 3.12.0",
+    "homeassistant",
+    "tox >= 3.9.0",
+    "ruff >= 0.1.0",
+]
 
-[tool.poetry.dev-dependencies]
-pytest = ">=7.2.1"
-tox = ">=3.9.0"
-flake8 = ">=4.0.0"
-
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+[tool.hatch.build.targets.wheel]
+packages = ["custom_components.ticktick_todo.pyticktick.openapi_client"]
 
 [tool.pylint.'MESSAGES CONTROL']
 extension-pkg-whitelist = "pydantic"
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+select = ["E", "F", "W", "I", "B", "C4", "ARG", "SIM"]
+ignore = []
+
+[tool.ruff.isort]
+known-first-party = ["custom_components"]
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
