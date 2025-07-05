@@ -66,6 +66,11 @@ def mock_coordinator():
     """Return a mocked coordinator instance."""
     coordinator = MagicMock(spec=TicktickUpdateCoordinator)
 
+    # Mock async methods
+    coordinator.async_create_todo_item = AsyncMock()
+    coordinator.async_config_entry_first_refresh = AsyncMock()
+    coordinator.async_refresh = AsyncMock()
+
     # Mock project data
     project1 = MagicMock()
     project1.name = "Project 1"

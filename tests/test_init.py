@@ -1,6 +1,6 @@
 """Test the TickTick TODO integration initialization."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -30,7 +30,8 @@ async def test_setup_entry(mock_hass, mock_config_entry):
         "custom_components.ticktick_todo.TicktickUpdateCoordinator"
     ) as mock_coordinator:
         mock_coordinator_instance = mock_coordinator.return_value
-        mock_coordinator_instance.async_config_entry_first_refresh = MagicMock()
+        mock_coordinator_instance.async_config_entry_first_refresh = AsyncMock()
+        mock_hass.config_entries.async_forward_entry_setups = AsyncMock(return_value=True)
 
         result = await async_setup_entry(mock_hass, mock_config_entry)
 
@@ -42,7 +43,8 @@ async def test_setup_entry(mock_hass, mock_config_entry):
 @pytest.mark.anyio
 async def test_unload_entry(mock_hass, mock_config_entry):
     """Test the unload entry function."""
-    mock_hass.config_entries.async_unload_platforms.return_value = True
+    # Mock async_unload_platforms to return a coroutine that resolves to True
+    mock_hass.config_entries.async_unload_platforms = AsyncMock(return_value=True)
 
     result = await async_unload_entry(mock_hass, mock_config_entry)
 

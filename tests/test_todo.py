@@ -2,11 +2,13 @@
 
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import pytest
 from homeassistant.components.todo import TodoItem
 
 from custom_components.ticktick_todo.todo import TickTickTodo, async_setup_entry
 
 
+@pytest.mark.anyio
 async def test_async_setup_entry(mock_hass, mock_config_entry, mock_coordinator):
     """Test the async_setup_entry function."""
     # Setup
@@ -22,6 +24,7 @@ async def test_async_setup_entry(mock_hass, mock_config_entry, mock_coordinator)
     assert len(async_add_entities.call_args[0][0]) == 2
 
 
+@pytest.mark.anyio
 async def test_tickticktodo_init(mock_hass, mock_coordinator, mock_device_info):
     """Test the TickTickTodo initialization."""
     # Setup
@@ -35,6 +38,7 @@ async def test_tickticktodo_init(mock_hass, mock_coordinator, mock_device_info):
     assert todo._ticktick_project_id == "project1"
 
 
+@pytest.mark.anyio
 async def test_tickticktodo_handle_coordinator_update(mock_hass, mock_coordinator, mock_device_info):
     """Test the _handle_coordinator_update method."""
     # Setup
@@ -51,6 +55,7 @@ async def test_tickticktodo_handle_coordinator_update(mock_hass, mock_coordinato
         assert todo.async_write_ha_state.called
 
 
+@pytest.mark.anyio
 async def test_tickticktodo_async_create_todo_item(mock_hass, mock_coordinator, mock_device_info):
     """Test the async_create_todo_item method."""
     # Setup

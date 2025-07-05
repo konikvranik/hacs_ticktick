@@ -55,6 +55,7 @@ async def test_async_update_data_api_exception(coordinator, mock_api_instance):
         await coordinator._async_update_data()
 
 
+@pytest.mark.anyio
 async def test_async_create_todo_item(coordinator, mock_api_instance):
     """Test the async_create_todo_item method."""
     # Setup
