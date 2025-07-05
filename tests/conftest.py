@@ -34,9 +34,10 @@ sys.modules["pyticktick.models"] = mock_pyticktick.models
 from custom_components.ticktick_todo import DOMAIN  # noqa: E402
 from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator  # noqa: E402
 
+
 # Create a mock async_timeout.timeout context manager
 @asynccontextmanager
-async def mock_timeout(delay):
+async def mock_timeout(_delay):
     """Mock async_timeout.timeout context manager."""
     yield
 
