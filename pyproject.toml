@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "custom_components.ticktick_todo.pyticktick.openapi_client"
-version = "1.0.0"
-description = "TickTick OpenAPI"
+name = "TickTick TODO"
+version = "0.2.1"
+description = "TickTick API"
 readme = "README.md"
 license = {text = "NoLicense"}
 authors = [
@@ -32,10 +32,14 @@ dev = [
     "homeassistant",
     "tox >= 3.9.0",
     "ruff >= 0.1.0",
+    "tomli >= 2.0.0; python_version < '3.11'",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["custom_components.ticktick_todo.pyticktick.openapi_client"]
+
+[tool.hatch.build.hooks.custom]
+path = "hatch_plugins/manifest_generator.py"
 
 [tool.pylint.'MESSAGES CONTROL']
 extension-pkg-whitelist = "pydantic"

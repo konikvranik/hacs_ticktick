@@ -27,19 +27,22 @@ Then import the package:
 import custom_components.ticktick_todo.pyticktick.openapi_client
 ```
 
-### Setuptools
+### Hatchling
 
-Install via [Setuptools](http://pypi.python.org/pypi/setuptools).
+This project uses [Hatchling](https://hatch.pypa.io/) as its build system.
 
 ```sh
-python setup.py install --user
+pip install .
 ```
-(or `sudo python setup.py install` to install the package for all users)
 
 Then import the package:
 ```python
 import custom_components.ticktick_todo.pyticktick.openapi_client
 ```
+
+### Manifest Generation
+
+This project includes a Hatch plugin that automatically generates manifest files for Home Assistant and HACS from configuration in `pyproject.toml`. See the [hatch_plugins/README.md](hatch_plugins/README.md) file for more information.
 
 ### Tests
 
@@ -109,7 +112,3 @@ Endpoints do not require authorization.
 
 
 ## Author
-
-
-
-

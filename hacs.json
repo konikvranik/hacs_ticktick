@@ -1,8 +1,8 @@
 {
-	"name": "TickTick TODO list",
-	"country": [
-		"CZ"
-	],
-	"homeassistant": "2024.10.0",
-	"render_readme": true
+  "name": "TickTick TODO",
+  "country": [
+    "CZ"
+  ],
+  "homeassistant": "2024.10.0",
+  "render_readme": true
 }

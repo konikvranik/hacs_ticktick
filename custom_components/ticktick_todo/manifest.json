@@ -1,21 +1,21 @@
 {
-	"version": "0.2.1",
-	"domain": "ticktick_todo",
-	"name": "TickTick todo list",
-	"codeowners": [
-		"@konikvranik"
-	],
-	"documentation": "https://github.com/konikvranik/hacs_ticktick",
-	"config_flow": true,
-	"iot_class": "cloud_polling",
-	"issue_tracker": "https://github.com/konikvranik/hacs_ticktick/issues",
-	"dependencies": [
-		"application_credentials"
-	],
-	"requirements": [
-		"openapi-client",
-		"pydantic"
-	],
-	"icon": "https://brands.home-assistant.io/ticktick_todo/icon.png",
-	"logo": "https://brands.home-assistant.io/ticktick_todo/logo.png"
+  "version": "0.2.1",
+  "domain": "ticktick_todo",
+  "name": "TickTick TODO",
+  "codeowners": [
+    "@konikvranik"
+  ],
+  "documentation": "https://github.com/konikvranik/hacs_ticktick",
+  "config_flow": true,
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/konikvranik/hacs_ticktick/issues",
+  "dependencies": [
+    "application_credentials"
+  ],
+  "requirements": [
+    "openapi-client",
+    "pydantic"
+  ],
+  "icon": "https://brands.home-assistant.io/ticktick_todo/icon.png",
+  "logo": "https://brands.home-assistant.io/ticktick_todo/logo.png"
 }
