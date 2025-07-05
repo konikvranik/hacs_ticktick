@@ -24,7 +24,6 @@ def parse_toml(file_path):
     """
     result = {}
     current_section = result
-    section_stack = []
 
     with open(file_path, "r") as f:
         content = f.read()
@@ -42,14 +41,11 @@ def parse_toml(file_path):
             section_path = line[1:-1].split(".")
             current_section = result
 
-            for i, section in enumerate(section_path):
+            for _i, section in enumerate(section_path):
                 if section not in current_section:
                     current_section[section] = {}
 
-                if i < len(section_path) - 1:
-                    current_section = current_section[section]
-                else:
-                    current_section = current_section[section]
+                current_section = current_section[section]
 
         # Key-value pair
         elif "=" in line:
