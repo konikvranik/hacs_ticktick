@@ -68,4 +68,4 @@ async def test_tickticktodo_async_create_todo_item(mock_hass, mock_coordinator, 
     await todo.async_create_todo_item(item)
 
     # Verify
-    assert mock_coordinator.async_create_todo_item.called_with("project1", item)
+    mock_coordinator.async_create_todo_item.assert_called_with("project1", item)

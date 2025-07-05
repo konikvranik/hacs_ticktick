@@ -37,7 +37,7 @@ async def test_setup_entry(mock_hass, mock_config_entry):
 
         assert result is True
         assert mock_config_entry.runtime_data["coordinator"] == mock_coordinator_instance
-        assert mock_hass.config_entries.async_forward_entry_setups.called_with(mock_config_entry, PLATFORMS)
+        mock_hass.config_entries.async_forward_entry_setups.assert_called_with(mock_config_entry, PLATFORMS)
 
 
 @pytest.mark.anyio
@@ -49,7 +49,7 @@ async def test_unload_entry(mock_hass, mock_config_entry):
     result = await async_unload_entry(mock_hass, mock_config_entry)
 
     assert result is True
-    assert mock_hass.config_entries.async_unload_platforms.called_with(mock_config_entry, PLATFORMS)
+    mock_hass.config_entries.async_unload_platforms.assert_called_with(mock_config_entry, PLATFORMS)
 
 
 @pytest.mark.anyio

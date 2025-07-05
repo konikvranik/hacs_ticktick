@@ -67,7 +67,6 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                         self.data = {}
                     projects_ = await self._api_instance.get_all_projects()
                     result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
-                    asyncio.timeout(1)
 
                     for idx in result:
                         if idx in listening_idx or result[idx].tasks is None:
@@ -76,7 +75,6 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                             )
                             _LOGGER.debug("Project data: %s", project_data)
                             result[project_data.project.id] = project_data
-                            asyncio.timeout(1)
                 except ApiException as err:
                     raise UpdateFailed(f"Error communicating with API: {err}") from err
                 except Exception as err:
@@ -89,7 +87,6 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         async with self._api_call_lock:
             current_task_ = await self._api_instance.create_single_task(TaskMapper.todo_item_to_task(project_id, item))
         item.uid = current_task_.id
-        asyncio.timeout(1)
         await self.async_request_refresh()
         return item
 
@@ -104,14 +101,12 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                     task_ = TaskMapper.task_response_to_task_request(task)
                     await self._api_instance.delete_specify_task(project_id, t.id)
                     await self._api_instance.create_single_task(task_)
-                    asyncio.timeout(1)
                     await self.async_request_refresh()
                     return
 
     async def async_delete_todo_items(self, project_id: str, uids: list[str]) -> None:
         """Delete an item from the to-do list."""
-        with self._api_call_lock:
+        async with self._api_call_lock:
             for uid in uids:
                 await self._api_instance.delete_specify_task(project_id, uid)
-        asyncio.timeout(1)
         await self.async_request_refresh()

@@ -60,6 +60,9 @@ class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity)
         self._ticktick_project_id = id
         self._attr_name = coordinator.data[id].project.name
         self._attr_device_info = device_info
+        self._attr_unique_id = f"ticktickt_todo_list_{id}"
+        self.entity_id = f"todo.ticktick_{id}"
+        self._attr_todo_items = []
         _LOGGER.debug("TickTickTodo.__init__(%s, %s)" % (self._ticktick_project_id, self._attr_name))
         self.hass = hass
         self._attr_supported_features = TodoListEntityFeature.CREATE_TODO_ITEM
@@ -82,7 +85,7 @@ class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity)
     async def async_create_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         _LOGGER.debug("Source item: %s", item)
-        self.todo_items.append(await self.coordinator.async_create_todo_item(self._ticktick_project_id, item))
+        self._attr_todo_items.append(await self.coordinator.async_create_todo_item(self._ticktick_project_id, item))
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
         """Add an item to the To-do list."""
