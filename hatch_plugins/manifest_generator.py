@@ -11,7 +11,9 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, cast
+
+from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 def parse_toml(file_path):
     """Simple TOML parser for pyproject.toml
@@ -219,10 +221,28 @@ class ManifestGenerator:
         self.save_hacs_manifest(hacs_manifest)
 
 # Hatch hook interface
-def hook(directory):
+class BuildHook(BuildHookInterface):
     """Hatch build hook to generate manifest files"""
-    generator = ManifestGenerator(directory)
-    generator.generate_all()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def initialize(self, version, build_data):
+        """Initialize the build hook"""
+        pass
+
+    def finalize(self, version, build_data, artifact_path):
+        """Finalize the build hook"""
+        pass
+
+    def clean(self, versions):
+        """Clean up after the build"""
+        pass
+
+    def hook(self, directory):
+        """Hatch build hook to generate manifest files"""
+        generator = ManifestGenerator(directory)
+        generator.generate_all()
 
 # Standalone script interface
 def main():
