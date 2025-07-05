@@ -44,7 +44,9 @@ async def test_tickticktodo_handle_coordinator_update(mock_hass, mock_coordinato
     # Setup
     todo = TickTickTodo(mock_hass, mock_device_info, mock_coordinator, "project1")
 
-    with patch("custom_components.ticktick_todo.helper.TaskMapper.task_to_todo_item") as mock_to_todo_item:
+    with patch(
+        "custom_components.ticktick_todo.helper.TaskMapper.task_to_todo_item"
+    ) as mock_to_todo_item, patch.object(todo, "async_write_ha_state") as mock_write_ha_state:
         mock_to_todo_item.return_value = MagicMock(spec=TodoItem)
 
         # Test
@@ -52,7 +54,7 @@ async def test_tickticktodo_handle_coordinator_update(mock_hass, mock_coordinato
 
         # Verify
         assert mock_to_todo_item.called
-        assert todo.async_write_ha_state.called
+        assert mock_write_ha_state.called
 
 
 @pytest.mark.anyio

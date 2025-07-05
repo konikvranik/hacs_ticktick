@@ -1,6 +1,6 @@
 """Test the TickTick TODO coordinator."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from homeassistant.components.todo import TodoItem
@@ -19,6 +19,10 @@ def coordinator(mock_hass, mock_config_entry, mock_api_instance):
     ):
         coordinator = TicktickUpdateCoordinator(mock_hass, mock_config_entry, "test_token")
         coordinator.data = {}
+
+        # Mock async_request_refresh to avoid actual implementation
+        coordinator.async_request_refresh = AsyncMock()
+
         return coordinator
 
 

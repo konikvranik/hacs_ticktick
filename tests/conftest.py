@@ -6,6 +6,19 @@ from contextlib import asynccontextmanager
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from _pytest.runner import pytest_runtest_setup
+
+# Skip trio tests if trio is not installed
+try:
+    import trio  # noqa: F401
+except ImportError:
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_setup(item):
+        if "trio" in item.keywords:
+            pytest.skip("trio not installed")
+
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -49,6 +62,11 @@ def mock_hass():
     # Add loop and loop_thread_id attributes to fix test failures
     hass.loop = MagicMock()
     hass.loop_thread_id = threading.get_ident()  # Use the current thread ID
+    # Add data attribute needed by entity
+    hass.data = {}
+    # Add states attribute with async_set_internal method
+    hass.states = MagicMock()
+    hass.states.async_set_internal = AsyncMock()
     return hass
 
 
@@ -94,6 +112,9 @@ def mock_coordinator():
     coordinator.async_create_todo_item = AsyncMock()
     coordinator.async_config_entry_first_refresh = AsyncMock()
     coordinator.async_refresh = AsyncMock()
+
+    # Add last_update_success attribute needed by CoordinatorEntity
+    coordinator.last_update_success = True
 
     # Mock project data
     project1 = MagicMock()
