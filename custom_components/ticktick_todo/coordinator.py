@@ -7,9 +7,10 @@ from homeassistant.components.todo import TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
+import pyticktick
 from custom_components.ticktick_todo.helper import TaskMapper
-from custom_components.ticktick_todo.pyticktick import openapi_client
-from custom_components.ticktick_todo.pyticktick.openapi_client import ProjectData, ApiException
+from pyticktick.exceptions import ApiException
+from pyticktick.models import ProjectData
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +28,8 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Polling interval. Will only be polled if there are subscribers.
             update_interval=timedelta(seconds=30)
         )
-        self._api_instance = openapi_client.DefaultApi(
-            openapi_client.ApiClient(openapi_client.Configuration(access_token=token)))
+        self._api_instance = pyticktick.DefaultApi(
+            pyticktick.ApiClient(pyticktick.Configuration(access_token=token)))
         self._api_call_lock = asyncio.Lock()
 
     async def _async_setup(self):
@@ -72,7 +73,7 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                     for idx in result.keys():
 
                         if idx in listening_idx or result[idx].tasks is None:
-                            project_data: openapi_client.models.ProjectData = (
+                            project_data: pyticktick.models.ProjectData = (
                                 await self._api_instance.get_project_with_data_by_id(idx))
                             _LOGGER.debug("Project data: %s", project_data)
                             result[project_data.project.id] = project_data

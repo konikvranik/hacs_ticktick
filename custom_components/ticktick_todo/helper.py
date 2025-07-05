@@ -5,28 +5,28 @@ from homeassistant.components.todo import (
     TodoItemStatus
 )
 
-from custom_components.ticktick_todo.pyticktick import openapi_client
+import pyticktick
 
 
 class TaskMapper:
 
     @staticmethod
-    def task_to_todo_item(task_response: openapi_client.Task) -> TodoItem:
+    def task_to_todo_item(task_response: pyticktick.Task) -> TodoItem:
         return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
                         status=TaskMapper._task_status_to_todo_item_status(task_response),
                         due=task_response.due_date)
 
     @staticmethod
-    def todo_item_to_task(project_id: str, todo_item: TodoItem) -> openapi_client.Task:
+    def todo_item_to_task(project_id: str, todo_item: TodoItem) -> pyticktick.Task:
         priority = TaskMapper._resolve_priority(todo_item)
-        task = openapi_client.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
+        task = pyticktick.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
                                    status=TaskMapper._todo_item_status_to_task_status(todo_item),
                                    dueDate=todo_item.due, projectId=project_id, priority=priority)
         return task
 
     @staticmethod
     def merge_todo_item_and_task_response(todo_item: TodoItem,
-                                          task_response: openapi_client.Task) -> openapi_client.Task:
+                                          task_response: pyticktick.Task) -> pyticktick.Task:
         priority = TaskMapper._resolve_priority(todo_item)
         task_response.task_id = todo_item.uid
         task_response.status = TaskMapper._todo_item_status_to_task_status(todo_item)
@@ -38,7 +38,7 @@ class TaskMapper:
         return task_response
 
     @staticmethod
-    def _task_status_to_todo_item_status(task_response: openapi_client.Task) -> TodoItemStatus | None:
+    def _task_status_to_todo_item_status(task_response: pyticktick.Task) -> TodoItemStatus | None:
         if task_response.status == 0:
             return TodoItemStatus.NEEDS_ACTION
         elif task_response.status == 2:
@@ -55,8 +55,8 @@ class TaskMapper:
 
     @staticmethod
     def task_response_to_task_request(
-            response: openapi_client.Task) -> openapi_client.Task:
-        return openapi_client.Task(
+            response: pyticktick.Task) -> pyticktick.Task:
+        return pyticktick.Task(
             title=response.title,
             isAllDay=response.is_all_day,
             content=response.content,

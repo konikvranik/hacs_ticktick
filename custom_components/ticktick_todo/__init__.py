@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 from datetime import timedelta
@@ -18,7 +17,6 @@ from homeassistant.helpers.typing import ConfigType
 from voluptuous import ALLOW_EXTRA
 
 from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator
-from custom_components.ticktick_todo.pyticktick import openapi_client
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.info('Starting tictick_todo')
@@ -53,7 +51,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     coordinator_ = TicktickUpdateCoordinator(hass, config_entry, await _get_valid_token(config_entry, hass))
     config_entry.runtime_data = {'coordinator': coordinator_}
-    #hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator
+    # hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator
     await coordinator_.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
