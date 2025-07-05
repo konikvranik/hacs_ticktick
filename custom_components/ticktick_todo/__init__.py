@@ -21,7 +21,8 @@ from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinato
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.info("Starting tictick_todo")
 
-MANIFEST = json.load(open("%s/manifest.json" % os.path.dirname(os.path.realpath(__file__))))
+with open("%s/manifest.json" % os.path.dirname(os.path.realpath(__file__))) as f:
+    MANIFEST = json.load(f)
 VERSION = MANIFEST["version"]
 DOMAIN = MANIFEST[CONF_DOMAIN]
 DEFAULT_NAME = MANIFEST[CONF_NAME]
@@ -41,7 +42,7 @@ SCHEMA = {
 CONFIG_SCHEMA = vol.Schema({vol.Optional(DOMAIN): vol.Schema(SCHEMA)}, extra=ALLOW_EXTRA)
 
 
-async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+async def async_setup(_hass: HomeAssistant, _config: ConfigType) -> bool:
     """Set up the Netatmo component."""
     return True
 
@@ -63,9 +64,8 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     return await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
 
 
-async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+async def async_migrate_entry(_hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Migrate old entry."""
-    data = {**config_entry.data}
     return True
 
 
@@ -75,7 +75,8 @@ async def _get_valid_token(config_entry, hass):
         hass.config_entries.async_update_entry(config_entry, unique_id=DOMAIN)
 
     if DEBUG:
-        return open(f"{Path.home()}/.ticktick_token").read().strip()
+        with open(f"{Path.home()}/.ticktick_token") as f:
+            return f.read().strip()
     implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
     session = config_entry_oauth2_flow.OAuth2Session(hass, config_entry, implementation)
     try:

@@ -18,7 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
     """HKO Update Coordinator."""
 
-    def __init__(self, hass, config_entry: ConfigEntry, token: str):
+    def __init__(self, hass, _config_entry: ConfigEntry, token: str):
         """Initialize my coordinator."""
         super().__init__(
             hass,
@@ -78,9 +78,9 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                             result[project_data.project.id] = project_data
                             asyncio.timeout(1)
                 except ApiException as err:
-                    raise UpdateFailed(f"Error communicating with API: {err}")
+                    raise UpdateFailed(f"Error communicating with API: {err}") from err
                 except Exception as err:
-                    raise UpdateFailed(f"Error communicating with API: {err}")
+                    raise UpdateFailed(f"Error communicating with API: {err}") from err
             return result
 
     async def async_create_todo_item(self, project_id: str, item: TodoItem) -> TodoItem:

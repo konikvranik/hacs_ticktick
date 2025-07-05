@@ -51,7 +51,7 @@ class TicktickFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, do
 
         return await super().async_step_user(user_input)
 
-    async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
+    async def async_step_reauth(self, _entry_data: Mapping[str, Any]) -> ConfigFlowResult:
         """Perform reauth upon an API authentication error."""
         return await self.async_step_reauth_confirm()
 

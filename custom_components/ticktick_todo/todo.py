@@ -43,7 +43,7 @@ async def async_setup_entry(
         TickTickTodo(
             hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}), coordinator, id
         )
-        for id in coordinator.data.keys()
+        for id in coordinator.data
     ]
     async_add_entities(new_entities_)
 

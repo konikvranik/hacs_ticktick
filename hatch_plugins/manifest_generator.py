@@ -49,7 +49,6 @@ def parse_toml(file_path):
                 if i < len(section_path) - 1:
                     current_section = current_section[section]
                 else:
-                    section_stack = section_path[:-1]
                     current_section = current_section[section]
 
         # Key-value pair
@@ -222,7 +221,7 @@ class BuildHook(BuildHookInterface):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def initialize(self, version, build_data):
+    def initialize(self, _version, _build_data):
         """Initialize the build hook"""
         # Run the manifest generator during initialization
         # This ensures it runs during pip install
@@ -230,7 +229,7 @@ class BuildHook(BuildHookInterface):
         generator = ManifestGenerator(directory)
         generator.generate_all()
 
-    def finalize(self, version, build_data, artifact_path):
+    def finalize(self, _version, _build_data, _artifact_path):
         """Finalize the build hook"""
         # Run the manifest generator again during finalization
         # This ensures the manifest files are updated in the built package
