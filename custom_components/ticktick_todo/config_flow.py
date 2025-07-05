@@ -1,14 +1,15 @@
 """Adds config flow for HDO."""
+
 import datetime
 import logging
 import time
 from pathlib import Path
 from typing import Any, Mapping
 
-from homeassistant.config_entries import ConfigFlowResult, SOURCE_REAUTH
+from homeassistant.config_entries import SOURCE_REAUTH, ConfigFlowResult
 from homeassistant.helpers import config_entry_oauth2_flow
 
-from . import DOMAIN, DEBUG
+from . import DEBUG, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,15 +38,15 @@ class TicktickFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, do
             return self.async_create_entry(
                 title="Title of the entry",
                 data={
-                    "token": {"access_token": self.hass.async_add_executor_job(open, f'{Path.home()}/.ticktick_token'),
-                              "expires_at": time.time() + datetime.timedelta(days=365).seconds},
+                    "token": {
+                        "access_token": self.hass.async_add_executor_job(open, f"{Path.home()}/.ticktick_token"),
+                        "expires_at": time.time() + datetime.timedelta(days=365).seconds,
+                    },
                 },
-                options={
-                },
+                options={},
             )
 
-        if (self.source !=
-                SOURCE_REAUTH and self._async_current_entries()):
+        if self.source != SOURCE_REAUTH and self._async_current_entries():
             return self.async_abort(reason="single_instance_allowed")
 
         return await super().async_step_user(user_input)

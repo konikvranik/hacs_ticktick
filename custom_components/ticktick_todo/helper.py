@@ -1,32 +1,36 @@
 import re
 
-from homeassistant.components.todo import TodoItem
-from homeassistant.components.todo import (
-    TodoItemStatus
-)
-
 import pyticktick
+from homeassistant.components.todo import TodoItem, TodoItemStatus
 
 
 class TaskMapper:
-
     @staticmethod
     def task_to_todo_item(task_response: pyticktick.Task) -> TodoItem:
-        return TodoItem(uid=task_response.id, summary=task_response.title, description=task_response.desc,
-                        status=TaskMapper._task_status_to_todo_item_status(task_response),
-                        due=task_response.due_date)
+        return TodoItem(
+            uid=task_response.id,
+            summary=task_response.title,
+            description=task_response.desc,
+            status=TaskMapper._task_status_to_todo_item_status(task_response),
+            due=task_response.due_date,
+        )
 
     @staticmethod
     def todo_item_to_task(project_id: str, todo_item: TodoItem) -> pyticktick.Task:
         priority = TaskMapper._resolve_priority(todo_item)
-        task = pyticktick.Task(id=todo_item.uid, title=todo_item.summary, desc=todo_item.description,
-                                   status=TaskMapper._todo_item_status_to_task_status(todo_item),
-                                   dueDate=todo_item.due, projectId=project_id, priority=priority)
+        task = pyticktick.Task(
+            id=todo_item.uid,
+            title=todo_item.summary,
+            desc=todo_item.description,
+            status=TaskMapper._todo_item_status_to_task_status(todo_item),
+            dueDate=todo_item.due,
+            projectId=project_id,
+            priority=priority,
+        )
         return task
 
     @staticmethod
-    def merge_todo_item_and_task_response(todo_item: TodoItem,
-                                          task_response: pyticktick.Task) -> pyticktick.Task:
+    def merge_todo_item_and_task_response(todo_item: TodoItem, task_response: pyticktick.Task) -> pyticktick.Task:
         priority = TaskMapper._resolve_priority(todo_item)
         task_response.task_id = todo_item.uid
         task_response.status = TaskMapper._todo_item_status_to_task_status(todo_item)
@@ -54,8 +58,7 @@ class TaskMapper:
             return 0
 
     @staticmethod
-    def task_response_to_task_request(
-            response: pyticktick.Task) -> pyticktick.Task:
+    def task_response_to_task_request(response: pyticktick.Task) -> pyticktick.Task:
         return pyticktick.Task(
             title=response.title,
             isAllDay=response.is_all_day,
@@ -71,7 +74,7 @@ class TaskMapper:
             id=response.id,
             projectId=response.project_id,
             completedTime=response.completed_time,
-            status=response.status
+            status=response.status,
         )
 
     @staticmethod

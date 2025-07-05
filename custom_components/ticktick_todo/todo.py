@@ -1,13 +1,13 @@
-""" mqtt-mediaplayer """
+"""mqtt-mediaplayer"""
+
 import logging
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.media_player import PLATFORM_SCHEMA, MediaPlayerState
-from homeassistant.components.todo import TodoListEntity, TodoItem
-from homeassistant.components.todo import TodoListEntityFeature
+from homeassistant.components.todo import TodoItem, TodoListEntity, TodoListEntityFeature
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_NAME, CONF_ACCESS_TOKEN
+from homeassistant.const import CONF_ACCESS_TOKEN, CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -34,21 +34,26 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry,
-                            async_add_entities: AddEntitiesCallback) -> None:
+async def async_setup_entry(
+    hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
-    coordinator = config_entry.runtime_data['coordinator']
+    coordinator = config_entry.runtime_data["coordinator"]
     new_entities_ = [
-        TickTickTodo(hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}),
-                     coordinator, id) for id in coordinator.data.keys()]
+        TickTickTodo(
+            hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}), coordinator, id
+        )
+        for id in coordinator.data.keys()
+    ]
     async_add_entities(new_entities_)
 
 
 class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity):
     """MQTTMediaPlayer"""
 
-    def __init__(self, hass: HomeAssistant, device_info: DeviceInfo, coordinator: TicktickUpdateCoordinator,
-                 id: str) -> None:
+    def __init__(
+        self, hass: HomeAssistant, device_info: DeviceInfo, coordinator: TicktickUpdateCoordinator, id: str
+    ) -> None:
         """Initialize"""
 
         super().__init__(coordinator, context=id)
@@ -66,8 +71,9 @@ class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity)
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_todo_items = [TaskMapper.task_to_todo_item(t) for t in
-                                 self.coordinator.data[self._ticktick_project_id].tasks]
+        self._attr_todo_items = [
+            TaskMapper.task_to_todo_item(t) for t in self.coordinator.data[self._ticktick_project_id].tasks
+        ]
         self.async_write_ha_state()
 
     def get_unique_id(self) -> str:

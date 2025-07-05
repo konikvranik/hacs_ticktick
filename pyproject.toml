@@ -51,11 +51,11 @@ extension-pkg-whitelist = "pydantic"
 [tool.ruff]
 line-length = 120
 target-version = "py38"
-select = ["E", "F", "W", "I", "B", "C4", "ARG", "SIM"]
-ignore = []
+lint.select = ["E", "F", "W", "I", "B", "C4", "ARG", "SIM"]
+lint.ignore = []
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["custom_components"]
 
-[tool.ruff.flake8-quotes]
+[tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"

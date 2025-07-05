@@ -3,14 +3,14 @@ import logging
 from datetime import timedelta
 
 import async_timeout
+import pyticktick
 from homeassistant.components.todo import TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-import pyticktick
-from custom_components.ticktick_todo.helper import TaskMapper
 from pyticktick.exceptions import ApiException
 from pyticktick.models import ProjectData
+
+from custom_components.ticktick_todo.helper import TaskMapper
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,10 +26,9 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
             # Name of the data. For logging purposes.
             name="TickTick TODO",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=30)
+            update_interval=timedelta(seconds=30),
         )
-        self._api_instance = pyticktick.DefaultApi(
-            pyticktick.ApiClient(pyticktick.Configuration(access_token=token)))
+        self._api_instance = pyticktick.DefaultApi(pyticktick.ApiClient(pyticktick.Configuration(access_token=token)))
         self._api_call_lock = asyncio.Lock()
 
     async def _async_setup(self):
@@ -70,11 +69,11 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                     result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
                     asyncio.timeout(1)
 
-                    for idx in result.keys():
-
+                    for idx in result:
                         if idx in listening_idx or result[idx].tasks is None:
                             project_data: pyticktick.models.ProjectData = (
-                                await self._api_instance.get_project_with_data_by_id(idx))
+                                await self._api_instance.get_project_with_data_by_id(idx)
+                            )
                             _LOGGER.debug("Project data: %s", project_data)
                             result[project_data.project.id] = project_data
                             asyncio.timeout(1)
@@ -88,8 +87,7 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         """Add an item to the To-do list."""
         _LOGGER.debug("Source item: %s", item)
         async with self._api_call_lock:
-            current_task_ = await self._api_instance.create_single_task(
-                TaskMapper.todo_item_to_task(project_id, item))
+            current_task_ = await self._api_instance.create_single_task(TaskMapper.todo_item_to_task(project_id, item))
         item.uid = current_task_.id
         asyncio.timeout(1)
         await self.async_request_refresh()

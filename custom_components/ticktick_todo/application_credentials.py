@@ -2,19 +2,22 @@ import logging
 from json import JSONDecodeError
 from typing import cast
 
-from aiohttp import ClientError, BasicAuth
-from homeassistant.components.application_credentials import AuthorizationServer, ClientCredential, AuthImplementation
+from aiohttp import BasicAuth, ClientError
+from homeassistant.components.application_credentials import AuthImplementation, AuthorizationServer, ClientCredential
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow, http
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.config_entry_oauth2_flow import MY_AUTH_CALLBACK_PATH, HEADER_FRONTEND_BASE, \
-    AUTH_CALLBACK_PATH
+from homeassistant.helpers.config_entry_oauth2_flow import (
+    AUTH_CALLBACK_PATH,
+    HEADER_FRONTEND_BASE,
+    MY_AUTH_CALLBACK_PATH,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_get_auth_implementation(
-        hass: HomeAssistant, auth_domain: str, credential: ClientCredential
+    hass: HomeAssistant, auth_domain: str, credential: ClientCredential
 ) -> config_entry_oauth2_flow.AbstractOAuth2Implementation:
     """Return auth implementation for a custom auth implementation."""
     return TickTickAuthImplementation(
@@ -22,20 +25,16 @@ async def async_get_auth_implementation(
         auth_domain,
         credential,
         AuthorizationServer(
-            authorize_url="https://ticktick.com/oauth/authorize",
-            token_url="https://ticktick.com/oauth/token"
-        )
+            authorize_url="https://ticktick.com/oauth/authorize", token_url="https://ticktick.com/oauth/token"
+        ),
     )
 
 
 class TickTickAuthImplementation(AuthImplementation):
-
     @property
     def extra_authorize_data(self) -> dict:
         """Extra data that needs to be appended to the authorize url."""
-        return {
-            "scope": "tasks:write tasks:read"
-        }
+        return {"scope": "tasks:write tasks:read"}
 
     @property
     def redirect_uri(self) -> str:
@@ -58,8 +57,9 @@ class TickTickAuthImplementation(AuthImplementation):
         data["scope"] = "tasks:write tasks:read"
 
         _LOGGER.debug("Sending token request to %s with data: \n%s", self.token_url, data)
-        resp = await session.post(self.token_url, data=data,
-                                  auth=BasicAuth(login=self.client_id, password=self.client_secret))
+        resp = await session.post(
+            self.token_url, data=data, auth=BasicAuth(login=self.client_id, password=self.client_secret)
+        )
 
         _LOGGER.debug("Received token response: %s", resp)
 

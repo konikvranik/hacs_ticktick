@@ -7,13 +7,14 @@ from configuration in pyproject.toml.
 
 It can be used as a standalone script or as a Hatch build hook.
 """
+
 import json
 import os
 import re
-from pathlib import Path
-from typing import Dict, Any, Optional, cast
+from typing import Any, Dict, Optional
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
+
 
 def parse_toml(file_path):
     """Simple TOML parser for pyproject.toml
@@ -25,20 +26,20 @@ def parse_toml(file_path):
     current_section = result
     section_stack = []
 
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         content = f.read()
 
     # Remove comments
-    content = re.sub(r'#.*$', '', content, flags=re.MULTILINE)
+    content = re.sub(r"#.*$", "", content, flags=re.MULTILINE)
 
-    for line in content.split('\n'):
+    for line in content.split("\n"):
         line = line.strip()
         if not line:
             continue
 
         # Section header
-        if line.startswith('[') and line.endswith(']'):
-            section_path = line[1:-1].split('.')
+        if line.startswith("[") and line.endswith("]"):
+            section_path = line[1:-1].split(".")
             current_section = result
 
             for i, section in enumerate(section_path):
@@ -52,8 +53,8 @@ def parse_toml(file_path):
                     current_section = current_section[section]
 
         # Key-value pair
-        elif '=' in line:
-            key, value = line.split('=', 1)
+        elif "=" in line:
+            key, value = line.split("=", 1)
             key = key.strip()
             value = value.strip()
 
@@ -61,23 +62,24 @@ def parse_toml(file_path):
             if value.startswith('"') and value.endswith('"'):
                 value = value[1:-1]
             # Handle list
-            elif value.startswith('[') and value.endswith(']'):
-                value = value[1:-1].split(',')
+            elif value.startswith("[") and value.endswith("]"):
+                value = value[1:-1].split(",")
                 value = [v.strip().strip('"') for v in value if v.strip()]
             # Handle boolean
-            elif value.lower() == 'true':
+            elif value.lower() == "true":
                 value = True
-            elif value.lower() == 'false':
+            elif value.lower() == "false":
                 value = False
             # Handle number
             elif value.isdigit():
                 value = int(value)
-            elif value.replace('.', '', 1).isdigit():
+            elif value.replace(".", "", 1).isdigit():
                 value = float(value)
 
             current_section[key] = value
 
     return result
+
 
 class ManifestGenerator:
     """Manifest Generator for Home Assistant and HACS"""
@@ -97,7 +99,7 @@ class ManifestGenerator:
         manifest_path = os.path.join(self.directory, f"custom_components/{domain}/manifest.json")
         if os.path.exists(manifest_path):
             try:
-                with open(manifest_path, 'r') as f:
+                with open(manifest_path, "r") as f:
                     return json.load(f)
             except json.JSONDecodeError:
                 print(f"Warning: Could not parse {manifest_path}, will create a new one")
@@ -117,7 +119,7 @@ class ManifestGenerator:
                     manifest_path = os.path.join(custom_components_dir, component_dir, "manifest.json")
                     if os.path.exists(manifest_path):
                         try:
-                            with open(manifest_path, 'r') as f:
+                            with open(manifest_path, "r") as f:
                                 manifest_data = json.load(f)
                                 if "domain" in manifest_data:
                                     domain = manifest_data["domain"]
@@ -139,15 +141,7 @@ class ManifestGenerator:
         # Only update specific fields from pyproject.toml
         # Do not update: version, codeowners, documentation, issue_tracker, requirements
         # Note: name is updated from project.description, not from tool.homeassistant
-        updateable_fields = [
-            "domain",
-            "dependencies",
-            "config_flow",
-            "iot_class",
-            "integration_type",
-            "icon",
-            "logo"
-        ]
+        updateable_fields = ["domain", "dependencies", "config_flow", "iot_class", "integration_type", "icon", "logo"]
 
         # Update only the allowed fields
         for field in updateable_fields:
@@ -161,7 +155,7 @@ class ManifestGenerator:
         manifest_path = os.path.join(self.directory, "hacs.json")
         if os.path.exists(manifest_path):
             try:
-                with open(manifest_path, 'r') as f:
+                with open(manifest_path, "r") as f:
                     return json.load(f)
             except json.JSONDecodeError:
                 print(f"Warning: Could not parse {manifest_path}, will create a new one")
@@ -220,6 +214,7 @@ class ManifestGenerator:
         hacs_manifest = self.generate_hacs_manifest()
         self.save_hacs_manifest(hacs_manifest)
 
+
 # Hatch hook interface
 class BuildHook(BuildHookInterface):
     """Hatch build hook to generate manifest files"""
@@ -252,11 +247,13 @@ class BuildHook(BuildHookInterface):
         generator = ManifestGenerator(directory)
         generator.generate_all()
 
+
 # Standalone script interface
 def main():
     """Main function when run as a standalone script"""
     generator = ManifestGenerator()
     generator.generate_all()
+
 
 if __name__ == "__main__":
     main()
