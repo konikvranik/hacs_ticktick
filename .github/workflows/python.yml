@@ -35,4 +35,4 @@ jobs:
           ruff check .
       - name: Test with pytest
         run: |
-          pytest
+          PYTHONPATH=$PWD pytest
