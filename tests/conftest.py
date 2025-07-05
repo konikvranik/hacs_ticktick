@@ -1,39 +1,32 @@
 """Fixtures for TickTick TODO tests."""
+
 import sys
-from unittest.mock import MagicMock, AsyncMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 
-# Mock the pyticktick module
-class MockApiException(Exception):
-    """Mock ApiException."""
-    pass
-
-class MockProjectData:
-    """Mock ProjectData."""
-    def __init__(self, project=None, tasks=None):
-        self.project = project
-        self.tasks = tasks
-
+# Mock the pyticktick module before importing our components
 # Create mock modules
 mock_pyticktick = MagicMock()
 mock_pyticktick.exceptions = MagicMock()
-mock_pyticktick.exceptions.ApiException = MockApiException
+mock_pyticktick.exceptions.ApiException = type('MockApiException', (Exception,), {})
 mock_pyticktick.models = MagicMock()
-mock_pyticktick.models.ProjectData = MockProjectData
+mock_pyticktick.models.ProjectData = type('MockProjectData', (), {
+    '__init__': lambda self, project=None, tasks=None: (
+        setattr(self, 'project', project) or setattr(self, 'tasks', tasks)
+    )
+})
 
 # Add mock modules to sys.modules
-sys.modules['pyticktick'] = mock_pyticktick
-sys.modules['pyticktick.exceptions'] = mock_pyticktick.exceptions
-sys.modules['pyticktick.models'] = mock_pyticktick.models
+sys.modules["pyticktick"] = mock_pyticktick
+sys.modules["pyticktick.exceptions"] = mock_pyticktick.exceptions
+sys.modules["pyticktick.models"] = mock_pyticktick.models
 
-# Now we can import from our module
-from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator
-from custom_components.ticktick_todo import DOMAIN
+from custom_components.ticktick_todo import DOMAIN  # noqa: E402
+from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator  # noqa: E402
 
 
 @pytest.fixture

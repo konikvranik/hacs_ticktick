@@ -1,14 +1,15 @@
 """Test the TickTick TODO integration initialization."""
+
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from custom_components.ticktick_todo import (
+    PLATFORMS,
+    async_migrate_entry,
     async_setup,
     async_setup_entry,
     async_unload_entry,
-    async_migrate_entry,
-    DOMAIN,
-    PLATFORMS,
 )
 
 
@@ -25,9 +26,9 @@ async def test_setup(mock_hass):
 @pytest.mark.anyio
 async def test_setup_entry(mock_hass, mock_config_entry):
     """Test the setup entry function."""
-    with patch("custom_components.ticktick_todo._get_valid_token", return_value="test_token"), \
-         patch("custom_components.ticktick_todo.TicktickUpdateCoordinator") as mock_coordinator:
-
+    with patch("custom_components.ticktick_todo._get_valid_token", return_value="test_token"), patch(
+        "custom_components.ticktick_todo.TicktickUpdateCoordinator"
+    ) as mock_coordinator:
         mock_coordinator_instance = mock_coordinator.return_value
         mock_coordinator_instance.async_config_entry_first_refresh = MagicMock()
 

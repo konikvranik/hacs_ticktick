@@ -1,12 +1,10 @@
 """Test the TickTick TODO todo platform."""
-import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
+
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from homeassistant.components.todo import TodoItem
-from homeassistant.helpers.device_registry import DeviceInfo
 
 from custom_components.ticktick_todo.todo import TickTickTodo, async_setup_entry
-from custom_components.ticktick_todo import DOMAIN
 
 
 async def test_async_setup_entry(mock_hass, mock_config_entry, mock_coordinator):

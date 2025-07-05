@@ -1,21 +1,22 @@
 """Test the TickTick TODO coordinator."""
-import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
 
+from unittest.mock import MagicMock, patch
+
+import pytest
 from homeassistant.components.todo import TodoItem
 from homeassistant.helpers.update_coordinator import UpdateFailed
-
-from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator
 from pyticktick.exceptions import ApiException
 from pyticktick.models import ProjectData
+
+from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator
 
 
 @pytest.fixture
 def coordinator(mock_hass, mock_config_entry, mock_api_instance):
     """Return a coordinator with mocked API."""
-    with patch("pyticktick.DefaultApi", return_value=mock_api_instance), \
-         patch("pyticktick.ApiClient"), \
-         patch("pyticktick.Configuration"):
+    with patch("pyticktick.DefaultApi", return_value=mock_api_instance), patch("pyticktick.ApiClient"), patch(
+        "pyticktick.Configuration"
+    ):
         coordinator = TicktickUpdateCoordinator(mock_hass, mock_config_entry, "test_token")
         coordinator.data = {}
         return coordinator
