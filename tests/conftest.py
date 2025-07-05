@@ -1,7 +1,9 @@
 """Fixtures for TickTick TODO tests."""
 
 import sys
-from unittest.mock import AsyncMock, MagicMock
+import threading
+from contextlib import asynccontextmanager
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from homeassistant.config_entries import ConfigEntry
@@ -32,11 +34,21 @@ sys.modules["pyticktick.models"] = mock_pyticktick.models
 from custom_components.ticktick_todo import DOMAIN  # noqa: E402
 from custom_components.ticktick_todo.coordinator import TicktickUpdateCoordinator  # noqa: E402
 
+# Create a mock async_timeout.timeout context manager
+@asynccontextmanager
+async def mock_timeout(delay):
+    """Mock async_timeout.timeout context manager."""
+    yield
+
 
 @pytest.fixture
 def mock_hass():
     """Return a mocked HomeAssistant instance."""
-    return MagicMock(spec=HomeAssistant)
+    hass = MagicMock(spec=HomeAssistant)
+    # Add loop and loop_thread_id attributes to fix test failures
+    hass.loop = MagicMock()
+    hass.loop_thread_id = threading.get_ident()  # Use the current thread ID
+    return hass
 
 
 @pytest.fixture
@@ -63,6 +75,13 @@ def mock_api_instance():
 def mock_device_info():
     """Return a mocked DeviceInfo instance."""
     return DeviceInfo(name="Test Device", identifiers={(DOMAIN, "test_entry_id")})
+
+
+@pytest.fixture(autouse=True)
+def mock_async_timeout():
+    """Mock async_timeout.timeout to avoid 'no running event loop' errors."""
+    with patch("async_timeout.timeout", mock_timeout):
+        yield
 
 
 @pytest.fixture
