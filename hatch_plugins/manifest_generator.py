@@ -132,13 +132,13 @@ class ManifestGenerator:
         # Load existing manifest
         manifest = self.load_existing_ha_manifest(domain)
 
-        # Set name from project.name
-        if "name" in self.pyproject.get("project", {}):
-            manifest["name"] = self.pyproject["project"]["name"]
+        # Set name from project.description
+        if "description" in self.pyproject.get("project", {}):
+            manifest["name"] = self.pyproject["project"]["description"]
 
         # Only update specific fields from pyproject.toml
         # Do not update: version, codeowners, documentation, issue_tracker, requirements
-        # Note: name is updated from project.name, not from tool.homeassistant
+        # Note: name is updated from project.description, not from tool.homeassistant
         updateable_fields = [
             "domain",
             "dependencies",
@@ -168,13 +168,13 @@ class ManifestGenerator:
         return {}
 
     def generate_hacs_manifest(self) -> Dict[str, Any]:
-        """Generate HACS hacs.json with name from project.name"""
+        """Generate HACS hacs.json with name from project.description"""
         # Load existing manifest
         manifest = self.load_existing_hacs_manifest()
 
-        # Set name from project.name
-        if "name" in self.pyproject.get("project", {}):
-            manifest["name"] = self.pyproject["project"]["name"]
+        # Set name from project.description
+        if "description" in self.pyproject.get("project", {}):
+            manifest["name"] = self.pyproject["project"]["description"]
 
         return manifest
 
@@ -187,7 +187,7 @@ class ManifestGenerator:
             json.dump(manifest, f, indent=2)
 
         print(f"✅ Updated {manifest_path} with fields from pyproject.toml")
-        print("   (name is set from project.name)")
+        print("   (name is set from project.description)")
         print("   (preserved version, codeowners, documentation, issue_tracker, requirements)")
 
     def save_hacs_manifest(self, manifest: Dict[str, Any]):
@@ -199,7 +199,7 @@ class ManifestGenerator:
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f, indent=2)
             if os.path.exists(manifest_path):
-                print(f"✅ Updated {manifest_path} with name from project.name")
+                print(f"✅ Updated {manifest_path} with name from project.description")
             else:
                 print(f"✅ Created {manifest_path}")
         else:
@@ -208,7 +208,7 @@ class ManifestGenerator:
     def generate_all(self):
         """Generate and save manifest files"""
         print("🔄 Manifest Generator")
-        print("   - Updating name field from project.name in both manifest files")
+        print("   - Updating name field from project.description in both manifest files")
         print("   - Also updating specific fields in manifest.json")
 
         # Update Home Assistant manifest
@@ -229,11 +229,19 @@ class BuildHook(BuildHookInterface):
 
     def initialize(self, version, build_data):
         """Initialize the build hook"""
-        pass
+        # Run the manifest generator during initialization
+        # This ensures it runs during pip install
+        directory = os.getcwd()
+        generator = ManifestGenerator(directory)
+        generator.generate_all()
 
     def finalize(self, version, build_data, artifact_path):
         """Finalize the build hook"""
-        pass
+        # Run the manifest generator again during finalization
+        # This ensures the manifest files are updated in the built package
+        directory = os.getcwd()
+        generator = ManifestGenerator(directory)
+        generator.generate_all()
 
     def clean(self, versions):
         """Clean up after the build"""
