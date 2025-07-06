@@ -35,10 +35,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Set up ESPHome binary sensors based on a config entry."""
-    coordinator = config_entry.runtime_data["coordinator"]
+    coordinator = hass.data.setdefault(DOMAIN, {})[config_entry.entry_id]
     new_entities_ = [
         TickTickTodo(
             hass, DeviceInfo(name=config_entry.title, identifiers={(DOMAIN, config_entry.entry_id)}), coordinator, id
@@ -52,7 +52,7 @@ class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity)
     """MQTTMediaPlayer"""
 
     def __init__(
-        self, hass: HomeAssistant, device_info: DeviceInfo, coordinator: TicktickUpdateCoordinator, id: str
+            self, hass: HomeAssistant, device_info: DeviceInfo, coordinator: TicktickUpdateCoordinator, id: str
     ) -> None:
         """Initialize"""
 

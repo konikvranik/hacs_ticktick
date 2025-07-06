@@ -39,7 +39,7 @@ class TicktickFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, do
                 title="Title of the entry",
                 data={
                     "token": {
-                        "access_token": self.hass.async_add_executor_job(open, f"{Path.home()}/.ticktick_token"),
+                        "access_token": await self.hass.async_add_executor_job(open, f"{Path.home()}/.ticktick_token"),
                         "expires_at": time.time() + datetime.timedelta(days=365).seconds,
                     },
                 },
