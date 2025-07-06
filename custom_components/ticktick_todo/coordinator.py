@@ -65,13 +65,13 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                 try:
                     if self.data is None:
                         self.data = {}
-                    projects_ = await self._api_instance.get_all_projects()
+                    projects_ = await self._api_instance.open_v1_project_get()
                     result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
 
                     for idx in result:
                         if idx in listening_idx or result[idx].tasks is None:
                             project_data: pyticktick.models.ProjectData = (
-                                await self._api_instance.get_project_with_data_by_id(idx)
+                                await self._api_instance.open_v1_project_project_id_data_get(idx)
                             )
                             _LOGGER.debug("Project data: %s", project_data)
                             result[project_data.project.id] = project_data
@@ -85,7 +85,7 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         """Add an item to the To-do list."""
         _LOGGER.debug("Source item: %s", item)
         async with self._api_call_lock:
-            current_task_ = await self._api_instance.create_single_task(TaskMapper.todo_item_to_task(project_id, item))
+            current_task_ = await self._api_instance.open_v1_task_post(TaskMapper.todo_item_to_task(project_id, item))
         item.uid = current_task_.id
         await self.async_request_refresh()
         return item
@@ -93,14 +93,14 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
     async def async_update_todo_item(self, project_id: str, item: TodoItem) -> None:
         """Add an item to the To-do list."""
         async with self._api_call_lock:
-            await self._api_instance.complete_specify_task_with_http_info
-            project_data = await self._api_instance.get_project_with_data_by_id(project_id)
+            # await self._api_instance.complete_specify_task_with_http_info
+            project_data = await self._api_instance.open_v1_project_project_id_data_get(project_id)
             for t in project_data.tasks:
                 if t.id == item.uid:
                     task = TaskMapper.merge_todo_item_and_task_response(item, t)
                     task_ = TaskMapper.task_response_to_task_request(task)
-                    await self._api_instance.delete_specify_task(project_id, t.id)
-                    await self._api_instance.create_single_task(task_)
+                    await self._api_instance.open_v1_project_project_id_task_task_id_delete(project_id, t.id)
+                    await self._api_instance.open_v1_task_post(task_)
                     await self.async_request_refresh()
                     return
 
@@ -108,5 +108,5 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
         """Delete an item from the to-do list."""
         async with self._api_call_lock:
             for uid in uids:
-                await self._api_instance.delete_specify_task(project_id, uid)
+                await self._api_instance.open_v1_project_project_id_task_task_id_delete(project_id, uid)
         await self.async_request_refresh()

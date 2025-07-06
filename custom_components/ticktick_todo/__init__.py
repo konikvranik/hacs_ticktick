@@ -30,7 +30,7 @@ PLATFORMS = [Platform.TODO]
 ISSUE_URL = "https://github.com/konikvranik/hacs_ticktick/issues"
 SCAN_INTERVAL = timedelta(seconds=20)
 
-DEBUG = False
+DEBUG = os.getenv("HACS_TICKTICK_DEBUG", False)
 
 SCHEMA = {
     vol.Required(CONF_HOST): cv.string,
@@ -51,8 +51,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     """Set up ESPHome binary sensors based on a config entry."""
 
     coordinator_ = TicktickUpdateCoordinator(hass, config_entry, await _get_valid_token(config_entry, hass))
-    config_entry.runtime_data = {"coordinator": coordinator_}
-    # hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator
+    hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = coordinator_
     await coordinator_.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
@@ -61,7 +60,14 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
+    unload_ok = await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
+
+    if unload_ok:
+        coordinator = hass.data[DOMAIN].pop(config_entry.entry_id)
+        if hasattr(coordinator, '_api_instance') and hasattr(coordinator._api_instance.api_client, 'rest_client'):
+            await coordinator._api_instance.api_client.rest_client.close()
+
+    return unload_ok
 
 
 async def async_migrate_entry(_hass: HomeAssistant, _config_entry: ConfigEntry) -> bool:
