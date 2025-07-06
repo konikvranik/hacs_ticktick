@@ -74,9 +74,10 @@ class TickTickTodo(CoordinatorEntity[TicktickUpdateCoordinator], TodoListEntity)
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_todo_items = [
-            TaskMapper.task_to_todo_item(t) for t in self.coordinator.data[self._ticktick_project_id].tasks
-        ]
+        project_ = self.coordinator.data[self._ticktick_project_id]
+        if project_ is None or project_.tasks is None:
+            return
+        self._attr_todo_items = [TaskMapper.task_to_todo_item(t) for t in project_.tasks]
         self.async_write_ha_state()
 
     def get_unique_id(self) -> str:

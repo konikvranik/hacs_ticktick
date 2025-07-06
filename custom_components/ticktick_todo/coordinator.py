@@ -3,14 +3,14 @@ import logging
 from datetime import timedelta
 
 import async_timeout
-import pyticktick
 from homeassistant.components.todo import TodoItem
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+
+import pyticktick
+from custom_components.ticktick_todo.helper import TaskMapper
 from pyticktick.exceptions import ApiException
 from pyticktick.models import ProjectData
-
-from custom_components.ticktick_todo.helper import TaskMapper
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                         self.data = {}
                     projects_ = await self._api_instance.open_v1_project_get()
                     result = {k.id: self.data.setdefault(k.id, ProjectData(project=k)) for k in projects_}
-
+                    await asyncio.sleep(.3)
                     for idx in result:
                         if idx in listening_idx or result[idx].tasks is None:
                             project_data: pyticktick.models.ProjectData = (
@@ -75,8 +75,13 @@ class TicktickUpdateCoordinator(DataUpdateCoordinator[dict[str, ProjectData]]):
                             )
                             _LOGGER.debug("Project data: %s", project_data)
                             result[project_data.project.id] = project_data
+                            await asyncio.sleep(.3)
                 except ApiException as err:
-                    raise UpdateFailed(f"Error communicating with API: {err}") from err
+                    if err.status == 500 and "exceed_query_limit" in err.body:
+                        self.hass.loop.call_later(30, lambda: self.hass.async_create_task(self.async_request_refresh()))
+                        _LOGGER.debug("Exceed query limit. Will retry soon.")
+                    else:
+                        raise UpdateFailed(f"Error communicating with API: {err}") from err
                 except Exception as err:
                     raise UpdateFailed(f"Error communicating with API: {err}") from err
             return result
